@@ -108,7 +108,7 @@ const CreateJadwal = () => {
   console.log(formik.values);
 
   return (
-    <section className="flex items-center overflow-x-auto flex-col justify-center w-full h-screen pt-10 bg-gray-50 p-10 font-quick">
+    <section className="flex items-center overflow-x-auto flex-col justify-center w-full h-fit pt-10 bg-gray-50 p-10 font-quick">
       <section className="bg-white p-8 rounded-lg mt-20 shadow-lg w-full">
         <Link href="/admin/jadwal">
           <span className="flex items-center mb-4 text-blue-600 hover:underline">

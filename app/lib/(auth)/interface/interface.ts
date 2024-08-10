@@ -19,15 +19,17 @@ export interface LoginResponse extends BaseResponseSucess {
   data: User;
 }
 
-
+export interface ProfileResponse extends BaseResponseSucess {
+  data: User;
+}
 
 export interface LupaPasswordPayload extends Pick<User, "email"> {}
-export interface ResetPasswordPayload  {
-  new_password: string
+export interface ResetPasswordPayload {
+  new_password: string;
 
-  confirm_password: string
+  confirm_password: string;
 }
 
 export interface ResetPasswordRespone extends BaseResponseSucess {
-  data: User
+  data: User;
 }

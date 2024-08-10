@@ -12,10 +12,10 @@ import { useState } from "react";
 import Link from "next/link";
 import InputFieldAuth from "@/component/InputText";
 import * as yup from "yup";
-import useAuthModule from "../../(user)/lib";
 import { Form, FormikProvider, getIn, useFormik } from "formik";
-import { LupaPasswordPayload } from "../../(user)/interface/interface";
 import { ClipLoader } from "react-spinners";
+import useAuthModule from "@/app/lib/(auth)/lib";
+import { LupaPasswordPayload } from "@/app/lib/(auth)/interface/interface";
 
 export const LupaPasswordScehema = yup.object().shape({
   email: yup

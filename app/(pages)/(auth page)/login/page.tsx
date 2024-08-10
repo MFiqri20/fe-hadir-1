@@ -5,8 +5,8 @@ import text from "/public/images/text.png";
 import text_mobile from "/public/images/text_mobile.png";
 import { useEffect, useState } from "react";
 import * as yup from "yup";
-import useAuthModule from "../../(user)/lib";
-import { LoginPayload } from "../../(user)/interface/interface";
+import useAuthModule from "@/app/lib/(auth)/lib";
+import { LoginPayload } from "@/app/lib/(auth)/interface/interface";
 import { useFormik, Form, FormikProvider } from "formik";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -36,7 +36,7 @@ const Login = () => {
 
   useEffect(() => {
     if (session) {
-      router.push("/");
+      router.push(`/${session.user.role.toLowerCase()}/dashboard`);
     }
   }, [session, router]);
 

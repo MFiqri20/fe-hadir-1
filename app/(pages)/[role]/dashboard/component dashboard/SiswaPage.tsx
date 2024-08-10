@@ -22,6 +22,11 @@ import { ChartData } from "chart.js";
 import TableJadwal from "@/component/JadwalTable";
 import DoughnutComponent from "../component/DONUTCHART";
 import TeacherTable from "../component/TeacherSchedule";
+import useCrudModule from "@/hook/useCRUD";
+import {
+  CreateAbsenSiswaPayload,
+  DataJadwalHariIniResponse,
+} from "@/app/lib/(absen)";
 
 const SiswaPage = () => {
   const [seconds, setSeconds] = useState(59);
@@ -45,17 +50,29 @@ const SiswaPage = () => {
     return () => clearInterval(countdown);
   }, [seconds, minutes, hours]);
 
+  const { data, isFetching } =
+    useCrudModule().useList<DataJadwalHariIniResponse>(
+      "/jadwal/hari-ini-siswa"
+    );
+
+    const router = useRouter()
+
+  console.log("data", data);
+
   return (
     <section>
-            <div className="w-full px-10 py-5 border-b bg-[#023E8A] flex flex-row justify-between items-center">
+      <div className="w-full px-10 py-5 border-b bg-[#023E8A] flex flex-row justify-between items-center">
         <picture>
           <Image src={hadirpak} alt="hadir" />
         </picture>
         <div className="flex gap-10">
-          <a href="" className="font-quick text-[#FFBC25] text-base">
+          <a href="/murid/dashboard" className="font-quick text-[#FFBC25] text-base">
             Dashboard
           </a>
-          <a href="/" className="font-quick text-white text-base">
+          <a
+            href={`/murid/attendance`}
+            className="font-quick text-white text-base"
+          >
             Attendance
           </a>
           <a href="" className="font-quick text-white text-base">
@@ -85,7 +102,14 @@ const SiswaPage = () => {
               <a>Settings</a>
             </li>
             <li>
-              <a onClick={async () => await signOut()}>Logout</a>
+              <a
+                onClick={async () => {
+                  await signOut();
+                  router.push('/login')
+                }}
+              >
+                Logout
+              </a>
             </li>
           </ul>
         </div>
@@ -119,7 +143,7 @@ const SiswaPage = () => {
             </h1>
             <h1 className="font-quick font-medium text-lg text-[#495057] w-[708px] mt-2">
               Today`s class is a{" "}
-              <span className="font-bold">database class</span> , please enter
+              <span className="font-bold">{data?.data.mapel} class</span> , please enter
               the class that is already available in the schedule or click
               button beside.
             </h1>
@@ -167,7 +191,7 @@ const SiswaPage = () => {
         </div>
       </div>
       {/*  */}
-      <Footer/>
+      <Footer />
     </section>
   );
 };

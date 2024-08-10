@@ -4,7 +4,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import useAxiosAuth from "./useAuthAxios";
 import { useToast } from "./useToast";
 import Swal from "sweetalert2";
-import toast, { Toaster } from 'react-hot-toast';
+// import toast, { Toaster } from 'react-hot-toast';
 export interface PaginationParams {
   page: number;
   pageSize: number;
@@ -102,16 +102,17 @@ const useCrudModule = () => {
     };
   };
 
-  const useCreate = <T>(url: string) => {
-    const { mutate, isLoading } = useMutation(
+  const useCreate = <T>(url: string, urlInvalidate?: string) => {
+    const { mutate, isLoading, data } = useMutation(
       (payload: T) => axiosAuthClient.post(url, payload),
       {
         onSuccess: (response) => {
+          console.log('data', data);
           toastSuccess(response.data.message);
-          queryClient.invalidateQueries([url]); // Optionally, invalidate queries to refetch data
+          queryClient.invalidateQueries([urlInvalidate]); // Optionally, invalidate queries to refetch data
         },
-        onError: () => {
-          toastError();
+        onError: (error: any) => {
+          toastWarning(error.response.data.message);
         },
       }
     );

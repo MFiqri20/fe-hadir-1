@@ -1,5 +1,4 @@
-import { GuruSubjectListResponse } from "@/app/(guru)/interface";
-import useGuruModule from "@/app/(guru)/lib";
+import { GuruSubjectListResponse } from "@/app/lib/(guru)/interface";
 import useCrudModule from "@/hook/useCRUD";
 import React from "react";
 
@@ -8,7 +7,7 @@ export default function TeacherTable() {
   // const { data, isFetching } = useGuruSubjectList();
   const { useList } = useCrudModule();
   const { data, isFetching } =
-    useList<GuruSubjectListResponse>("guru/list-subject");
+    useList<GuruSubjectListResponse>("/guru/list-subject");
 
   return (
     <div className="overflow-x-auto my-8">
@@ -29,7 +28,7 @@ export default function TeacherTable() {
                   className="border text-center border-black px-4 py-2"
                   rowSpan={teacher.mapel.length || 1}
                 >
-                  {index + 1}
+                 {teacher.initial_schedule}
                 </td>
                 <td
                   className="border border-black px-4 py-2"

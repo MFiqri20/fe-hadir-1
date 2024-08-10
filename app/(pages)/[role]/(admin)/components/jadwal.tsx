@@ -6,7 +6,7 @@ import { Formik, Form, Field, FormikProvider, useFormik } from "formik";
 import * as yup from "yup";
 import useOptions from "@/hook/useOption";
 // import { UpdateJadwalPayload } from "@/app/(jadwal)/interface/update";
-import { JadwalDetailResponses } from "@/app/lib/(jadwal)/interface/detail";
+import { JadwalDetailResponses } from "@/app/lib/(jadwal)/interface/detail"; 
 
 export const updateJadwalSchema = yup.object().shape({
   hari_id: yup.number().nullable(),
@@ -31,7 +31,7 @@ export const updateJadwalSchema = yup.object().shape({
 
 const TableJadwal: React.FC = () => {
   const [selectedDay, setSelectedDay] = useState<string | null>(null);
-  let [isEditing, setIsEditing] = useState<boolean>(false);
+  const [isEditing, setIsEditing] = useState<boolean>(false);
   const [initialValues, setInitialValues] = useState<null>(null);
   const [editCell, setEditCell] = useState<{
     jamIndex: number;
@@ -41,7 +41,7 @@ const TableJadwal: React.FC = () => {
   const { useUpdate, useDetail } = useCrudModule();
   const { data: dataJadwalDetail } = useDetail<JadwalDetailResponses>(
     "jadwal/detail",
-    selectedDay || "0"
+    selectedDay || "1"
   );
   const { mutate, isLoading } = useUpdate<any>(
     "jadwal/update",
@@ -52,12 +52,12 @@ const TableJadwal: React.FC = () => {
     if (dataJadwalDetail) {
       const newInitialValues: any = {
         hari_id: dataJadwalDetail.hari.id,
-        jam_jadwal: dataJadwalDetail.jam_jadwal.map((jam: any) => ({
+        jam_jadwal: dataJadwalDetail.jam_jadwal.map((jam) => ({
           id: jam.id,
           jam_mulai: jam.jam_mulai,
           jam_selesai: jam.jam_selesai,
           is_rest: jam.is_rest,
-          jam_detail: jam.jam_detail.map((d: any) => ({
+          jam_detail: jam.jam_detail.map((d) => ({
             id: d.id,
             subject_code: d.subject_code.code || "", // Retain existing value if empty
           })),
@@ -96,8 +96,6 @@ const TableJadwal: React.FC = () => {
         setEditCell(null); // Revert to plain text
       },
     });
-
-    isEditing = false;
   };
 
   const formik = useFormik<any>({
@@ -134,7 +132,7 @@ const TableJadwal: React.FC = () => {
   console.log(formik.values);
 
   return (
-    <div className="mt-3 p-6 font-quick w-full">
+    <div className="mt-3 font-quick w-full">
       <div className="flex flex-col">
         <div className="overflow-x-auto">
           <div className="flex w-full justify-between mt-12 mb-3">
@@ -148,13 +146,13 @@ const TableJadwal: React.FC = () => {
                 <div
                   tabIndex={0}
                   role="button"
-                  className="flex font-quick font-semibold m-1"
+                  className="flex font-quick font-semibold m-1 text-lg"
                 >
-                  <ChevronDownIcon className="w-5" />{" "}
+                  <ChevronDownIcon className="w-5 mr-2" />{" "}
                   {selectedDay
                     ? optionHari.find((h: any) => h.value === selectedDay)
                         ?.label
-                    : "Select Day"}
+                    : "Senin"}
                 </div>
                 <ul
                   tabIndex={0}
@@ -171,7 +169,7 @@ const TableJadwal: React.FC = () => {
               </div>
             </div>
           </div>
-          <div className="min-w-[800px] max-h-[550px]">
+          <div className="min-w-[800px] h-fit">
             <div className="flex flex-row justify-between w-full bg-blue-800 text-white font-semibold">
               <div className="py-2 px-6">Clock</div>
               {optionKelas.map((kelas) => (

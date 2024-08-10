@@ -1,4 +1,7 @@
-import { User } from "@/app/(mapel)/interface";
+// import { User } from "@/app/(mapel)/interface";
+
+import { BaseResponseSucess } from "@/lib/axiosClient";
+import { User } from "../../(auth)/interface/interface";
 
 export interface GuruSubject {
   id: number;
@@ -8,6 +11,11 @@ export interface GuruSubject {
   nama: string;
   email: string;
   mapel: Mapel[];
+  jadwal_detail_id: number;
+}
+
+export interface ProfileGuruResponse extends BaseResponseSucess {
+  data: GuruSubject;
 }
 
 interface Mapel {

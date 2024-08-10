@@ -1,10 +1,19 @@
 import useAxiosAuth from "@/hook/useAuthAxios";
 import { axiosClient } from "@/lib/axiosClient";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { LoginPayload, LoginResponse, LupaPasswordPayload, ResetPasswordPayload, ResetPasswordRespone } from "../interface/interface";
+import {
+  LoginPayload,
+  LoginResponse,
+  LupaPasswordPayload,
+  ProfileResponse,
+  ResetPasswordPayload,
+  ResetPasswordRespone,
+} from "../interface/interface";
 import { useToast } from "@/hook";
+import { ProfileGuruResponse } from "../../(guru)/interface";
+import { ResponseSiswaProfile } from "../../(siswa)";
 
 const useAuthModule = () => {
   const { toastError, toastSuccess, toastWarning } = useToast();
@@ -14,12 +23,72 @@ const useAuthModule = () => {
   const router = useRouter();
   const queryClient = useQueryClient();
 
+  const getProfile = async (): Promise<ProfileResponse> => {
+    return axiosAuthClient.get("/auth/profile").then((res) => res.data);
+  };
+
+  const useProfile = () => {
+    const { data, isLoading, isFetching } = useQuery(
+      ["/auth/profile"],
+      () => getProfile(),
+      {
+        select: (response) => response,
+        staleTime: 1000 * 60 * 60,
+        refetchInterval: 1000 * 60 * 60,
+        refetchOnWindowFocus: false,
+        enabled: !!session === true,
+      }
+    );
+
+    return { data, isFetching, isLoading };
+  };
+
+  const getProfileGuru = async (): Promise<ProfileGuruResponse> => {
+    return axiosAuthClient.get("/guru/profile").then((res) => res.data);
+  };
+
+  const useProfileGuru = () => {
+    const { data, isLoading, isFetching } = useQuery(
+      ["/guru/profile"],
+      () => getProfileGuru(),
+      {
+        select: (response) => response,
+        staleTime: 1000 * 60 * 60,
+        refetchInterval: 1000 * 60 * 60,
+        refetchOnWindowFocus: false,
+        enabled: !!session === true,
+      }
+    );
+
+    return { data, isFetching, isLoading };
+  };
+
+  const getProfileSiswa = async (): Promise<ResponseSiswaProfile> => {
+    return axiosAuthClient.get("/siswa/profile").then((res) => res.data);
+  };
+
+  const useProfileSiswa = () => {
+    const { data, isLoading, isFetching } = useQuery(
+      ["/siswa/profile"],
+      () => getProfileSiswa(),
+      {
+        select: (response) => response,
+        staleTime: 1000 * 60 * 60,
+        refetchInterval: 1000 * 60 * 60,
+        refetchOnWindowFocus: false,
+        enabled: !!session === true,
+      }
+    );
+
+    return { data, isFetching, isLoading };
+  };
+
   const login = async (payload: LoginPayload): Promise<LoginResponse> => {
     return axiosClient.post("/auth/login", payload).then((res) => res.data);
   };
 
   const useLogin = () => {
-    const { mutate, isLoading } = useMutation(  
+    const { mutate, isLoading } = useMutation(
       (payload: LoginPayload) => login(payload),
       {
         onSuccess: async (response) => {
@@ -36,8 +105,9 @@ const useAuthModule = () => {
             refreshToken: response.data.refresh_token,
             redirect: false,
           });
+          console.log(response.data.role);
 
-          return router.push("/");
+          return router.push(`/${response.data.role}/dashboard`);
         },
         onError: (error: any) => {
           if (error.response.status === 422) {
@@ -60,10 +130,9 @@ const useAuthModule = () => {
   };
 
   const extractNameFromEmail = (email: string): string => {
-    const name = email.split('@')[0];
+    const name = email.split("@")[0];
     return name;
   };
-  
 
   const useLupaPassword = () => {
     const { mutate, isLoading } = useMutation(
@@ -86,7 +155,7 @@ const useAuthModule = () => {
     );
 
     return { mutate, isLoading };
-  }; 
+  };
 
   const ResetPassword = async (
     payload: ResetPasswordPayload,
@@ -119,7 +188,14 @@ const useAuthModule = () => {
     return { mutate, isLoading };
   };
 
-  return { useLogin, useLupaPassword, useResetPassword };
+  return {
+    useLogin,
+    useLupaPassword,
+    useProfileGuru,
+    useProfile,
+    useResetPassword,
+    useProfileSiswa,
+  };
 };
 
 export default useAuthModule;

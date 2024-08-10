@@ -12,17 +12,39 @@ import {
   MapPinIcon,
 } from "@heroicons/react/20/solid";
 import { signOut, useSession } from "next-auth/react";
-import { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import hadirpak from "/public/images/HadirPak_putih.png";
 import CopyToClipboardButton from "@/component/CopyToClipboardButton";
 import Footer from "@/component/Footer";
+import useCrudModule from "@/hook/useCRUD";
+import { DetailAbsenKelasIResponse } from "@/app/lib/(absen)";
+import useAuthModule from "@/app/lib/(auth)/lib";
 
-export default function AdminAttendance() {
+const AdminAttendance: React.FC = () => {
   const { data: session, status } = useSession();
   console.log("session:", session);
   const router = useRouter();
-  const textToCopy = 'A78P1';
+
+  const { useList } = useCrudModule();
+  const { useProfileGuru } = useAuthModule();
+  const { data: dataguru } = useProfileGuru();
+
+  const [countdown, setCountdown] = useState({
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
+  });
+
+  console.log(dataguru?.data.jadwal_detail_id);
+
+  const { data } = useList<DetailAbsenKelasIResponse>(
+    `/absen/detail-kelas-absen/${dataguru?.data.jadwal_detail_id}`
+  );
+
+  console.log("data", data);
+
+  const textToCopy: any = data?.data.kode_kelas;
 
   useEffect(() => {
     if (status === "loading") return; // Do nothing while loading
@@ -35,15 +57,18 @@ export default function AdminAttendance() {
     return <div>Loading...</div>; // Optionally render a loading state while checking session
   }
   return (
-    <main className="w-screen h-full">
+    <main className="w-screen h-fit">
       <div className="w-full px-10 py-5 border-b bg-[#023E8A] flex flex-row justify-between items-center">
         <picture>
           <Image src={hadirpak} alt="hadir" />
         </picture>
         <div className="flex gap-10">
-          <a href="/dashboard" className="font-quick text-white text-base">
+          <button
+            onClick={() => router.push("dashboard")}
+            className="font-quick text-white text-base"
+          >
             Dashboard
-          </a>
+          </button>
           <a href="/" className="font-quick text-[#FFBC25] text-base">
             Attendance
           </a>
@@ -82,23 +107,35 @@ export default function AdminAttendance() {
       {/* --------------- navbar ---------------- */}
 
       <div className="px-10 w-full h-screen">
-        <div className="w-full my-10 flex flex-col gap-3">
-          <h1 className="font-quick text-3xl font-medium">
-            Hi, Akbar Rismawan
-          </h1>
-          <div className="flex flex-row gap-2">
-            <picture>
-              <Image src={logo} alt="user" width={35} height={35} />
-            </picture>
-            <h1 className="font-quick text-2xl">
-              SMK Madinatul Quran | Teacher
+        <div className="flex flex-row justify-between w-full">
+          <div className="w-full my-10 flex flex-col gap-3">
+            <h1 className="font-quick text-3xl font-medium">
+              Hi, Akbar Rismawan
             </h1>
+            <div className="flex flex-row gap-2">
+              <picture>
+                <Image src={logo} alt="user" width={35} height={35} />
+              </picture>
+              <h1 className="font-quick text-2xl">
+                SMK Madinatul Quran | Teacher
+              </h1>
+            </div>
+            <div className="flex gap-2">
+              <h1 className="font-quick text-2xl font-medium text-[#2F3E46]">
+                Class code : <span className="font-semibold">{textToCopy}</span>
+              </h1>
+              <CopyToClipboardButton text={textToCopy} />
+            </div>
           </div>
-          <div className="flex gap-2">
-            <h1 className="font-quick text-2xl font-medium text-[#2F3E46]">
-              Class code : <span className="font-semibold">{textToCopy}</span>
+          <div className="w-1/2 gap-2 flex flex-col items-center justify-center">
+            <span className="countdown text-[100px] font-light text-[#495057]">
+              <span style={{ "--value": countdown.hours } as any}></span>:
+              <span style={{ "--value": countdown.minutes } as any}></span>:
+              <span style={{ "--value": countdown.seconds } as any}></span>
+            </span>
+            <h1 className="font-quick font-medium text-3xl text-[#495057] ">
+              left for your absence.
             </h1>
-            <CopyToClipboardButton text={textToCopy}/>
           </div>
         </div>
         {/* ------------ dashboard --------------- */}
@@ -108,7 +145,7 @@ export default function AdminAttendance() {
           <div className="w-full border"></div>
         </div>
 
-        <div className="w-full h-screen flex flex-col bg-gray-100 rounded-md my-5">
+        <div className="w-full h-fit flex flex-col bg-gray-100 rounded-md my-5">
           <div className="my-8 mx-6">
             <div className="flex flex-row justify-between">
               <div className="flex flex-row gap-3">
@@ -220,32 +257,36 @@ export default function AdminAttendance() {
               </Tr>
             </Thead>
             <Tbody>
-              <Td>
-                <span>SMKMQ0001</span>
-              </Td>
-              <Td>
-                <span>Fatin Nayhan</span>
-              </Td>
-              <Td>
-                <span>18 July 2024</span>
-              </Td>
-              <Td>
-                <span>Attendace</span>
-              </Td>
-              <Td>
-                <span>07:30</span>
-              </Td>
-              <Td>
-                <span>15:00</span>
-              </Td>
-              <Td>
-                <div className="flex gap-2 pl-[30rem] py-[59px]">
-                  <MapPinIcon className="text-[#FFBC25] w-5" />
-                  <p className="font-quick font-semibold text-[#212529]">
-                    View Location
-                  </p>
-                </div>
-              </Td>
+              {data?.data?.daftar_siswa.map((absen, index) => (
+                <Tr key={index}>
+                  <Td>
+                    <span>{absen.id || "null"}</span>
+                  </Td>
+                  <Td>
+                    <span>{absen.nama || "null"}</span>
+                  </Td>
+                  <Td>
+                    <span>{"null"}</span>
+                  </Td>
+                  <Td>
+                    <span>{absen.status || "null"}</span>
+                  </Td>
+                  <Td>
+                    <span>{absen.waktu_absen || "null"}</span>
+                  </Td>
+                  <Td>
+                    <span>{"null"}</span>
+                  </Td>
+                  <Td>
+                    <div className="flex gap-2 pl-[30rem] py-[59px]">
+                      <MapPinIcon className="text-[#FFBC25] w-5" />
+                      <p className="font-quick font-semibold text-[#212529]">
+                        View Location
+                      </p>
+                    </div>
+                  </Td>
+                </Tr>
+              ))}
             </Tbody>
           </Table>
           {/* pagination */}
@@ -254,9 +295,18 @@ export default function AdminAttendance() {
           </div>
           {/* pagination */}
         </div>
+        <button
+          // onClick={handleAbsence}
+          // disabled={buttonDisabled}
+          className={`btn w-full h-[80px] mt-6 text-[#212529] text-3xl font-quick font-semibold py-3 btn-outline`}
+        >
+          End Class
+        </button>
       </div>
-
-      <Footer/>
+      <div className="mt-40">
+        <Footer />
+      </div>
     </main>
   );
-}
+};
+export default AdminAttendance;
