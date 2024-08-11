@@ -1,6 +1,5 @@
 "use client";
 import Button from "@/component/Button";
-import InputText from "@/component/InputText";
 import Label from "@/component/Label";
 import Select from "@/component/Select";
 import { useFormik, Form, FormikProvider, FieldArray } from "formik";
@@ -12,6 +11,7 @@ import React from "react";
 import useOptions from "@/hook/useOption";
 import TeacherTable from "../../../dashboard/component/TeacherSchedule";
 import useCrudModule from "@/hook/useCRUD";
+import InputFieldAuth from "@/component/InputTextAuth";
 
 // Define KelasList here
 const KelasList = [
@@ -152,14 +152,14 @@ const CreateJadwal = () => {
                         {values.jam_jadwal.map((jadwal: any, index: any) => (
                           <tr key={index}>
                             <td className="py-2 px-4 border">
-                              <InputText
+                              <InputFieldAuth
                                 value={jadwal.jam_mulai}
                                 placeholder="Jam Mulai"
                                 name={`jam_jadwal[${index}].jam_mulai`}
                                 onChange={handleChange}
                                 onBlur={handleBlur}
                                 error={
-                                  formik.errors.jam_jadwal?.[index]?.jam_mulai
+                                  formik.errors.jam_jadwal?.[index]?.jam_mulai as any
                                 }
                                 touched={
                                   formik.touched.jam_jadwal?.[index]?.jam_mulai
@@ -167,7 +167,7 @@ const CreateJadwal = () => {
                               />
                             </td>
                             <td className="py-2 px-4 border">
-                              <InputText
+                              <InputFieldAuth
                                 value={jadwal.jam_selesai}
                                 placeholder="Jam Selesai"
                                 name={`jam_jadwal[${index}].jam_selesai`}

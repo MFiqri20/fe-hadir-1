@@ -7,7 +7,13 @@ interface DataJadwalHariIniInterface {
   jam_selesai: string;
   kelas: string;
   is_absen: boolean;
+  is_masuk_kelas: boolean;
   is_mulai: boolean;
+}
+
+export interface AbsenKeluarPayload {
+  materi: string | undefined
+  kendala?: string | undefined
 }
 
 interface DetailAbsenKelasInterface

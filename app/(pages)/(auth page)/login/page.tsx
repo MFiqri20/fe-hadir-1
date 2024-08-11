@@ -10,7 +10,7 @@ import { LoginPayload } from "@/app/lib/(auth)/interface/interface";
 import { useFormik, Form, FormikProvider } from "formik";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import InputFieldAuth from "@/component/InputText";
+import InputFieldAuth from "@/component/InputTextAuth";
 
 export const loginSchema = yup.object().shape({
   email: yup

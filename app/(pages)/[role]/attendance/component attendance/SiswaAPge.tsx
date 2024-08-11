@@ -34,48 +34,48 @@ const SiswaAttendance: React.FC = () => {
       "/jadwal/hari-ini-siswa"
     );
 
-  const [countdown, setCountdown] = useState({
-    hours: 0,
-    minutes: 0,
-    seconds: 0,
-  });
+    const [countdown, setCountdown] = useState({
+      hours: 0,
+      minutes: 0,
+      seconds: 0,
+    });
 
-  // Calculate the remaining time until jam_selesai
-  useEffect(() => {
-    if (data?.data) {
-      const { jam_mulai, jam_selesai } = data.data;
+    // Calculate the remaining time until jam_selesai
+    useEffect(() => {
+      if (data?.data) {
+        const { jam_mulai, jam_selesai } = data.data;
 
-      const updateCountdown = () => {
-        const now: any = new Date();
-        const [endHour, endMinute] = jam_selesai.split(":").map(Number);
+        const updateCountdown = () => {
+          const now: any = new Date();
+          const [endHour, endMinute] = jam_selesai.split(":").map(Number);
 
-        const endTime: any = new Date(
-          now.getFullYear(),
-          now.getMonth(),
-          now.getDate(),
-          endHour,
-          endMinute
-        );
+          const endTime: any = new Date(
+            now.getFullYear(),
+            now.getMonth(),
+            now.getDate(),
+            endHour,
+            endMinute
+          );
 
-        const timeDiffEnd = endTime - now;
-        const totalSecondsEnd = Math.floor(timeDiffEnd / 1000);
-        const hoursEnd = Math.floor(totalSecondsEnd / 3600);
-        const minutesEnd = Math.floor((totalSecondsEnd % 3600) / 60);
-        const secondsEnd = totalSecondsEnd % 60;
+          const timeDiffEnd = endTime - now;
+          const totalSecondsEnd = Math.floor(timeDiffEnd / 1000);
+          const hoursEnd = Math.floor(totalSecondsEnd / 3600);
+          const minutesEnd = Math.floor((totalSecondsEnd % 3600) / 60);
+          const secondsEnd = totalSecondsEnd % 60;
 
-        setCountdown({
-          hours: hoursEnd,
-          minutes: minutesEnd,
-          seconds: secondsEnd,
-        });
-      };
+          setCountdown({
+            hours: hoursEnd,
+            minutes: minutesEnd,
+            seconds: secondsEnd,
+          });
+        };
 
-      updateCountdown(); // Initial call
-      const interval = setInterval(updateCountdown, 1000); // Update countdown every second
+        updateCountdown(); // Initial call
+        const interval = setInterval(updateCountdown, 1000); // Update countdown every second
 
-      return () => clearInterval(interval); // Cleanup interval on component unmount
-    }
-  }, [data]);
+        return () => clearInterval(interval); // Cleanup interval on component unmount
+      }
+    }, [data]);
 
   useEffect(() => {
     if (status === "loading") return;

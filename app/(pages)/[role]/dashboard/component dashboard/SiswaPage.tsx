@@ -148,7 +148,7 @@ const SiswaPage = () => {
               button beside.
             </h1>
           </div>
-          <button className="btn btn-outline font-semibold text-[24px] px-16 h-[98px]">
+          <button onClick={() => router.push("attendance")} className="btn btn-outline font-semibold text-[24px] px-16 h-[98px]">
             Enter class
           </button>
         </div>

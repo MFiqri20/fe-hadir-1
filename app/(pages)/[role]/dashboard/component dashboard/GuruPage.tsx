@@ -278,6 +278,7 @@ const AdminPage = () => {
             <h1 className="font-quick font-semibold text-4xl text-[#212529]">
               Today`s Class
             </h1>
+
             <h1 className="font-quick font-medium text-lg text-[#495057] w-[708px] mt-2">
               Today`s class is a{" "}
               <span className="font-bold">{data?.data.mapel} class</span> ,
@@ -287,7 +288,7 @@ const AdminPage = () => {
           </div>
           <button
             onClick={handleMasukKelas}
-            disabled={!data?.data.is_absen}
+            disabled={data?.data.is_masuk_kelas}
             className="btn btn-outline font-semibold text-[24px] px-16 h-[98px]"
           >
             Enter class

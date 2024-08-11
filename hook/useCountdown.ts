@@ -1,4 +1,3 @@
-// hooks/useCountdown.ts
 import { useState, useEffect } from "react";
 
 interface Countdown {
@@ -7,7 +6,7 @@ interface Countdown {
   seconds: number;
 }
 
-const useCountdown = (startTime: string, endTime: string) => {
+const useCountdown = (jamMulai: string | undefined, jamSelesai: string | undefined): Countdown => {
   const [countdown, setCountdown] = useState<Countdown>({
     hours: 0,
     minutes: 0,
@@ -15,53 +14,37 @@ const useCountdown = (startTime: string, endTime: string) => {
   });
 
   useEffect(() => {
-    const updateCountdown = () => {
+    if (!jamMulai || !jamSelesai) return;
+
+    const calculateCountdown = () => {
       const now = new Date();
-      const [startHour, startMinute] = startTime.split(":").map(Number);
-      const [endHour, endMinute] = endTime.split(":").map(Number);
+      const [startHour, startMinute] = jamMulai.split(":").map(Number);
+      const [endHour, endMinute] = jamSelesai.split(":").map(Number);
 
-      const start = new Date(
-        now.getFullYear(),
-        now.getMonth(),
-        now.getDate(),
-        startHour,
-        startMinute
-      );
-      const end = new Date(
-        now.getFullYear(),
-        now.getMonth(),
-        now.getDate(),
-        endHour,
-        endMinute
-      );
+      const startTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), startHour, startMinute);
+      const endTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), endHour, endMinute);
 
-      // Adjust start time if it has passed
-      if (now > start && now < end) {
-        setCountdown({
-          hours: 0,
-          minutes: 0,
-          seconds: 0,
-        });
+      let remainingTime = startTime.getTime() - now.getTime();
+      if (now > startTime) {
+        remainingTime = endTime.getTime() - now.getTime();
+      }
+
+      if (remainingTime <= 0) {
+        setCountdown({ hours: 0, minutes: 0, seconds: 0 });
       } else {
-        const timeDiffStart = start.getTime() - now.getTime();
-        const totalSecondsStart = Math.floor(timeDiffStart / 1000);
-        const hoursStart = Math.floor(totalSecondsStart / 3600);
-        const minutesStart = Math.floor((totalSecondsStart % 3600) / 60);
-        const secondsStart = totalSecondsStart % 60;
+        const hours = Math.floor((remainingTime / (1000 * 60 * 60)) % 24);
+        const minutes = Math.floor((remainingTime / 1000 / 60) % 60);
+        const seconds = Math.floor((remainingTime / 1000) % 60);
 
-        setCountdown({
-          hours: hoursStart,
-          minutes: minutesStart,
-          seconds: secondsStart,
-        });
+        setCountdown({ hours, minutes, seconds });
       }
     };
 
-    updateCountdown(); // Initial call
-    const interval = setInterval(updateCountdown, 1000); // Update countdown every second
+    calculateCountdown();
+    const intervalId = setInterval(calculateCountdown, 1000);
 
-    return () => clearInterval(interval); // Cleanup interval on component unmount
-  }, [startTime, endTime]);
+    return () => clearInterval(intervalId);
+  }, [jamMulai, jamSelesai]);
 
   return countdown;
 };
