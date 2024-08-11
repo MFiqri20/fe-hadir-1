@@ -60,8 +60,9 @@ export const createJadwalSchema = yup.object().shape({
 const CreateJadwal = () => {
   // const { useCreateJadwal } = useJadwalModule();
   // const { mutate, isLoading } = useCreateJadwal();
-  const { useCreate } = useCrudModule()
-  const { mutate, isLoading } = useCreate<CreateJadwalPayload>("/jadwal/create");
+  const { useCreate } = useCrudModule();
+  const { mutate, isLoading } =
+    useCreate<CreateJadwalPayload>("/jadwal/create");
 
   const { optionSubjectCode, optionHari } = useOptions();
   const optionKelas = generateKelasOptions();
@@ -158,12 +159,6 @@ const CreateJadwal = () => {
                                 name={`jam_jadwal[${index}].jam_mulai`}
                                 onChange={handleChange}
                                 onBlur={handleBlur}
-                                error={
-                                  formik.errors.jam_jadwal?.[index]?.jam_mulai as any
-                                }
-                                touched={
-                                  formik.touched.jam_jadwal?.[index]?.jam_mulai
-                                }
                               />
                             </td>
                             <td className="py-2 px-4 border">
@@ -173,13 +168,6 @@ const CreateJadwal = () => {
                                 name={`jam_jadwal[${index}].jam_selesai`}
                                 onChange={handleChange}
                                 onBlur={handleBlur}
-                                error={
-                                  formik.errors.jam_jadwal?.[index]?.jam_selesai
-                                }
-                                touched={
-                                  formik.touched.jam_jadwal?.[index]
-                                    ?.jam_selesai
-                                }
                               />
                             </td>
                             <td className="py-2 px-4 border">
@@ -189,7 +177,8 @@ const CreateJadwal = () => {
                                     // Find existing detail or create a new one
                                     const detailIndex =
                                       jadwal.jam_detail.findIndex(
-                                        (d: any) => d.kelas === kelasOption.value
+                                        (d: any) =>
+                                          d.kelas === kelasOption.value
                                       );
                                     const detail =
                                       detailIndex > -1
@@ -274,10 +263,12 @@ const CreateJadwal = () => {
                                           // Clear subject_code values when is_rest is true
                                           setFieldValue(
                                             `jam_jadwal[${index}].jam_detail`,
-                                            jadwal.jam_detail.map((detail: any) => ({
-                                              ...detail,
-                                              subject_code: "",
-                                            }))
+                                            jadwal.jam_detail.map(
+                                              (detail: any) => ({
+                                                ...detail,
+                                                subject_code: "",
+                                              })
+                                            )
                                           );
                                         }
                                       }}
