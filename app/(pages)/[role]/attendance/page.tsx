@@ -24,6 +24,8 @@ import TableJadwal from "@/component/JadwalTable";
 import notAccess from "/public/images/not-access1.png";
 import AdminAttendance from "./component attendance/GuruPage";
 import SiswaAttendance from "./component attendance/SiswaAPge";
+import Admin from "./component attendance/tes.page";
+import User from "./component attendance/tes.page";
 
 const Dashboard = ({ params }: { params: { role: string } }) => {
   var role = params.role;
@@ -55,6 +57,13 @@ const Dashboard = ({ params }: { params: { role: string } }) => {
     return (
       <main className="w-screen h-full">
         <SiswaAttendance />
+      </main>
+    );
+  }
+  if (role.toLowerCase() === "user") {
+    return (
+      <main className="w-screen h-full">
+        <User />
       </main>
     );
   }

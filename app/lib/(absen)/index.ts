@@ -12,8 +12,8 @@ interface DataJadwalHariIniInterface {
 }
 
 export interface AbsenKeluarPayload {
-  materi: string | undefined
-  kendala?: string | undefined
+  materi: string | undefined;
+  kendala?: string | undefined;
 }
 
 interface DetailAbsenKelasInterface
@@ -24,6 +24,10 @@ interface DetailAbsenKelasInterface
   kode_kelas: string;
   nama_kelas: string;
   nama_mapel: string;
+  jumlah_siswa: number; // Total siswa
+  jumlah_hadir: number; // Jumlah siswa yang hadir
+  jumlah_telat: number; // Jumlah siswa yang telat
+  jumlah_alpha: number;
   daftar_siswa: daftarSiswaInterface[];
 }
 
@@ -31,7 +35,8 @@ interface daftarSiswaInterface {
   id: number;
   nama: string;
   status: string;
-  waktu_absen: string;
+  waktu_masuk: string;
+  waktu_keluar: string | null;
 }
 
 export interface DetailAbsenKelasIResponse extends BaseResponseSucess {

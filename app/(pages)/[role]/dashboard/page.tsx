@@ -26,6 +26,8 @@ import TeacherTable from "./component/TeacherSchedule";
 import AdminPage from "./component dashboard/GuruPage";
 import SiswaPage from "./component dashboard/SiswaPage";
 import notAccess from "/public/images/not-access1.png";
+import User from "./component dashboard/tes";
+import Admin from "./component dashboard/tes";
 
 const Dashboard = ({ params }: { params: { role: string } }) => {
   var role = params.role;
@@ -57,6 +59,13 @@ const Dashboard = ({ params }: { params: { role: string } }) => {
     return (
       <main className="w-screen h-full">
         <SiswaPage />
+      </main>
+    );
+  }
+  if (role.toLowerCase() === "admin") {
+    return (
+      <main className="w-screen h-full">
+        <Admin />
       </main>
     );
   }

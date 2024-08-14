@@ -1,9 +1,8 @@
   import { useSession } from "next-auth/react";
   import useAxiosAuth from "./useAuthAxios";
   import { useQuery } from "@tanstack/react-query";
-  import { Mapel } from "@/app/(mapel)/interface";
-  import { Kelas, KelasListResponse } from "@/app/(kelas)/interface";
-  import { SubjectCode } from "@/app/(guru)/interface";
+import { Mapel } from "@/app/lib/(mapel)/interface";
+import { SubjectCode } from "@/app/lib/(guru)/interface";
 
   // Helper function to generate letters from A to Z
   const generateAlphabetOptions = () => {
@@ -59,7 +58,7 @@
         enabled: !!session === true,
         select: (data) => {
           const options = data?.data?.map((item: any) => ({
-            label: `${item.nama_hari}`,
+            label: `${item.nama_hari} id: ${item.id}`,
             value: item.id,
           }));
           return options;

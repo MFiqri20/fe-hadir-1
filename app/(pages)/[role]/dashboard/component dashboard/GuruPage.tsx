@@ -191,7 +191,7 @@ const AdminPage = () => {
               <a
                 onClick={async () => {
                   await signOut();
-                  router.push("login");
+                  router.push("/login");
                 }}
               >
                 Logout
@@ -288,7 +288,7 @@ const AdminPage = () => {
           </div>
           <button
             onClick={handleMasukKelas}
-            disabled={data?.data.is_masuk_kelas}
+            disabled={!data?.data.is_absen}
             className="btn btn-outline font-semibold text-[24px] px-16 h-[98px]"
           >
             Enter class
