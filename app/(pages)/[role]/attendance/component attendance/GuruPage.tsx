@@ -36,6 +36,7 @@ import CopyInput from "@/component/inputCopy";
 import NavbarResponsive from "@/component/NavbarResponsive";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUserCheck, faUser } from "@fortawesome/free-solid-svg-icons";
+import socket from "@/lib/socket";
 
 export const jrunalSchema = yup.object().shape({
   materi: yup.string().nullable().default("").required("Wajib isi"),
@@ -50,6 +51,12 @@ const AdminAttendance: React.FC = () => {
   const { useList } = useCrudModule();
   const { useProfileGuru } = useAuthModule();
   const { data: dataguru } = useProfileGuru();
+  const [attendanceCounts, setAttendanceCounts] = useState({
+    jumlah_siswa: 0,
+    jumlah_hadir: 0,
+    jumlah_alpha: 0,
+    jumlah_telat: 0,
+  });
 
   console.log(dataguru?.data.jadwal_detail_id);
 
@@ -64,6 +71,63 @@ const AdminAttendance: React.FC = () => {
     `/absen/keluar-kelas/${dataGuru?.data.jamDetailId}`,
     "/jadwal/hari-ini-guru"
   );
+
+  const [absens, setAbsens] = useState<any[]>([]);
+  console.log(absens);
+  useEffect(() => {
+    if (data) {
+      // Tunggu sebentar sebelum mengupdate state dengan data dari backend
+      const timeoutId = setTimeout(() => {
+        // Filter data backend untuk mencegah duplikat dengan data dari WebSocket
+        const filteredData = data.data.daftar_siswa.filter(
+          (item) => !absens.some((absen) => absen.id === item.id)
+        );
+        setAbsens((prevAbsens) => [...prevAbsens, ...filteredData]);
+      }, 1000); // 1 detik penundaan
+      setAttendanceCounts({
+        jumlah_siswa: data.data.jumlah_siswa,
+        jumlah_hadir: data.data.jumlah_hadir,
+        jumlah_alpha: data.data.jumlah_alpha,
+        jumlah_telat: data.data.jumlah_telat,
+      });
+
+      return () => clearTimeout(timeoutId); // Clean up timeout jika komponen di-unmount
+    }
+  }, [data]);
+
+  useEffect(() => {
+    socket.on("absenSiswaUpdated", (absen) => {
+      setAbsens((prevAbsens) => {
+        if (!prevAbsens.some((item) => item.id === absen.id)) {
+          return [absen, ...prevAbsens];
+        }
+        return prevAbsens;
+      });
+
+      setAttendanceCounts((prevCounts) => {
+        const updatedCounts = { ...prevCounts };
+
+        if (absen.status === "Hadir") {
+          updatedCounts.jumlah_hadir += 1;
+        } else if (absen.status === "Alpha") {
+          updatedCounts.jumlah_alpha += 1;
+        } else if (absen.status === "Telat") {
+          updatedCounts.jumlah_telat += 1;
+        }
+
+        return updatedCounts;
+      });
+
+      console.log("dataAbsen", absen);
+    });
+
+    return () => {
+      socket.off("absenSiswaUpdated"); // Clean up listener on component unmount
+    };
+  }, [socket]);
+
+  console.log("dataAbsen", absens);
+
   const formik = useFormik<AbsenKeluarPayload>({
     initialValues: jrunalSchema.getDefault(),
     validationSchema: jrunalSchema,
@@ -279,28 +343,28 @@ const AdminAttendance: React.FC = () => {
                       <p className="text-[16px] md:text-base">Students</p>
                       <UsersIcon className="w-6 md:w-5 md:h-5 text-gray-500" />
                     </div>
-                    <h1 className="font-quick font-medium text-3xl pt-3">22</h1>
+                    <h1 className="font-quick font-medium text-3xl pt-3">{attendanceCounts.jumlah_siswa}</h1>
                   </div>
                   <div className="border border-gray-500 rounded-md px-3 py-3">
                     <div className="flex flex-row justify-between md:gap-10">
                       <p className="text-[16px] md:text-base">Attendace</p>
                       <UsersIcon className="w-6 md:w-5 md:h-5 text-green-400" />
                     </div>
-                    <h1 className="font-quick font-medium text-3xl pt-3">20</h1>
+                    <h1 className="font-quick font-medium text-3xl pt-3">{attendanceCounts.jumlah_hadir}</h1>
                   </div>
                   <div className="border border-gray-500 rounded-md px-3 py-3">
                     <div className="flex flex-row justify-between md:gap-10">
                       <p className="text-[16px] md:text-base">Absent</p>
                       <UsersIcon className="w-6 md:w-5 md:h-5 text-red-500" />
                     </div>
-                    <h1 className="font-quick font-medium text-3xl pt-3">1</h1>
+                    <h1 className="font-quick font-medium text-3xl pt-3">{attendanceCounts.jumlah_alpha}</h1>
                   </div>
                   <div className="border border-gray-500 rounded-md px-3 py-3">
                     <div className="flex flex-row justify-between md:gap-10">
                       <p className="text-[16px] md:text-base">Permission</p>
                       <UsersIcon className="w-6 md:w-5 md:h-5 text-blue-500" />
                     </div>
-                    <h1 className="font-quick font-medium text-3xl pt-3">1</h1>
+                    <h1 className="font-quick font-medium text-3xl pt-3">{attendanceCounts.jumlah_telat}</h1>
                   </div>
                 </div>
               </div>
@@ -382,50 +446,29 @@ const AdminAttendance: React.FC = () => {
             </div>
             <div className="overflow-x-scroll md:overflow-x-auto">
             <Table>
-              <Thead>
-                <Tr>
-                  <Th>NIK</Th>
-                  <Th>Name</Th>
-                  <Th>Date</Th>
-                  <Th>Status</Th>
-                  <Th>Clock In</Th>
-                  <Th>Clock Out</Th>
-                  <Th>Coordinate</Th>
-                </Tr>
-              </Thead>
-              <Tbody>
-                {data?.data?.daftar_siswa.map((absen, index) => (
-                  <Tr key={index}>
-                    <Td>
-                      <span>{absen.id || "null"}</span>
-                    </Td>
-                    <Td>
-                      <span>{absen.nama || "null"}</span>
-                    </Td>
-                    <Td>
-                      <span>{"null"}</span>
-                    </Td>
-                    <Td>
-                      <span>{absen.status || "null"}</span>
-                    </Td>
-                    <Td>
-                      <span>{absen.waktu_absen || "null"}</span>
-                    </Td>
-                    <Td>
-                      <span>{"null"}</span>
-                    </Td>
-                    <Td>
-                      <div className="flex gap-2 pl-[30rem] py-[59px]">
-                        <MapPinIcon className="text-[#FFBC25] w-5" />
-                        <p className="font-quick font-semibold text-[#212529]">
-                          View Location
-                        </p>
-                      </div>
-                    </Td>
+                <Thead>
+                  <Tr>
+                    <Th>ID NISN</Th>
+                    <Th>Name</Th>
+                    <Th>Date</Th>
+                    <Th>Status</Th>
+                    <Th>Clock In</Th>
+                    <Th>Clock Out</Th>
                   </Tr>
-                ))}
-              </Tbody>
-            </Table>
+                </Thead>
+                <Tbody>
+                  {absens.map((item, index) => (
+                    <Tr key={index}>
+                      <Td>{item.id}</Td>
+                      <Td>{item.nama}</Td>
+                      <Td>{item.tanggal}</Td>
+                      <Td>{item.status}</Td>
+                      <Td>{item.waktu_masuk}</Td>
+                      <Td>{item.waktu_keluar || ""}</Td>
+                    </Tr>
+                  ))}
+                </Tbody>
+              </Table>
 
             </div>
             {/* pagination */}

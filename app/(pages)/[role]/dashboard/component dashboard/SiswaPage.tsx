@@ -28,11 +28,14 @@ import {
   DataJadwalHariIniResponse,
 } from "@/app/lib/(absen)";
 import MuridTable from "../component/MuridSchedule";
+import useAuthModule from "@/app/lib/(auth)/lib";
 
 const SiswaPage = () => {
   const [seconds, setSeconds] = useState(59);
   const [minutes, setMinutes] = useState(24);
   const [hours, setHours] = useState(10);
+  const { useProfileSiswa } = useAuthModule();
+  const { data: dataSiswa } = useProfileSiswa();
 
   useEffect(() => {
     const countdown = setInterval(() => {
@@ -120,7 +123,7 @@ const SiswaPage = () => {
         <div className="flex w-full my-10 items-center">
           <div className="flex flex-col gap-3">
             <h1 className="font-quick text-3xl font-medium">
-              Hi, Ramzi Respati
+              Hi, {dataSiswa?.data.nama}
             </h1>
             <div className="flex flex-row gap-2">
               <picture>

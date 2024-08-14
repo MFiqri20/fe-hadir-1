@@ -1,4 +1,3 @@
-/* eslint-disable react/no-unescaped-entities */
 "use client";
 import Image from "next/image";
 import { signOut, useSession } from "next-auth/react";
@@ -13,6 +12,8 @@ import {
   DataJadwalHariIniResponse,
 } from "@/app/lib/(absen)";
 import useAuthModule from "@/app/lib/(auth)/lib";
+import dayjs from "dayjs";
+import socket from "@/lib/socket";
 
 const SiswaAttendance: React.FC = () => {
   const { data: session, status } = useSession();
@@ -33,48 +34,48 @@ const SiswaAttendance: React.FC = () => {
       "/jadwal/hari-ini-siswa"
     );
 
-    const [countdown, setCountdown] = useState({
-      hours: 0,
-      minutes: 0,
-      seconds: 0,
-    });
+  const [countdown, setCountdown] = useState({
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
+  });
 
-    // Calculate the remaining time until jam_selesai
-    useEffect(() => {
-      if (data?.data) {
-        const { jam_mulai, jam_selesai } = data.data;
+  // Calculate the remaining time until jam_selesai
+  useEffect(() => {
+    if (data?.data) {
+      const { jam_mulai, jam_selesai } = data.data;
 
-        const updateCountdown = () => {
-          const now: any = new Date();
-          const [endHour, endMinute] = jam_selesai.split(":").map(Number);
+      const updateCountdown = () => {
+        const now: any = new Date();
+        const [endHour, endMinute] = jam_selesai.split(":").map(Number);
 
-          const endTime: any = new Date(
-            now.getFullYear(),
-            now.getMonth(),
-            now.getDate(),
-            endHour,
-            endMinute
-          );
+        const endTime: any = new Date(
+          now.getFullYear(),
+          now.getMonth(),
+          now.getDate(),
+          endHour,
+          endMinute
+        );
 
-          const timeDiffEnd = endTime - now;
-          const totalSecondsEnd = Math.floor(timeDiffEnd / 1000);
-          const hoursEnd = Math.floor(totalSecondsEnd / 3600);
-          const minutesEnd = Math.floor((totalSecondsEnd % 3600) / 60);
-          const secondsEnd = totalSecondsEnd % 60;
+        const timeDiffEnd = endTime - now;
+        const totalSecondsEnd = Math.floor(timeDiffEnd / 1000);
+        const hoursEnd = Math.floor(totalSecondsEnd / 3600);
+        const minutesEnd = Math.floor((totalSecondsEnd % 3600) / 60);
+        const secondsEnd = totalSecondsEnd % 60;
 
-          setCountdown({
-            hours: hoursEnd,
-            minutes: minutesEnd,
-            seconds: secondsEnd,
-          });
-        };
+        setCountdown({
+          hours: hoursEnd,
+          minutes: minutesEnd,
+          seconds: secondsEnd,
+        });
+      };
 
-        updateCountdown(); // Initial call
-        const interval = setInterval(updateCountdown, 1000); // Update countdown every second
+      updateCountdown(); // Initial call
+      const interval = setInterval(updateCountdown, 1000); // Update countdown every second
 
-        return () => clearInterval(interval); // Cleanup interval on component unmount
-      }
-    }, [data]);
+      return () => clearInterval(interval); // Cleanup interval on component unmount
+    }
+  }, [data]);
 
   useEffect(() => {
     if (status === "loading") return;
@@ -82,19 +83,92 @@ const SiswaAttendance: React.FC = () => {
       router.push("/login");
     }
   }, [session, status, router]);
-
   const handleSubmit = () => {
-    const payload: CreateAbsenSiswaPayload = {
-      kode_class: classCode,
-    };
+    if (data?.data) {
+      const { jam_mulai } = data.data;
+      const now = new Date();
 
-    mutate(payload);
-    setIsAbsen2(true);
+      // Parse the jam_mulai to create a Date object
+      const [startHour, startMinute] = jam_mulai.split(":").map(Number);
+      const startTime = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate(),
+        startHour,
+        startMinute
+      );
+
+      // Calculate the difference in minutes
+      const diffInMinutes = Math.floor(
+        (now.getTime() - startTime.getTime()) / 60000
+      );
+
+      // Determine the attendance status based on the difference
+      let status = "Hadir"; // Default status
+
+      if (diffInMinutes > 15 && diffInMinutes <= 60) {
+        status = "Telat";
+      } else if (diffInMinutes > 60 || now.getTime() > startTime.getTime()) {
+        status = "Alpha";
+      }
+
+      // Count logic
+      let presentCount = 0;
+      let lateCount = 0;
+      let absentCount = 0;
+
+      // Example array for student attendance records, replace with actual data
+      const absens = [
+        // Sample data, replace with actual attendance data
+        { status: "Hadir" },
+        { status: "Telat" },
+        { status: "Alpha" },
+        { status: "Hadir" },
+      ];
+
+      absens.forEach((student) => {
+        if (student.status === "Hadir") presentCount++;
+        if (student.status === "Telat") lateCount++;
+        if (student.status === "Alpha") absentCount++;
+      });
+
+      // Submit the attendance with the determined status and dynamic counts
+      mutate(
+        {
+          kode_class: classCode,
+        },
+        {
+          onSuccess: () => {
+            socket.emit("createAbsenSiswa", {
+              id: dataSiswa?.data?.id,
+              nama: dataSiswa?.data?.nama,
+              status: status, // Use the determined status
+              tanggal: new Date().toLocaleDateString("en-GB", {
+                day: "numeric",
+                month: "long",
+                year: "numeric",
+              }), // Use the current date
+              waktu_masuk: new Date().toLocaleDateString("en-GB", {
+                minute: "2-digit",
+                hour: "2-digit",
+                day: "numeric",
+                month: "long",
+                year: "numeric",
+              }), // Use the current time
+              jumlah_hadir: presentCount,
+              jumlah_telat: lateCount,
+              jumlah_alpha: absentCount,
+            });
+          },
+        }
+      );
+    }
   };
 
   if (status === "loading") {
     return <div>Loading...</div>;
   }
+
 
   return (
     <main className="w-screen h-full">
@@ -178,7 +252,7 @@ const SiswaAttendance: React.FC = () => {
             </div>
             <h1 className="w-[633px] text-2xl mt-2 font-medium my-1">
               Welcome to {data?.data.mapel} Class. You have until{" "}
-              {data?.data.jam_selesai} to finish this class, and don't forget
+              {data?.data.jam_selesai} to finish this class, and don`t forget
               to pray before we begin.
             </h1>
             {/* <button className="btn w-[633px] btn-outline mt-6 hover:bg-[#023E8A] bg-[#D51919] text-white">

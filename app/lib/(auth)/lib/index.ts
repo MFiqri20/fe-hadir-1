@@ -64,12 +64,12 @@ const useAuthModule = () => {
   };
 
   const getProfileSiswa = async (): Promise<ResponseSiswaProfile> => {
-    return axiosAuthClient.get("/siswa/profile").then((res) => res.data);
+    return axiosAuthClient.get("/siswa/profil").then((res) => res.data);
   };
 
   const useProfileSiswa = () => {
     const { data, isLoading, isFetching } = useQuery(
-      ["/siswa/profile"],
+      ["/siswa/profil"],
       () => getProfileSiswa(),
       {
         select: (response) => response,
