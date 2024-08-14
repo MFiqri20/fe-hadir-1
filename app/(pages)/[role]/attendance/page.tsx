@@ -25,7 +25,7 @@ import notAccess from "/public/images/not-access1.png";
 import AdminAttendance from "./component attendance/GuruPage";
 import SiswaAttendance from "./component attendance/SiswaAPge";
 
-const Dashboard = ({ params }: { params: { role: string } }) => {
+const Attendace = ({ params }: { params: { role: string } }) => {
   var role = params.role;
 
   const { data: session, status } = useSession();
@@ -46,7 +46,7 @@ const Dashboard = ({ params }: { params: { role: string } }) => {
 
   if (role === "guru") {
     return (
-      <main className="w-screen h-screen">
+      <main className="w-screen h-full">
         <AdminAttendance />
       </main>
     );
@@ -58,6 +58,7 @@ const Dashboard = ({ params }: { params: { role: string } }) => {
       </main>
     );
   }
+
 
   return (
     <>
@@ -115,4 +116,4 @@ const Dashboard = ({ params }: { params: { role: string } }) => {
   );
 };
 
-export default Dashboard;
+export default Attendace;
