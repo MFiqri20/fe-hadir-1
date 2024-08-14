@@ -60,13 +60,7 @@ const Dashboard = ({ params }: { params: { role: string } }) => {
       </main>
     );
   }
-  if (role.toLowerCase() === "user") {
-    return (
-      <main className="w-screen h-full">
-        <User />
-      </main>
-    );
-  }
+
 
   return (
     <>
