@@ -15,6 +15,7 @@ import {
 } from "@/app/lib/(absen)";
 import { signOut } from "next-auth/react";
 import useAuthModule from "@/app/lib/(auth)/lib";
+import NavbarResponsive from "@/component/NavbarResponsive";
 
 const AdminPage = () => {
   const [countdown, setCountdown] = useState({
@@ -146,12 +147,12 @@ const AdminPage = () => {
     : "Jadwal Belum Mulai";
 
   return (
-    <section>
+    <section className="w-screen h-screen overflow-x-hidden">
       <div className="w-full px-10 py-5 border-b bg-[#023E8A] flex flex-row justify-between items-center">
-        <picture>
+        <picture className="">
           <Image src={hadirpak} alt="hadir" />
         </picture>
-        <div className="flex gap-10">
+        <div className="md:flex hidden gap-10">
           <a href="" className="font-quick text-[#FFBC25] text-base">
             Dashboard
           </a>
@@ -165,7 +166,7 @@ const AdminPage = () => {
             Userdata
           </a>
         </div>
-        <div className="dropdown dropdown-end">
+        <div className="dropdown dropdown-end hidden md:block">
           <div
             tabIndex={0}
             role="button"
@@ -199,37 +200,49 @@ const AdminPage = () => {
             </li>
           </ul>
         </div>
+        <NavbarResponsive
+          judul1="Dashboard"
+          judul2="Attendance"
+          judul3="Userdata"
+          judul4="Notification"
+        />
       </div>
 
       <div className="w-screen px-8">
-        <div className="flex w-full justify-between my-10 items-center">
-          <div className="flex flex-col gap-3">
-            <h1 className="font-quick text-3xl font-medium">
-              Hi, {dataProfil?.data.nama}
-            </h1>
-            <div className="flex flex-row gap-2">
-              <picture>
-                <Image src={logo} alt="user" width={35} height={35} />
-              </picture>
-              <h1 className="font-quick text-3xl">
-                SMK Madinatul Quran | Teacher
+        <div className="flex flex-col md:flex-row w-full justify-between my-10 items-center">
+          <div className="flex w-full justify-between items-center">
+            <div className="flex flex-col gap-3">
+              <h1 className="font-quick text-2xl md:text-3xl font-medium">
+                Hi, {dataProfil?.data.nama}
               </h1>
+              <div className="flex flex-row gap-2">
+                <picture>
+                  <Image src={logo} alt="user" width={35} height={35} />
+                </picture>
+                <h1 className="font-quick text-lg md:text-3xl">
+                  SMK Madinatul Quran | Teacher
+                </h1>
+              </div>
             </div>
+            <picture>
+              <Image src={profile} alt="user" className="md:hidden w-12" />
+            </picture>
           </div>
+          <hr className="w-full border border-[#6C757D] mt-8 md:hidden" />
           {!data?.data.is_absen && (
-            <div className="w-[672px] flex gap-6 items-center">
-              <span className="countdown text-[100px] font-light text-[#495057]">
+            <div className="flex flex-row w-full md:w-auto gap-2 items-center mt-12 md:mt-0">
+              <span className="countdown text-[50px] md:text-[100px] font-light text-[#495057]">
                 <span style={{ "--value": countdown.hours } as any}></span>:
                 <span style={{ "--value": countdown.minutes } as any}></span>:
                 <span style={{ "--value": countdown.seconds } as any}></span>
               </span>
               <div className="flex flex-col">
-                <h1 className="font-quick font-medium text-2xl text-[#495057] ">
-                  left before check-in to {data?.data.mapel}
+                <h1 className="font-quick font-medium text-[19px] md:text-2xl text-[#495057]">
+                  left before check-in to {data?.data.mapel} Class
                 </h1>
-                <h1 className="font-quick font-medium text-2xl text-[#495057] ">
+                {/* <h1 className="font-quick font-medium text-[19px] md:text-2xl text-[#495057]">
                   {data?.data.kelas} Class
-                </h1>
+                </h1> */}
               </div>
             </div>
           )}
@@ -237,7 +250,7 @@ const AdminPage = () => {
         <button
           onClick={handleAbsence}
           disabled={buttonDisabled}
-          className={`btn w-full h-[60px] mt-10 text-[#212529] text-3xl font-quick font-semibold py-3 ${
+          className={`btn w-full h-[60px] md:mt-10 text-[#212529] md:text-3xl text-[16px] font-quick font-semibold py-3 ${
             data?.data.is_absen || !isCountdownOver
               ? "btn-disabled"
               : "btn-outline"
@@ -270,10 +283,17 @@ const AdminPage = () => {
             permission={50}
           />
         </div>
-        <hr className="w-full border border-[#6C757D]" />
+        <div className="w-full flex justify-between items-center">
+          <h1 className="font-quick md:text-xl text-[14px] w-[200px] md:w-[708px]">
+            This will kindly remind you of your attendance each time you clock
+            in, whether it be weekly, monthly, or per semester.
+          </h1>
+          <button className="btn btn-outline md:px-4 px-2 font-semibold font-quick hover:text-white md:text-lg hover:bg-[#023E8A]">Dowload Recap</button>
+        </div>
+        <hr className="w-full border border-[#6C757D] mt-6" />
         {/*  */}
 
-        <div className="flex w-full justify-between mt-6">
+        <div className="md:flex hidden w-full justify-between mt-6">
           <div className="">
             <h1 className="font-quick font-semibold text-4xl text-[#212529]">
               Today`s Class
@@ -289,13 +309,14 @@ const AdminPage = () => {
           <button
             onClick={handleMasukKelas}
             disabled={data?.data.is_masuk_kelas}
-            className="btn btn-outline font-semibold text-[24px] px-16 h-[98px]"
+            className="btn btn-outline font-semibold text-[24px] px-16 h-[98px] hover:bg-[#023E8A]"
           >
             Enter class
           </button>
         </div>
         <TableJadwal />
         <TeacherTable />
+        <button className="btn btn-outline md:hidden w-full my-6 font-quick font-semibold ">Enter Class</button>
       </div>
       <Footer />
     </section>

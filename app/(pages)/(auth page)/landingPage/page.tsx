@@ -45,7 +45,7 @@ const LandingPage = () => {
           Sign Up
         </button>
         {/*  */}
-        <NavbarResponsive/>
+        <NavbarResponsive judul1="Home" judul2="About" judul3="Futures" judul4="Contact"/>
         {/*  */}
       </div>
       {/* --------------------- navbar ------------------ */}

@@ -45,7 +45,7 @@ const TableJadwal: React.FC = () => {
   });
 
   const { handleBlur, values } = formik;
-  const { optionHari, optionKelas, optionJadwalCode } = useOptions();
+  const { optionHari, optionKelas, optionJadwalCode = [] } = useOptions();
 
   const handleDayChange = (dayId: string) => {
     setSelectedDay(dayId);

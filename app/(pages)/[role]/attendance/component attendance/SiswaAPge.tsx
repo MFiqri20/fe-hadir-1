@@ -13,7 +13,6 @@ import {
   DataJadwalHariIniResponse,
 } from "@/app/lib/(absen)";
 import useAuthModule from "@/app/lib/(auth)/lib";
-import dayjs from "dayjs";
 
 const SiswaAttendance: React.FC = () => {
   const { data: session, status } = useSession();

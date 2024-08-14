@@ -27,6 +27,7 @@ import {
   CreateAbsenSiswaPayload,
   DataJadwalHariIniResponse,
 } from "@/app/lib/(absen)";
+import MuridTable from "../component/MuridSchedule";
 
 const SiswaPage = () => {
   const [seconds, setSeconds] = useState(59);
@@ -153,7 +154,8 @@ const SiswaPage = () => {
           </button>
         </div>
 
-        <TableJadwal />
+        {/* <TableJadwal /> */}
+        <MuridTable/>
         {/*  */}
 
         <TeacherTable />

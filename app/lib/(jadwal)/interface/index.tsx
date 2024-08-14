@@ -6,7 +6,7 @@ interface JamDetail {
   nama_kelas: string;
 }
 
-interface JamJadwal {
+export interface JamJadwal {
   id: number;
   jam_mulai: string;
   jam_selesai: string;

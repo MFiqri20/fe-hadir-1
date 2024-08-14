@@ -46,7 +46,7 @@ const Dashboard = ({ params }: { params: { role: string } }) => {
 
   if (role === "guru") {
     return (
-      <main className="w-screen h-full">
+      <main className="w-screen h-screen">
         <AdminAttendance />
       </main>
     );

@@ -40,6 +40,7 @@
     "react-chartjs-2": "^5.2.0",
     "react-currency-input-field": "^3.8.0",
     "react-dom": "^18",
+    "react-fontawesome": "^1.7.1",
     "react-google-button": "^0.7.2",
     "react-select": "^5.8.0",
     "react-spinners": "^0.13.8",
