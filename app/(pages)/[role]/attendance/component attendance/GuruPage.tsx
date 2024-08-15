@@ -126,6 +126,8 @@ const AdminAttendance: React.FC = () => {
     };
   }, [socket]);
 
+
+  
   console.log("dataAbsen", absens);
 
   const formik = useFormik<AbsenKeluarPayload>({
@@ -133,7 +135,11 @@ const AdminAttendance: React.FC = () => {
     validationSchema: jrunalSchema,
     enableReinitialize: true,
     onSubmit: (payload) => {
-      mutate(payload);
+      mutate(payload, {
+        onSuccess: () => {
+          socket.emit("closeAbsen", false);
+        }
+      });
       console.log("pay: ", payload);
       router.push("/guru/dashboard");
     },

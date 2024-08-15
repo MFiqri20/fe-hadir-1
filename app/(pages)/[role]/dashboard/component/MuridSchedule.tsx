@@ -40,6 +40,8 @@ const MuridTable = () => {
     setSelectedSchedule(scheduleId);
   };
 
+  console.log('dasdasdasd', selectedDay);
+
   const formik = useFormik<any>({
     initialValues: initialValues || {},
   });
@@ -106,7 +108,11 @@ const MuridTable = () => {
               Clock
             </th>
             <th colSpan={6} className="border border-black px-4 py-2">
-              Hari
+              {jadwalList?.data
+                .filter((item) => item.hari_id === selectedDay)
+                .map((i, e) => (
+                  <span key={e}>{i.hari_id}</span>
+                ))}
             </th>
           </tr>
           <tr className="bg-[#023E8A] text-white">

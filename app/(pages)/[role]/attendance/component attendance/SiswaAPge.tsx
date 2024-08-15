@@ -40,6 +40,24 @@ const SiswaAttendance: React.FC = () => {
     seconds: 0,
   });
 
+  const [isAbsenSocket, setIsAbsenSocket] = useState<any>(true);
+
+  useEffect(() => {
+    if (data) {
+      setIsAbsenSocket(data.data.is_masuk_kelas);
+    }
+  }, [data]);
+
+  useEffect(() => {
+    socket.on("absenCloseUpdated", (absen) => {
+      setIsAbsenSocket(absen);
+    });
+
+    return () => {
+      socket.off("absenCloseUpdated"); // Clean up listener on component unmount
+    };
+  }, [socket]);
+
   // Calculate the remaining time until jam_selesai
   useEffect(() => {
     if (data?.data) {
@@ -241,7 +259,7 @@ const SiswaAttendance: React.FC = () => {
 
         <hr className="w-full border mt-20" />
 
-        {data?.data.is_absen || isAbsen2 ? (
+        {isAbsenSocket ? (
           <div className="w-full flex flex-col justify-center items-center text-center font-quick mt-32">
             <div className="justify-center flex">
               <span className="countdown text-[100px] font-light text-[#495057]">
