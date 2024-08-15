@@ -36,6 +36,7 @@ import * as yup from "yup";
 import CopyInput from "@/component/inputCopy";
 import { useSocket } from "@/component/SocketProvider";
 import socket from "@/lib/socket";
+import { useQueryClient } from "@tanstack/react-query";
 // import { useSocket } from "@/hook/useSocket";
 // import socket from "@/lib/socket";
 
@@ -48,6 +49,7 @@ const AdminAttendance: React.FC = () => {
   const { data: session, status } = useSession();
   console.log("session:", session);
   const router = useRouter();
+  const queryclient = useQueryClient();
 
   const { useList } = useCrudModule();
   const { useProfileGuru } = useAuthModule();
@@ -119,6 +121,10 @@ const AdminAttendance: React.FC = () => {
         return updatedCounts;
       });
 
+      queryclient.invalidateQueries([
+        `/absen/detail-kelas-absen/${dataguru?.data.jadwal_detail_id}`,
+      ]);
+
       console.log("dataAbsen", absen);
     });
 
@@ -134,7 +140,11 @@ const AdminAttendance: React.FC = () => {
     validationSchema: jrunalSchema,
     enableReinitialize: true,
     onSubmit: (payload) => {
-      mutate(payload);
+      mutate(payload, {
+        onSuccess: () => {
+          socket.emit("closeAbsen", false)
+        }
+      });
       console.log("pay: ", payload);
       router.push("/guru/dashboard");
     },

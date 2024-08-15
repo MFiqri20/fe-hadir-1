@@ -23,6 +23,8 @@ export default function Home() {
   const router = useRouter();
   const textToCopy = 'A78P1';
 
+  
+
   useEffect(() => {
     if (status === "loading") return; // Do nothing while loading
     if (!session) {
