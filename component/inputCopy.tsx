@@ -18,7 +18,7 @@ const CopyInput: FC<CopyInputProps> = ({ value }) => {
 
   return (
     <div
-      className="tooltip tooltip-right mt-1"
+      className="tooltip tooltip-bottom md:tooltip-right mt-1"
       data-tip={copied ? "Copied" : "Copy"}
     >
       <button onClick={handleCopy} className="">

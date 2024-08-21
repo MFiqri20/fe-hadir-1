@@ -1,12 +1,12 @@
 import axios, { AxiosInstance } from "axios";
 
 export const axiosClient: AxiosInstance = axios.create({
-  baseURL: "http://172.16.40.12:2009",
+  baseURL: process.env.BACKEND_URL,
   headers: { "Content-Type": "application/json" },
 });
 
 export const axiosClientRefresh: AxiosInstance = axios.create({
-  baseURL: "http://172.16.40.12:2009",
+  baseURL: process.env.BACKEND_URL,
   headers: { "Content-Type": "application/json" },
 });
 

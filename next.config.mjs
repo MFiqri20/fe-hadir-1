@@ -4,6 +4,9 @@ const nextConfig = {
   experimental: {
     appDir: true,
   },
+  env:{
+      BACKEND_URL: process.env.BACKEND_URL
+  }
 };
 
 export default nextConfig;

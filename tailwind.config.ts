@@ -19,6 +19,7 @@ const config: Config = {
       },
       fontFamily: {
         quick: ["var(--font-quicksand)"],
+        brodile: ['Brodile', 'sans-serif'],
       },
     },
   },

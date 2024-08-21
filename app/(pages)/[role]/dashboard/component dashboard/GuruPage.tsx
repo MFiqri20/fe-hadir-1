@@ -16,6 +16,7 @@ import {
 import { signOut } from "next-auth/react";
 import useAuthModule from "@/app/lib/(auth)/lib";
 import NavbarResponsive from "@/component/NavbarResponsive";
+import { ChevronDownIcon } from "@heroicons/react/20/solid";
 
 const AdminPage = () => {
   const [countdown, setCountdown] = useState({
@@ -28,6 +29,13 @@ const AdminPage = () => {
 
   const { useProfile } = useAuthModule();
   const { data: dataProfil } = useProfile();
+  const [selectedOption, setSelectedOption] = useState("Weekly");
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleSelectChange = (option: any) => {
+    setSelectedOption(option);
+    setIsOpen(false);
+  };
 
   // Fetch schedule data and calculate countdown
   const { data, isFetching } =
@@ -263,7 +271,64 @@ const AdminPage = () => {
           )}
         </button>
         <hr className="w-full border border-[#6C757D] mt-8" />
-        <div className="flex md:flex-row flex-col my-8 justify-evenly">
+        <div className="md:hidden flex flex-col my-8">
+          <div className="flex justify-between mb-4">
+            <div className=""></div>
+            <div className="flex items-center gap-4">
+              <div className="relative">
+                <div
+                  onClick={() => setIsOpen(!isOpen)}
+                  className="flex font-quick font-semibold m-1 text-lg cursor-pointer"
+                >
+                  <ChevronDownIcon className="w-5 mr-2" />
+                  {selectedOption}
+                </div>
+                {isOpen && (
+                  <ul className="absolute top-full left-0 dropdown-content menu bg-base-100 rounded-box z-[1] w-36 p-2 shadow">
+                    {["Weekly", "Monthly", "Semester"].map((option) => (
+                      <li key={option}>
+                        <a
+                          onClick={() => handleSelectChange(option)}
+                          className="block px-4 py-2 hover:bg-gray-200"
+                        >
+                          {option}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {selectedOption === "Weekly" && (
+            <DoughnutComponent
+              title="Weekly"
+              absen={25}
+              attendece={25}
+              permission={50}
+            />
+          )}
+          {selectedOption === "Monthly" && (
+            <DoughnutComponent
+              title="Monthly"
+              absen={25}
+              attendece={25}
+              permission={50}
+            />
+          )}
+          {selectedOption === "Semester" && (
+            <DoughnutComponent
+              title="Semester Basis"
+              absen={25}
+              attendece={25}
+              permission={50}
+            />
+          )}
+        </div>
+
+        {/* Row of DoughnutComponents for larger screens */}
+        <div className="hidden md:flex flex-row my-8 justify-evenly">
           <DoughnutComponent
             title="Weekly"
             absen={25}

@@ -29,6 +29,7 @@ import {
 } from "@/app/lib/(absen)";
 import MuridTable from "../component/MuridSchedule";
 import useAuthModule from "@/app/lib/(auth)/lib";
+import NavbarResponsive from "@/component/NavbarResponsive";
 
 const SiswaPage = () => {
   const [seconds, setSeconds] = useState(59);
@@ -36,6 +37,13 @@ const SiswaPage = () => {
   const [hours, setHours] = useState(10);
   const { useProfileSiswa } = useAuthModule();
   const { data: dataSiswa } = useProfileSiswa();
+  const [selectedOption, setSelectedOption] = useState("Weekly");
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleSelectChange = (option: any) => {
+    setSelectedOption(option);
+    setIsOpen(false);
+  };
 
   useEffect(() => {
     const countdown = setInterval(() => {
@@ -59,31 +67,31 @@ const SiswaPage = () => {
       "/jadwal/hari-ini-siswa"
     );
 
-    const router = useRouter()
+  const router = useRouter();
 
   console.log("data", data);
 
   return (
-    <section>
+    <section className="w-screen h-screen overflow-x-hidden">
       <div className="w-full px-10 py-5 border-b bg-[#023E8A] flex flex-row justify-between items-center">
-        <picture>
+        <picture className="">
           <Image src={hadirpak} alt="hadir" />
         </picture>
-        <div className="flex gap-10">
-          <a href="/murid/dashboard" className="font-quick text-[#FFBC25] text-base">
+        <div className="md:flex hidden gap-10">
+          <a href="" className="font-quick text-[#FFBC25] text-base">
             Dashboard
           </a>
-          <a
-            href={`/murid/attendance`}
+          <button
+            onClick={() => router.push("attendance")}
             className="font-quick text-white text-base"
           >
             Attendance
-          </a>
+          </button>
           <a href="" className="font-quick text-white text-base">
             Userdata
           </a>
         </div>
-        <div className="dropdown dropdown-end">
+        <div className="dropdown dropdown-end hidden md:block">
           <div
             tabIndex={0}
             role="button"
@@ -109,7 +117,7 @@ const SiswaPage = () => {
               <a
                 onClick={async () => {
                   await signOut();
-                  router.push('/login')
+                  router.push("login");
                 }}
               >
                 Logout
@@ -117,54 +125,121 @@ const SiswaPage = () => {
             </li>
           </ul>
         </div>
+        <NavbarResponsive
+          judul1="Dashboard"
+          judul2="Attendance"
+          judul3="Userdata"
+          judul4="Notification"
+        />
       </div>
       {/*  */}
       <div className="w-screen px-8">
-        <div className="flex w-full my-10 items-center">
+        <div className="flex w-full justify-between items-center my-7 md:mt-16 md:my-0 md:mb-12">
           <div className="flex flex-col gap-3">
-            <h1 className="font-quick text-3xl font-medium">
+            <h1 className="font-quick text-2xl md:text-3xl font-medium">
               Hi, {dataSiswa?.data.nama}
             </h1>
             <div className="flex flex-row gap-2">
               <picture>
                 <Image src={logo} alt="user" width={35} height={35} />
               </picture>
-              <h1 className="font-quick text-3xl">
+              <h1 className="font-quick text-lg md:text-3xl">
                 SMK Madinatul Quran | Student
               </h1>
             </div>
           </div>
+          <picture>
+            <Image src={profile} alt="user" className="md:hidden w-12" />
+          </picture>
         </div>
         {/*  */}
         {/*  */}
         <hr className="w-full border border-[#6C757D]" />
         {/*  */}
 
-        <div className="flex w-full justify-between mt-6">
+        <div className="flex flex-col md:flex-row md:w-full justify-between mt-6">
           <div className="">
             <h1 className="font-quick font-semibold text-4xl text-[#212529]">
               Today`s Class
             </h1>
-            <h1 className="font-quick font-medium text-lg text-[#495057] w-[708px] mt-2">
+            <h1 className="font-quick font-medium text-sm md:text-lg text-[#495057] md:w-[708px] my-3 md:my-2">
               Today`s class is a{" "}
-              <span className="font-bold">{data?.data.mapel} class</span> , please enter
-              the class that is already available in the schedule or click
-              button beside.
+              <span className="font-bold">{data?.data.mapel} class</span> ,
+              please enter the class that is already available in the schedule
+              or click button beside.
             </h1>
           </div>
-          <button onClick={() => router.push("attendance")} className="btn btn-outline font-semibold text-[24px] px-16 h-[98px]">
+          <button
+            onClick={() => router.push("attendance")}
+            className="btn btn-outline font-semibold text-[16px] md:text-[24px] px-16 h-[55px] md:h-[98px] font-quick"
+          >
             Enter class
           </button>
         </div>
 
         {/* <TableJadwal /> */}
-        <MuridTable/>
+        <MuridTable />
         {/*  */}
 
         <TeacherTable />
         <hr className="w-full border border-[#6C757D] mt-8" />
         {/*  */}
-        <div className="flex md:flex-row flex-col my-8 justify-evenly">
+        <div className="md:hidden flex flex-col my-8">
+          <div className="flex justify-between mb-4">
+            <div className=""></div>
+            <div className="flex items-center gap-4">
+              <div className="relative">
+                <div
+                  onClick={() => setIsOpen(!isOpen)}
+                  className="flex font-quick font-semibold m-1 text-lg cursor-pointer"
+                >
+                  <ChevronDownIcon className="w-5 mr-2" />
+                  {selectedOption}
+                </div>
+                {isOpen && (
+                  <ul className="absolute top-full left-0 dropdown-content menu bg-base-100 rounded-box z-[1] w-36 p-2 shadow">
+                    {["Weekly", "Monthly", "Semester"].map((option) => (
+                      <li key={option}>
+                        <a
+                          onClick={() => handleSelectChange(option)}
+                          className="block px-4 py-2 hover:bg-gray-200"
+                        >
+                          {option}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {selectedOption === "Weekly" && (
+            <DoughnutComponent
+              title="Weekly"
+              absen={25}
+              attendece={25}
+              permission={50}
+            />
+          )}
+          {selectedOption === "Monthly" && (
+            <DoughnutComponent
+              title="Monthly"
+              absen={25}
+              attendece={25}
+              permission={50}
+            />
+          )}
+          {selectedOption === "Semester" && (
+            <DoughnutComponent
+              title="Semester Basis"
+              absen={25}
+              attendece={25}
+              permission={50}
+            />
+          )}
+        </div>
+        <div className="hidden md:flex md:flex-row flex-col my-8 justify-evenly">
           <DoughnutComponent
             title="Weekly"
             absen={25}

@@ -24,7 +24,7 @@ const SiswaNotif = () => {
             />
           </svg>
 
-          <h1 className="font-medium text-2xl">List Notification</h1>
+          <h1 className="font-medium md:text-2xl text-lg">List Notification</h1>
         </div>
       </Link>
       <div className="flex justify-between items-center bg-[#DEE2E6] px-6 py-4 rounded-t-xl mt-20">

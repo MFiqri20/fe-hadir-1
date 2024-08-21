@@ -20,10 +20,10 @@ const MuridTable = () => {
   );
 
   useEffect(() => {
-    if (selectedDay && Array.isArray(jadwalList)) {
+    if (selectedDay && Array.isArray(jadwalList?.data)) {
       // Filter data berdasarkan hari yang dipilih
-      const filteredData = jadwalList.filter(
-        (j: any) => j.hari.id === selectedDay
+      const filteredData = jadwalList.data.filter(
+        (j) => j.hari_id && j.hari_id.toString() === selectedDay
       );
       setFilteredScheduleData(filteredData || []);
     } else {
@@ -33,14 +33,12 @@ const MuridTable = () => {
 
   const handleDayChange = (dayId: string) => {
     setSelectedDay(dayId);
-    setSelectedSchedule(null); // Reset selected schedule when day changes
+    setSelectedSchedule(null); // Reset jadwal yang dipilih saat hari berubah
   };
 
   const handleScheduleChange = (scheduleId: string) => {
     setSelectedSchedule(scheduleId);
   };
-
-  console.log('dasdasdasd', selectedDay);
 
   const formik = useFormik<any>({
     initialValues: initialValues || {},
@@ -48,23 +46,8 @@ const MuridTable = () => {
   const { handleBlur, values } = formik;
   const { optionHari, optionKelas, optionJadwalCode } = useOptions();
 
-  const scheduleData = [
-    { no: 1, time: "07.30 - 08.00", description: "Tilawah Al Quran" },
-    { no: 2, time: "08:00 - 08:15", description: "English Speech" },
-    {
-      no: 3,
-      time: "08:15 - 09:00",
-      description: ["I1", "", "G1", "", "M2", "C1"],
-    },
-    {
-      no: 4,
-      time: "09:00 - 09:45",
-      description: ["I1", "", "G1", "", "M2", "C1"],
-    },
-  ];
-
   return (
-    <div className="w-full mx-auto mt-8 font-quick text-xl">
+    <div className="w-screen md:w-full overflow-x-auto mx-auto mt-8 font-quick text-xl">
       <div className="flex w-full justify-between mt-12 mb-3">
         <div className="flex flex-row">
           <h1 className="font-quick font-semibold text-2xl text-[#212529]">
@@ -80,14 +63,14 @@ const MuridTable = () => {
             >
               <ChevronDownIcon className="w-5 mr-2" />
               {selectedDay
-                ? optionHari.find((h: any) => h.value === selectedDay)?.label
-                : "Select Day"}
+                ? optionHari.find((h) => h.value === selectedDay)?.label
+                : "Pilih Hari"}
             </div>
             <ul
               tabIndex={0}
               className="dropdown-content menu bg-base-100 rounded-box z-[1] w-36 p-2 shadow"
             >
-              {optionHari?.map((option: any) => (
+              {optionHari?.map((option) => (
                 <li key={option.value}>
                   <a onClick={() => handleDayChange(option.value)}>
                     {option.label}
@@ -105,28 +88,29 @@ const MuridTable = () => {
               No
             </th>
             <th rowSpan={2} className="border border-black px-4 py-2">
-              Clock
+              Jam
             </th>
             <th colSpan={6} className="border border-black px-4 py-2">
               {jadwalList?.data
                 .filter((item) => item.hari_id === selectedDay)
-                .map((i, e) => (
+                .map((i,e) => (
                   <span key={e}>{i.hari_id}</span>
-                ))}
+                ))
+              }
             </th>
           </tr>
           <tr className="bg-[#023E8A] text-white">
             <th className="border border-black px-4 py-2">X RPL</th>
-            <th className="border border-black px-4 py-2">X RPL</th>
-            <th className="border border-black px-4 py-2">X RPL</th>
-            <th className="border border-black px-4 py-2">X RPL</th>
-            <th className="border border-black px-4 py-2">X RPL</th>
-            <th className="border border-black px-4 py-2">X RPL</th>
+            <th className="border border-black px-4 py-2">X TKJ</th>
+            <th className="border border-black px-4 py-2">XI RPL</th>
+            <th className="border border-black px-4 py-2">XI TKJ</th>
+            <th className="border border-black px-4 py-2">XII RPL</th>
+            <th className="border border-black px-4 py-2">XII TKJ</th>
           </tr>
         </thead>
         <FormikProvider value={formik}>
           <tbody className="font-medium">
-            {jadwalList?.data.map((item, index) => (
+            {filteredScheduleData.map((item, index) => (
               <tr key={index}>
                 <td className="border border-black text-center px-4 py-2">
                   {item.id}
@@ -141,23 +125,7 @@ const MuridTable = () => {
                     </div>
                   ))}
                 </td>
-                {/* {Array.isArray(item.description) ? (
-                    item.description.map((desc, descIndex) => (
-                    <td
-                        key={descIndex}
-                        className="border border-black text-center px-4 py-2"
-                    >
-                        {}
-                    </td>
-                    ))
-                ) : (
-                    <td
-                    colSpan={6}
-                    className="border border-black text-center px-4 py-2"
-                    >
-                    {item.description}
-                    </td>
-                )} */}
+                {/* Tambahkan sel lainnya berdasarkan struktur data Anda */}
               </tr>
             ))}
           </tbody>

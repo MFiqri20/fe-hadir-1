@@ -10,7 +10,7 @@ export default function TeacherTable() {
     useList<GuruSubjectListResponse>("/guru/list-subject");
 
   return (
-    <div className="overflow-x-auto my-8">
+    <div className="overflow-x-auto my-8 md:block hidden">
       <table className="min-w-full bg-white font-quick">
         <thead>
           <tr className="bg-[#023E8A] text-white">
