@@ -14,6 +14,8 @@ import {
 import useAuthModule from "@/app/lib/(auth)/lib";
 import dayjs from "dayjs";
 import socket from "@/lib/socket";
+import NavbarResponsive from "@/component/NavbarResponsive";
+import Navbar from "@/component/Navbar";
 
 const SiswaAttendance: React.FC = () => {
   const { data: session, status } = useSession();
@@ -187,36 +189,33 @@ const SiswaAttendance: React.FC = () => {
     return <div>Loading...</div>;
   }
 
-
   return (
     <main className="w-screen h-full">
-      <div className="w-full px-10 py-5 border-b bg-[#023E8A] flex flex-row justify-between items-center">
-        <Image src={hadirpak} alt="hadir" />
-        <div className="flex gap-10">
-          <a
-            href="/murid/dashboard"
-            className="font-quick text-white text-base"
-          >
+      {/* <div className="w-full px-10 py-5 border-b bg-[#023E8A] flex flex-row justify-between items-center">
+        <picture className="">
+          <Image src={hadirpak} alt="hadir" />
+        </picture>
+        <div className="md:flex hidden gap-10">
+          <a href="/guru/dashboard" className="font-quick text-white text-base">
             Dashboard
           </a>
-          <a
-            href="/murid/attendance"
-            className="font-quick text-[#FFBC25] text-base"
-          >
+          <button className="font-quick  text-base text-[#FFBC25]">
             Attendance
-          </a>
-          <a href="#" className="font-quick text-white text-base">
+          </button>
+          <a href="" className="font-quick text-white text-base">
             Userdata
           </a>
         </div>
-        <div className="dropdown dropdown-end">
+        <div className="dropdown dropdown-end hidden md:block">
           <div
             tabIndex={0}
             role="button"
             className="btn btn-ghost btn-circle avatar"
           >
             <div className="rounded-full">
-              <Image src={profile} alt="user" width={80} height={80} />
+              <picture>
+                <Image src={profile} alt="user" width={80} height={80} />
+              </picture>
             </div>
           </div>
           <ul
@@ -230,48 +229,74 @@ const SiswaAttendance: React.FC = () => {
               <a>Settings</a>
             </li>
             <li>
-              <a onClick={() => signOut()}>Logout</a>
+              <a
+                onClick={async () => {
+                  await signOut();
+                  router.push("login");
+                }}
+              >
+                Logout
+              </a>
             </li>
           </ul>
         </div>
-      </div>
+        <NavbarResponsive
+          judul1="Dashboard"
+          judul2="Attendance"
+          judul3="Userdata"
+          judul4="Notification"
+        />
+      </div> */}
+      <Navbar title1="Dashboard" title2="Attendance" title3="Userdata" role="murid" userData="userdata"/>
 
       <div className="px-10 w-full h-screen">
-        <div className="w-full flex justify-between items-center">
+        <div className="flex md:flex-row flex-col md:justify-between w-full items-center">
           <div className="my-10 flex flex-col gap-3">
-            <h1 className="font-quick text-3xl font-medium">
-              Hi, {dataSiswa?.data.nama}
-            </h1>
-            <div className="flex flex-row gap-2">
-              <Image src={logo} alt="user" width={35} height={35} />
-              <h1 className="font-quick text-2xl">
-                SMK Madinatul Quran | Student
-              </h1>
+            <div className="flex w-screen px-8 md:px-0 md:w-full justify-between items-center">
+              <div className="flex flex-col gap-3">
+                <h1 className="font-quick text-2xl md:text-3xl font-medium">
+                  Hi, {dataSiswa?.data.nama}
+                </h1>
+                <div className="flex flex-row gap-2">
+                  <picture>
+                    <Image src={logo} alt="user" width={35} height={35} />
+                  </picture>
+                  <h1 className="font-quick text-lg md:text-3xl">
+                    SMK Madinatul Quran | Student
+                  </h1>
+                </div>
+              </div>
+              <picture>
+                <Image src={profile} alt="user" className="md:hidden w-12" />
+              </picture>
             </div>
+            <hr className="border border-[#212529] mt- md:hidden mx-8 opacity-25" />
           </div>
-          <div className="font-quick text-right">
-            <h1 className="font-medium text-6xl">{data?.data.mapel} Class</h1>
-            <p className="font-medium  text-3xl text-[#495057] mt-1">
-              {data?.data.jam_mulai} - {data?.data.jam_selesai} PM{" "}
-            </p>
+          <div className="w-full md:w-auto md:block flex flex-col items-end">
+            <h1 className="font-quick font-medium md:text-[60px] text-[38px]">
+              Database Class
+            </h1>
+            <h1 className="font-quick font-medium md:text-3xl text-[28px] text-[#495057] text-right">
+              07.30 - 10.00 PM{" "}
+            </h1>
           </div>
         </div>
 
-        <hr className="w-full border mt-20" />
+        <hr className="w-full border border-[#212529] md:mt-20 mt-4 opacity-25" />
 
         {isAbsenSocket ? (
           <div className="w-full flex flex-col justify-center items-center text-center font-quick mt-32">
             <div className="justify-center flex">
-              <span className="countdown text-[100px] font-light text-[#495057]">
+              <span className="countdown md:text-[100px] text-[70px] font-light text-[#495057]">
                 <span style={{ "--value": countdown.hours } as any}></span>:
                 <span style={{ "--value": countdown.minutes } as any}></span>:
                 <span style={{ "--value": countdown.seconds } as any}></span>
               </span>
             </div>
-            <h1 className="w-[633px] text-2xl mt-2 font-medium my-1">
+            <h1 className="md:w-[633px] w-full md:text-2xl text-base mt-2 font-medium my-1">
               Welcome to {data?.data.mapel} Class. You have until{" "}
-              {data?.data.jam_selesai} to finish this class, and don`t forget
-              to pray before we begin.
+              {data?.data.jam_selesai} to finish this class, and don`t forget to
+              pray before we begin.
             </h1>
             {/* <button className="btn w-[633px] btn-outline mt-6 hover:bg-[#023E8A] bg-[#D51919] text-white">
               Absen Out
@@ -279,7 +304,7 @@ const SiswaAttendance: React.FC = () => {
           </div>
         ) : (
           <div className="w-full flex flex-col justify-center items-center text-center font-quick mt-32">
-            <h1 className="w-[760px] font-medium text-4xl">
+            <h1 className="md:w-[760px] w-full font-medium md:text-4xl text-xl">
               Please enter your teacher`s class code in the column below to
               access your class!
             </h1>

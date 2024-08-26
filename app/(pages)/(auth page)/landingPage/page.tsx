@@ -55,8 +55,8 @@ const LandingPage = () => {
           Welcome to the online attendance app <br /> of SMK Madinatul Quran
         </h1>
         <p className="font-quick md:text-3xl text-xl">Simplicity and accuracy in one</p>
-        <button className="bg-[#023E8A] rounded-md py-3 px-7 md:text-2xl text-lg hover:transition duration-150 ease-in-out hover:bg-[#03316b]">
-          Get Started
+        <button className="w-[200px] font-quick font-semibold text-2xl bg-[# h-[50px] my-3 flex items-center border border-white hover:border-none justify-center rounded-xl cursor-pointer relative overflow-hidden transition-all duration-500 ease-in-out shadow-md hover:scale-105 hover:shadow-lg before:absolute before:top-0 before:-left-full before:w-full before:h-full before:bg-gradient-to-r before:from-[#023E8A] before:to-[#0077B6] before:transition-all before:duration-500 before:ease-in-out before:z-[-1] before:rounded-xl hover:before:left-0 text-[#fff]">
+          Get started
         </button>
       </div>
       {/*  */}

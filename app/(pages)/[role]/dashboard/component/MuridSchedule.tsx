@@ -90,13 +90,20 @@ const MuridTable = () => {
             <th rowSpan={2} className="border border-black px-4 py-2">
               Jam
             </th>
+            <th rowSpan={2} className="border border-black px-4 py-2">
+              Senin
+            </th>
+            <th rowSpan={2} className="border border-black px-4 py-2">
+              Senin
+            </th>
+            <th rowSpan={2} className="border border-black px-4 py-2">
+              Senin
+            </th>
+            <th rowSpan={2} className="border border-black px-4 py-2">
+              Senin
+            </th>
             <th colSpan={6} className="border border-black px-4 py-2">
-              {jadwalList?.data
-                .filter((item) => item.hari_id === selectedDay)
-                .map((i,e) => (
-                  <span key={e}>{i.hari_id}</span>
-                ))
-              }
+              Senin
             </th>
           </tr>
           <tr className="bg-[#023E8A] text-white">

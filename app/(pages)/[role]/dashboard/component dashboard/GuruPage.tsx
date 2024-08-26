@@ -17,8 +17,12 @@ import { signOut } from "next-auth/react";
 import useAuthModule from "@/app/lib/(auth)/lib";
 import NavbarResponsive from "@/component/NavbarResponsive";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
+import Navbar from "@/component/Navbar";
 
-const AdminPage = () => {
+interface Role {
+  role: string;
+}
+const AdminPage: React.FC<Role> = ({ role }) => {
   const [countdown, setCountdown] = useState({
     hours: 0,
     minutes: 0,
@@ -156,7 +160,7 @@ const AdminPage = () => {
 
   return (
     <section className="w-screen h-screen overflow-x-hidden">
-      <div className="w-full px-10 py-5 border-b bg-[#023E8A] flex flex-row justify-between items-center">
+      {/* <div className="w-full px-10 py-5 border-b bg-[#023E8A] flex flex-row justify-between items-center">
         <picture className="">
           <Image src={hadirpak} alt="hadir" />
         </picture>
@@ -214,7 +218,8 @@ const AdminPage = () => {
           judul3="Userdata"
           judul4="Notification"
         />
-      </div>
+      </div> */}
+      <Navbar title1="Dashboard" title2="Attendance" title3="Recap" role="guru" userData="recap"/>
 
       <div className="w-screen px-8">
         <div className="flex flex-col md:flex-row w-full justify-between my-10 items-center">

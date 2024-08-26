@@ -99,7 +99,7 @@ const NavbarResponsive: React.FC<ContentNav> = ({
   };
 
   return (
-    <nav className=" py-4 px-4 md:hidden block">
+    <nav className=" py-4 px-4 md:hidden">
       <div className="container mx-auto flex justify-between items-center ">
         <ul className="flex text-white gap-6 items-center cursor-pointer">
           {iconList.map((item, index) => (

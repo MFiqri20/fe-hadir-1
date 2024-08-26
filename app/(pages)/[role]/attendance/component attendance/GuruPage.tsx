@@ -2,6 +2,9 @@
 import Image from "next/image";
 import profile from "/public/images/profile.png";
 import logo from "/public/images/logo.png";
+import hadirpak from "/public/images/HadirPak_putih.png";
+import DisableStudentAccess from "/public/images/Disable Access Student.png";
+import X from "/public/images/x.png";
 import { Table, Th, Thead, Tr, Tbody, Td } from "@/component/Table";
 import {
   AcademicCapIcon,
@@ -14,9 +17,6 @@ import {
 import { signOut, useSession } from "next-auth/react";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import hadirpak from "/public/images/HadirPak_putih.png";
-import DisableStudentAccess from "/public/images/Disable Access Student.png";
-import X from "/public/images/x.png";
 import CopyToClipboardButton from "@/component/CopyToClipboardButton";
 import Footer from "@/component/Footer";
 import useCrudModule from "@/hook/useCRUD";
@@ -37,6 +37,7 @@ import NavbarResponsive from "@/component/NavbarResponsive";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUserCheck, faUser } from "@fortawesome/free-solid-svg-icons";
 import socket from "@/lib/socket";
+import Navbar from "@/component/Navbar";
 
 export const jrunalSchema = yup.object().shape({
   materi: yup.string().nullable().default("").required("Wajib isi"),
@@ -203,7 +204,7 @@ const AdminAttendance: React.FC = () => {
     formik;
   return (
     <main className="w-screen h-fit">
-      <div className="w-full px-10 py-5 border-b bg-[#023E8A] flex flex-row justify-between items-center">
+      {/* <div className="w-full px-10 py-5 border-b bg-[#023E8A] flex flex-row justify-between items-center">
         <picture className="">
           <Image src={hadirpak} alt="hadir" />
         </picture>
@@ -258,7 +259,8 @@ const AdminAttendance: React.FC = () => {
           judul3="Userdata"
           judul4="Notification"
         />
-      </div>
+      </div> */}
+      <Navbar title1="Dashboard" title2="Attendance" title3="Recap" role="guru" userData="recap"/>
 
       {/* --------------- end navbar ---------------- */}
       {!dataGuru?.data.is_masuk_kelas ? (

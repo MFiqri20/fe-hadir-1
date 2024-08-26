@@ -49,7 +49,7 @@ const Dashboard = ({ params }: { params: { role: string } }) => {
   if (role.toLowerCase() === "guru") {
     return (
       <main className="w-screen h-full">
-        <AdminPage />
+        <AdminPage role="guru"/>
       </main>
     );
   }

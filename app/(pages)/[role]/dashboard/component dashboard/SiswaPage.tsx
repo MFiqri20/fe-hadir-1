@@ -30,6 +30,7 @@ import {
 import MuridTable from "../component/MuridSchedule";
 import useAuthModule from "@/app/lib/(auth)/lib";
 import NavbarResponsive from "@/component/NavbarResponsive";
+import Navbar from "@/component/Navbar";
 
 const SiswaPage = () => {
   const [seconds, setSeconds] = useState(59);
@@ -73,7 +74,7 @@ const SiswaPage = () => {
 
   return (
     <section className="w-screen h-screen overflow-x-hidden">
-      <div className="w-full px-10 py-5 border-b bg-[#023E8A] flex flex-row justify-between items-center">
+      {/* <div className="w-full px-10 py-5 border-b bg-[#023E8A] flex flex-row justify-between items-center">
         <picture className="">
           <Image src={hadirpak} alt="hadir" />
         </picture>
@@ -131,7 +132,9 @@ const SiswaPage = () => {
           judul3="Userdata"
           judul4="Notification"
         />
-      </div>
+      </div> */}
+      <Navbar title1="Dashboard" title2="Attendance" title3="Userdata" role="murid" userData="userdata"/>
+
       {/*  */}
       <div className="w-screen px-8">
         <div className="flex w-full justify-between items-center my-7 md:mt-16 md:my-0 md:mb-12">
@@ -185,16 +188,22 @@ const SiswaPage = () => {
         <hr className="w-full border border-[#6C757D] mt-8" />
         {/*  */}
         <div className="md:hidden flex flex-col my-8">
-          <div className="flex justify-between mb-4">
-            <div className=""></div>
-            <div className="flex items-center gap-4">
+          <div className="">
+            <div className="flex items-center justify-between gap-4 w-full">
+              <div className="">
+                <h1 className="font-quick font-semibold text-lg text-[#495057]">
+                  Reports
+                </h1>
+              </div>
               <div className="relative">
-                <div
-                  onClick={() => setIsOpen(!isOpen)}
-                  className="flex font-quick font-semibold m-1 text-lg cursor-pointer"
-                >
-                  <ChevronDownIcon className="w-5 mr-2" />
-                  {selectedOption}
+                <div className="flex justify-between items-center w-full">
+                  <div
+                    onClick={() => setIsOpen(!isOpen)}
+                    className="flex font-quick font-semibold m-1 text-lg cursor-pointer"
+                  >
+                    <ChevronDownIcon className="w-5 mr-2" />
+                    {selectedOption}
+                  </div>
                 </div>
                 {isOpen && (
                   <ul className="absolute top-full left-0 dropdown-content menu bg-base-100 rounded-box z-[1] w-36 p-2 shadow">
@@ -212,7 +221,17 @@ const SiswaPage = () => {
                 )}
               </div>
             </div>
+            <div className="w-full flex justify-between my-9">
+              <h1 className="font-quick font-medium text-xs text-[#495057]">
+                This will kindly remind you of your attendance each time you
+                clock in, whether it be weekly, monthly, or per semester.
+              </h1>
+              <button className="btn btn-outline font-semibold text-[14px]">
+                Download Recap
+              </button>
+            </div>
           </div>
+          <hr className="w-full border border-[#6C757D] md:hidden mb-6" />
 
           {selectedOption === "Weekly" && (
             <DoughnutComponent
@@ -260,7 +279,7 @@ const SiswaPage = () => {
           />
         </div>
         {/*  */}
-        <div className="flex w-full justify-between mb-32">
+        <div className="md:flex hidden w-full justify-between mb-32">
           <h1 className="font-quick font-medium text-lg text-[#495057] w-[708px]">
             This will kindly remind you of your attendance each time you clock
             in, whether it be weekly, monthly, or per semester.
