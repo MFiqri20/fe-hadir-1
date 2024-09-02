@@ -21,7 +21,7 @@ const useAuthModule = () => {
   const axiosAuthClient = useAxiosAuth();
   const { data: session } = useSession();
   const router = useRouter();
-  const queryClient = useQueryClient();
+  // const queryClient = useQueryClient();
 
   const getProfile = async (): Promise<ProfileResponse> => {
     return axiosAuthClient.get("/auth/profile").then((res) => res.data);

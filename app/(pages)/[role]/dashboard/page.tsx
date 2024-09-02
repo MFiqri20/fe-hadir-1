@@ -23,9 +23,13 @@ import { ChartData } from "chart.js";
 import TableJadwal from "@/component/JadwalTable";
 import DoughnutComponent from "./component/DONUTCHART";
 import TeacherTable from "./component/TeacherSchedule";
-import AdminPage from "./component dashboard/GuruPage";
+// import AdminPage from "./component dashboard/AdminPage";
+
 import SiswaPage from "./component dashboard/SiswaPage";
 import notAccess from "/public/images/not-access1.png";
+import GuruPage from "./component dashboard/GuruPage";
+import Admin from "../(admin)/page";
+import AdminLayout from "../(admin)/layout";
 
 const Dashboard = ({ params }: { params: { role: string } }) => {
   var role = params.role;
@@ -49,9 +53,12 @@ const Dashboard = ({ params }: { params: { role: string } }) => {
   if (role.toLowerCase() === "guru") {
     return (
       <main className="w-screen h-full">
-        <AdminPage role="guru"/>
+        <GuruPage role="guru"/>
       </main>
     );
+  }
+  if (role.toLowerCase() === "admin") {
+    router.push('/admin');
   }
   if (role.toLowerCase() === "murid") {
     return (

@@ -22,7 +22,7 @@ import Navbar from "@/component/Navbar";
 interface Role {
   role: string;
 }
-const AdminPage: React.FC<Role> = ({ role }) => {
+const GuruPage: React.FC<Role> = ({ role }) => {
   const [countdown, setCountdown] = useState({
     hours: 0,
     minutes: 0,
@@ -393,4 +393,4 @@ const AdminPage: React.FC<Role> = ({ role }) => {
   );
 };
 
-export default AdminPage;
+export default GuruPage;
