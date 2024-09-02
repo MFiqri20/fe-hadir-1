@@ -64,7 +64,7 @@ const SideBar: React.FC<ContentNav> = ({
     { icon: <LuUsers /> },
     { icon: <RiPieChartLine /> },
     { icon: <SlCalender /> },
-    { icon: <IoSettingsOutline /> },
+    // { icon: <IoSettingsOutline /> },
   ];
 
   // const toggleModal = () => {

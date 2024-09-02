@@ -16,10 +16,10 @@ import InputFieldAuth from "@/component/InputTextAuth";
 // Define KelasList here
 const KelasList = [
   { nama_kelas: "X RPL", kelas: 1 },
-  { nama_kelas: "X TKJ", kelas: 4 },
-  { nama_kelas: "XI RPL", kelas: 2 },
-  { nama_kelas: "XI TKJ", kelas: 5 },
-  { nama_kelas: "XII RPL", kelas: 3 },
+  { nama_kelas: "X TKJ", kelas: 2 },
+  { nama_kelas: "XI RPL", kelas: 3 },
+  { nama_kelas: "XI TKJ", kelas: 4 },
+  { nama_kelas: "XII RPL", kelas: 5 },
   { nama_kelas: "XII TKJ", kelas: 6 },
 ];
 

@@ -118,7 +118,9 @@ const Login = () => {
                     Forgot Password
                   </a>
                 </div>
-                <button type="submit" className="btn btn-outline w-full">
+                <button
+                 disabled={isLoading}
+                 type="submit" className="btn btn-outline w-full">
                   Login
                 </button>
               </div>

@@ -19,7 +19,9 @@ const Admin = ({ params }: { params: { role: string } }) => {
 
   if (role.toLowerCase() === "admin") {
     return (
-        <AdminDashboard/>
+        <div className="w-full h-screen">
+            <AdminDashboard/>
+        </div>
     )
   }
 

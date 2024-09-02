@@ -23,9 +23,9 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
         />
       </div>
       {showModal === true ? (
-        <div className="ml-[182px]">{children}</div>
+        <div className="ml-[182px] w-full">{children}</div>
       ) : (
-        <div className="">{children}</div>
+        <div className="w-full">{children}</div>
       )}
     </div>
   );
