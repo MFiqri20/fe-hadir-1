@@ -1,9 +1,9 @@
   import { useSession } from "next-auth/react";
   import useAxiosAuth from "./useAuthAxios";
   import { useQuery } from "@tanstack/react-query";
-  import { Mapel } from "@/app/(mapel)/interface";
-  import { Kelas, KelasListResponse } from "@/app/(kelas)/interface";
-  import { SubjectCode } from "@/app/(guru)/interface";
+  import { Mapel } from "@/app/lib/(mapel)/interface"; 
+  // import { Kelas, KelasListResponse } from "@/app/(kelas)/interface";
+  import { SubjectCode } from "@/app/lib/(guru)/interface";
 
   // Helper function to generate letters from A to Z
   const generateAlphabetOptions = () => {
@@ -101,6 +101,25 @@
       }
     );
 
+    const getIntitialSchedule = async (): Promise<any> => {
+      return axiosAuthClient.get("/initial-schedule/list").then((res) => res.data);
+    };
+
+    const { data: optionInitialSchedule } = useQuery(
+      ["/initial-schedule/list"],
+      () => getIntitialSchedule(),
+      {
+        enabled: !!session === true,
+        select: (data) => {
+          const options = data?.data?.map((item: any) => ({
+            label: `${item.schedule_name}`,
+            value: item.schedule_name,
+          }));
+          return options;
+        },
+      }
+    );
+
     // Options for days of the week
   
 
@@ -110,7 +129,7 @@
     }));
 
     // Generate options for initial_schedule from A to Z
-    const optionInitialSchedule = generateAlphabetOptions();
+    // const optionInitialSchedule = generateAlphabetOptions();
 
     return {
       optionSubjectCode,

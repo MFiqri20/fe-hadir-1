@@ -41,7 +41,7 @@ const MuridTable = () => {
   };
 
   const formik = useFormik<any>({
-    initialValues: initialValues || {},
+    initialValues: initialValues || {} ,
   });
   const { handleBlur, values } = formik;
   const { optionHari, optionKelas, optionJadwalCode } = useOptions();

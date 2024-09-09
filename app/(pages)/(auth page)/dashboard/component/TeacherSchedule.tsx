@@ -1,5 +1,4 @@
-import { GuruSubjectListResponse } from "@/app/(guru)/interface";
-import useGuruModule from "@/app/(guru)/lib";
+import { GuruSubjectListResponse } from "@/app/lib/(guru)/interface";
 import useCrudModule from "@/hook/useCRUD";
 import React from "react";
 

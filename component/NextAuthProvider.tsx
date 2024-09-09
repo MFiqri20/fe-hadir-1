@@ -13,4 +13,4 @@ const NextAuthProvider: React.FC<NextAuthProps> = ({ children, session }) => {
   return <SessionProvider session={session}>{children}</SessionProvider>;
 };
 
-export default NextAuthProvider;
+export default NextAuthProvider

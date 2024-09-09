@@ -14,8 +14,8 @@ import InputFieldAuth from "@/component/InputText";
 import * as yup from "yup";
 import { Form, FormikProvider, getIn, useFormik } from "formik";
 import { ClipLoader } from "react-spinners";
-import useAuthModule from "@/app/(user)/lib";
-import { ResetPasswordPayload } from "@/app/(user)/interface/interface";
+import useAuthModule from "@/app/lib/(auth)/lib";
+import { ResetPasswordPayload } from "@/app/lib/(auth)/interface/interface";
 
 export const ResetPasswordScehema = yup.object().shape({
   new_password: yup

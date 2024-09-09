@@ -12,12 +12,19 @@ import { LuUsers2 } from "react-icons/lu";
 import { IoMdMore } from "react-icons/io";
 //
 import useAuthModule from "@/app/lib/(auth)/lib";
-import SimpleLineChart from "../../(admin)/components/lineMui";
+// import SimpleLineChart from "../../(admin)/components/lineMui";
 import BasicBars from "../../(admin)/components/barMui";
+import SimpleAreaChart from "../../(admin)/components/lineMui";
 const AdminDashboard = () => {
   const { useProfile } = useAuthModule();
   const { data: dataProfil } = useProfile();
 
+  const data = [
+    { title: "Student", count: 100, Icon: HiOutlineAcademicCap },
+    { title: "Teacher", count: 15, Icon: FaChalkboardTeacher },
+    { title: "Staff", count: 17, Icon: GrUserWorker },
+    { title: "All", count: 132, Icon: LuUsers2 },
+  ];
   return (
     <section className="w-full py-8">
       <div className="flex justify-between items-center mx-6">
@@ -61,52 +68,32 @@ const AdminDashboard = () => {
           summaries.
         </h1>
         {/*  */}
-        <div className="flex w-full items-center justify-evenly mt-[49px]">
-          {/*  */}
-          <div className="bg-[#F8F9FA] shadow-lg rounded-lg p-5 flex items-center space-x-4 max-w-xs">
-            <div className="bg-[#0077B6] rounded-[30px] p-6">
-              <HiOutlineAcademicCap className="text-white text-[50px]" />
+        <div className="flex w-full items-center justify-between mt-[49px] gap-12">
+          {data.map((item, index) => (
+            <div
+              key={index}
+              className="bg-[#F8F9FA] shadow-lg rounded-lg p-5 flex items-center space-x-4 w-1/4"
+            >
+              <div className="bg-[#0077B6] rounded-[30px] p-6">
+                <item.Icon className="text-white text-[50px]" />
+              </div>
+              <div className="ml-5">
+                <h2 className="text-gray-800 text-3xl font-semibold">
+                  {item.title}
+                </h2>
+                <div className="flex flex-row gap-2">
+                  <p className="text-3xl font-semibold">{item.count} </p>
+                  {/* <p className="text-lg mt-1 text-[#495057] text-opacity-70 font-medium mb-2">
+                    person
+                  </p> */}
+                </div>
+              </div>
             </div>
-            <div className="">
-              <h2 className="text-gray-800 text-2xl font-semibold">Student</h2>
-              <p className="text-3xl font-semibold">100</p>
-            </div>
-          </div>
-          {/*  */}
-          <div className="bg-[#F8F9FA] shadow-lg rounded-lg p-5 flex items-center space-x-4 max-w-xs">
-            <div className="bg-[#0077B6] rounded-[30px] p-6">
-              <FaChalkboardTeacher className="text-white text-[50px]" />
-            </div>
-            <div className="">
-              <h2 className="text-gray-800 text-2xl font-semibold">Teacher</h2>
-              <p className="text-3xl font-semibold">15</p>
-            </div>
-          </div>
-          {/*  */}
-          <div className="bg-[#F8F9FA] shadow-lg rounded-lg p-5 flex items-center space-x-4 max-w-xs">
-            <div className="bg-[#0077B6] rounded-[30px] p-6">
-              <GrUserWorker className="text-white text-[50px]" />
-            </div>
-            <div className="">
-              <h2 className="text-gray-800 text-2xl font-semibold">Staff</h2>
-              <p className="text-3xl font-semibold">17</p>
-            </div>
-          </div>
-          {/*  */}
-          <div className="bg-[#F8F9FA] shadow-lg rounded-lg p-5 flex items-center space-x-4 max-w-xs">
-            <div className="bg-[#0077B6] rounded-[30px] p-6">
-              <LuUsers2 className="text-white text-[50px]" />
-            </div>
-            <div className="">
-              <h2 className="text-gray-800 text-2xl font-semibold">All</h2>
-              <p className="text-3xl font-semibold">132</p>
-            </div>
-          </div>
-          {/*  */}
+          ))}
         </div>
         {/*  */}
-        <div className="flex w-full justify-evenly items-center mt-8">
-          <div className="bg-[#F8F9FA] p-4 flex flex-col gap-6 w-[858px] shadow-xl">
+        <div className="flex w-full justify-between items-center gap-12 mt-6">
+          <div className="bg-[#F8F9FA] p-4 flex flex-col w-[78%] shadow-xl gap-6">
             <div className="flex justify-between items-center">
               <div className="">
                 <h1 className="text-2xl font-semibold text-[#212529]">
@@ -117,15 +104,15 @@ const AdminDashboard = () => {
               <IoMdMore className="text-2xl" />
             </div>
             <div className="w-full">
-              <SimpleLineChart />
+              <SimpleAreaChart />
             </div>
           </div>
           {/*  */}
-          <div className="bg-[#F8F9FA] p-4 flex flex-col gap-6 w-[290px] shadow-xl">
+          <div className="bg-[#F8F9FA] py-8 px-4 h-full flex flex-col w-[23.5%] shadow-xl">
             <div className="flex justify-between items-center">
               <div className="">
                 <h1 className="text-lg font-semibold text-[#212529]">
-                Productivity Overview
+                  Productivity Overview
                 </h1>
                 <h1 className="font-medium">Weekly attendance</h1>
               </div>

@@ -291,7 +291,7 @@ const CreateJadwal = () => {
                     </table>
                   </div>
                   <button type="submit" className="btn btn-outline px-10">
-                    Submit
+                    {isLoading ? "Loading..." : "Submit"}
                   </button>
                   <button
                     type="button"

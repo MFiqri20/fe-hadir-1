@@ -7,8 +7,8 @@ import { useFormik, Form, FormikProvider } from "formik";
 import * as yup from "yup";
 import {
   CreateGuruPayload,
-  GuruSubjectDetailResponse,
-  UpdateGuruPayload,
+  // GuruSubjectDetailResponse,
+  // UpdateGuruPayload,
 } from "@/app/lib/(guru)/interface";
 // import useBookModule from "../../../(guru)/lib";
 import Link from "next/link";
@@ -35,17 +35,17 @@ export const createGuruSchema = yup.object().shape({
 
 const UpdateMapel = ({ params }: { params: { id: string } }) => {
   const { useDetail, useUpdate } = useCrudModule();
-  const { data } = useDetail<GuruSubjectDetailResponse>(
+  const { data } = useDetail<any>(
     "/guru/detail",
     params.id
   );
-  const { mutate, isLoading } = useUpdate<UpdateGuruPayload>(
+  const { mutate, isLoading } = useUpdate<any>(
     "/guru/update",
     params.id
   );
   const { optionMapel } = useOptions();
 
-  const onSubmit = async (values: UpdateGuruPayload) => {
+  const onSubmit = async (values: any) => {
     mutate(values, {
       onSuccess: () => {
         resetForm();
@@ -53,7 +53,7 @@ const UpdateMapel = ({ params }: { params: { id: string } }) => {
     });
   };
 
-  const formik = useFormik<UpdateGuruPayload>({
+  const formik = useFormik<any>({
     initialValues: {
       id: data?.id,
       initial_schedule: data?.initial_schedule || "",
