@@ -22,11 +22,15 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
           //   link={/}
         />
       </div>
-      {showModal === true ? (
-        <div className="ml-[182px] w-full">{children}</div>
-      ) : (
-        <div className="w-full">{children}</div>
-      )}
+      <div
+        className={`w-full ${
+          showModal
+            ? "ml-[182px]"
+            : "ml-0 transition-[margin-left] duration-[1500ms]"
+        }`}
+      >
+        {children}
+      </div>
     </div>
   );
 }
