@@ -51,7 +51,7 @@ export default function RootLayout({ children, session }: NextAuthProps) {
     <html lang="en" data-theme="">
       <body className={`${quicksand.variable} overflow-x-hidden`}>
         <NextAuthProvider session={session}>
-          <ReactQuery>{children}</ReactQuery>
+          <ReactQuery >{children}</ReactQuery>
         </NextAuthProvider>
       </body>
     </html>

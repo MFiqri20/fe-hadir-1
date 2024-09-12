@@ -12,7 +12,6 @@ const ReactQuery: React.FC<ReactQueryProps> = ({ children }) => {
   return (
     <QueryClientProvider client={queryClient}>
       {children}
-      <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   );
 };
