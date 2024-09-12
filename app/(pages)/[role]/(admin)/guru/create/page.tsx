@@ -30,7 +30,7 @@ export const createGuruSchema = yup.object().shape({
 
 const CreateMapel = () => {
   const { useCreate } = useCrudModule();
-  const { mutate, isLoading } = useCreate<CreateGuruPayload>("/guru/register");
+  const { mutate, isLoading } = useCreate<CreateGuruPayload>("/guru/register", "/initial-schedule/list");
   const { optionMapel } = useOptions();
 
   const onSubmit = async (values: CreateGuruPayload) => {

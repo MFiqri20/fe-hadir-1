@@ -27,6 +27,10 @@ export interface MapelListResponse {
 }
 
 export interface MapelCreatePayload
-  extends Pick<Mapel, "nama_mapel"  | "status_mapel"> {}
+  extends Pick<Mapel, "nama_mapel" | "status_mapel"> {}
+
+export interface MapelCreateBUlkPAyload {
+  data: MapelCreatePayload[];
+}
 
 //   export interface MapelCreate extends Pick<Mapel, "nama_mapel" | "subject_code" | "status_mapel"> {}

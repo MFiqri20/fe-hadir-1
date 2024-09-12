@@ -102,6 +102,8 @@ const useCrudModule = () => {
     };
   };
 
+  
+
   const useCreate = <T>(url: string, urlInvalidate?: string) => {
     const { mutate, isLoading, data } = useMutation(
       (payload: T) => axiosAuthClient.post(url, payload),

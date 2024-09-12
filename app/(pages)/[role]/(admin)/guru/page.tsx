@@ -1,10 +1,8 @@
 "use client";
 import { Table, Th, Thead, Tr, Tbody, Td } from "@/component/Table";
 import { useRouter } from "next/navigation";
-import useMapelModule from "../../(guru)/lib";
 import Button from "@/component/Button";
-import useGuruModule from "../../(guru)/lib";
-import { GuruSubjectListResponse } from "../../(guru)/interface";
+import { GuruSubjectListResponse } from "@/app/lib/(guru)/interface";
 import { string } from "yup";
 import useCrudModule, { PaginationParams } from "@/hook/useCRUD";
 
