@@ -11,13 +11,18 @@ import {
 import { useRouter } from "next/navigation";
 import { CiUser } from "react-icons/ci";
 import Dropdown from "./dropdown"; // Ensure the correct path to Dropdown
+import { signOut } from "next-auth/react";
 
 const Sidebar = ({
   onHoverChange,
+  setCurrentPath,
 }: {
   onHoverChange: (isHovered: boolean) => void;
+  setCurrentPath: (path: string) => void;
 }) => {
   const [isHovered, setIsHovered] = useState(false);
+  const router = useRouter();
+
   const handleHoverStart = () => {
     setIsHovered(true);
     onHoverChange(true);
@@ -27,6 +32,7 @@ const Sidebar = ({
     setIsHovered(false);
     onHoverChange(false);
   };
+
   const sidebarVariants = {
     hidden: {
       width: "4rem", // Initial width for icons only
@@ -76,24 +82,28 @@ const Sidebar = ({
               icon={<FaHome width={24} height={24} />}
               text="Home"
               isHovered={isHovered}
-              url="/dashboard"
+              url="/admin"
             />
             <SidebarItem
               icon={<FaUser width={24} height={24} />}
               text="Users"
               isHovered={isHovered}
-              url="/dashboard"
+              url="/admin/users"
             />
             <Dropdown
               icon={<FaChartBar width={24} height={24} />}
               iconsDrop={[
                 <CiUser width={24} height={24} key={"student"} />,
-                <CiUser width={24} height={24} key={"Teacher"} />,
-                <CiUser width={24} height={24} key={"student"} />,
+                <CiUser width={24} height={24} key={"teacher"} />,
+                <CiUser width={24} height={24} key={"staff"} />,
               ]}
               title="Recap"
               options={["Student", "Teacher", "Staff"]}
-              urls={["", "", ""]}
+              urls={[
+                "/admin/recap/student",
+                "/admin/recap/teacher",
+                "/admin/recap/staff",
+              ]}
               isCollapsed={!isHovered}
             />
           </div>
@@ -103,38 +113,39 @@ const Sidebar = ({
               icon={<FaChartBar width={24} height={24} />}
               text="Mapel"
               isHovered={isHovered}
-              url="/dashboard"
+              url="/admin/mapel"
             />
             <SidebarItem
               icon={<FaCalendarAlt width={24} height={24} />}
               text="Schedule"
               isHovered={isHovered}
-              url="jadwal"
+              url="/admin/jadwal"
             />
             <SidebarItem
               icon={<FaCalendarAlt width={24} height={24} />}
               text="Class"
               isHovered={isHovered}
-              url="kelas"
+              url="/"
             />
             <SidebarItem
               icon={<FaCalendarAlt width={24} height={24} />}
               text="Teacher"
               isHovered={isHovered}
-              url="kelas"
+              url="/"
             />
             <SidebarItem
               icon={<FaCalendarAlt width={24} height={24} />}
               text="Staf"
               isHovered={isHovered}
-              url="kelas"
+              url="/"
             />
             <SidebarItem
               icon={<FaCalendarAlt width={24} height={24} />}
               text="Student"
               isHovered={isHovered}
-              url="kelas"
+              url="/"
             />
+            {/* Add other SidebarItems here */}
           </div>
           <div className="h-[1px] w-full bg-gray-200 my-4"></div>
         </div>
@@ -143,13 +154,14 @@ const Sidebar = ({
             icon={<FaChartBar width={24} height={24} />}
             text="Logout"
             isHovered={isHovered}
-            url="/dashboard"
+            url=""
+            onClick={async () => await signOut()}
           />
           <SidebarItem
             icon={<FaCalendarAlt width={24} height={24} />}
             text="Profile"
             isHovered={isHovered}
-            url="jadwal"
+            url="/admin/profile"
           />
         </div>
       </div>
@@ -162,20 +174,27 @@ const SidebarItem = ({
   text,
   isHovered,
   url,
+  onClick,
 }: {
   icon: JSX.Element;
   text: string;
   isHovered: boolean;
   url: string;
+  onClick?: () => void;
 }) => {
   const router = useRouter();
 
   return (
-    <motion.a
-      type="button"
-      onClick={() => router.push(url)}
+    <motion.button
+      onClick={() => {
+        if (onClick) {
+          onClick();
+        } else {
+          router.push(url);
+        }
+      }}
       className={`cursor-pointer flex items-center h-8 px-4 py-6 text-lg text-gray-700 hover:bg-gray-200 rounded transition-colors duration-200`}
-      whileHover={{ scale: 1.0, originX: 0 }} // Hover animation
+      whileHover={{ scale: 1.0, originX: 0 }}
     >
       <span className="mr-5">{icon}</span>
       {isHovered && (
@@ -187,7 +206,7 @@ const SidebarItem = ({
           {text}
         </motion.span>
       )}
-    </motion.a>
+    </motion.button>
   );
 };
 
