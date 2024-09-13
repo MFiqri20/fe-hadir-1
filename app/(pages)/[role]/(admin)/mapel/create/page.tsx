@@ -9,11 +9,8 @@ import { MapelCreatePayload } from "@/app/lib/(mapel)/interface";
 import Link from "next/link";
 import { ArrowLongLeftIcon } from "@heroicons/react/20/solid";
 import useCrudModule from "@/hook/useCRUD";
+import { createMapelSchema } from "@/schema";
 
-export const createMapelSchema = yup.object().shape({
-  nama_mapel: yup.string().nullable().default("").required("Wajib isi"),
-  status_mapel: yup.string().nullable().default("").required("Wajib isi"),
-});
 
 const options = [
   {

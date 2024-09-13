@@ -31,7 +31,7 @@ const TableJadwal: React.FC = () => {
           jam_detail: jam.jam_detail.map((d) => ({
             id: d.id,
             subject_code: d.subject_code || "",
-            nama_kelas: d.nama_kelas || "",
+            nama_kelas: d.kelas.nama_kelas || "",
           })),
         })),
       };
@@ -42,6 +42,7 @@ const TableJadwal: React.FC = () => {
 
   const formik = useFormik<any>({
     initialValues: initialValues || {},
+    onSubmit: () => {},
   });
 
   const { handleBlur, values } = formik;

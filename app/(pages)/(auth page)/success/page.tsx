@@ -3,7 +3,6 @@ import success from "/public/images/success.png";
 import Image from "next/image";
 import { ChevronLeftIcon } from "@heroicons/react/20/solid";
 import Link from "next/link";
-import useAuthModule from "@/app/(user)/lib";
 import { useRouter } from "next/navigation";
 
 const Success = ({ params }: { params: { token: any} }) => {

@@ -8,26 +8,7 @@ import useOptions from "@/hook/useOption";
 // import { UpdateJadwalPayload } from "@/app/(jadwal)/interface/update";
 import { JadwalDetailResponses } from "@/app/lib/(jadwal)/interface/detail";
 
-export const updateJadwalSchema = yup.object().shape({
-  hari_id: yup.number().nullable(),
-  jam_jadwal: yup
-    .array()
-    .of(
-      yup.object().shape({
-        id: yup.number().nullable(),
-        jam_mulai: yup.string().nullable(),
-        jam_selesai: yup.string().nullable(),
-        is_rest: yup.boolean().nullable(),
-        jam_detail: yup.array().of(
-          yup.object().shape({
-            id: yup.number().nullable(),
-            subject_code: yup.number().nullable(),
-          })
-        ),
-      })
-    )
-    .nullable(),
-});
+
 
 const TableJadwal: React.FC = () => {
   const [selectedDay, setSelectedDay] = useState<string | null>(null);

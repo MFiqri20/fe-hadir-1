@@ -40,9 +40,10 @@ const MuridTable = () => {
     setSelectedSchedule(scheduleId);
   };
 
-  const formik = useFormik<any>({
-    initialValues: initialValues || {} ,
-  });
+  const formik = useFormik({
+    initialValues: initialValues as any,
+    onSubmit: () => {},
+  })
   const { handleBlur, values } = formik;
   const { optionHari, optionKelas, optionJadwalCode } = useOptions();
 
@@ -63,14 +64,14 @@ const MuridTable = () => {
             >
               <ChevronDownIcon className="w-5 mr-2" />
               {selectedDay
-                ? optionHari.find((h) => h.value === selectedDay)?.label
+                ? optionHari.find((h: any) => h.value === selectedDay)?.label
                 : "Pilih Hari"}
             </div>
             <ul
               tabIndex={0}
               className="dropdown-content menu bg-base-100 rounded-box z-[1] w-36 p-2 shadow"
             >
-              {optionHari?.map((option) => (
+              {optionHari?.map((option: any) => (
                 <li key={option.value}>
                   <a onClick={() => handleDayChange(option.value)}>
                     {option.label}
@@ -123,7 +124,7 @@ const MuridTable = () => {
                   {item.id}
                 </td>
                 <td className="border border-black text-center px-4 py-2">
-                  {item.jam_jadwal.map((jam, e) => (
+                  {item.jam_jadwal.map((jam: any, e: any) => (
                     <div key={e}>
                       {`${jam.jam_mulai.replace(
                         ":",

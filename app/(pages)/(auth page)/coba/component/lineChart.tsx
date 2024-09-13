@@ -60,7 +60,7 @@ const LineChar = () => {
         <div className="w-full h-screen flex flex-col items-center justify-center">
         <h1>Example 1: Line Chart</h1>
         <div className="w-[700px] h-[700px]">
-          <Line data={data} options={options}/>
+          <Line data={data} options={options as any}/>
         </div>
       </div>
      );

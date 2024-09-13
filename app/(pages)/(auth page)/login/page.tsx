@@ -11,21 +11,9 @@ import { useFormik, Form, FormikProvider } from "formik";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import InputFieldAuth from "@/component/InputTextAuth";
+import { loginSchema } from "@/schema";
 
-export const loginSchema = yup.object().shape({
-  email: yup
-    .string()
-    .nullable()
-    .default("")
-    .email("Gunakan format email")
-    .required("Wajib isi"),
-  password: yup
-    .string()
-    .nullable()
-    .default("")
-    .required("Wajib isi")
-    .min(8, "Minimal 8 karakater"),
-});
+
 
 const Login = () => {
   const { data: session } = useSession();

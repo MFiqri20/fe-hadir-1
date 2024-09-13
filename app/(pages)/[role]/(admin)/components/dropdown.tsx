@@ -53,11 +53,21 @@ const Dropdown: React.FC<DropdownProps> = ({
             <div className="flex flex-row w-full justify-between items-center">
               <div className="flex flex-row items-center">
                 <span className="mr-5">{icon}</span>
-                <span>{title}</span>
+                <motion.span
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.3, ease: "easeInOut" }}
+                >
+                  {title}
+                </motion.span>
               </div>
-              <span className="">
+              <motion.span
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.3, ease: "easeInOut" }}
+              >
                 {isOpen ? <FaCaretUp /> : <FaCaretDown />}
-              </span>
+              </motion.span>
             </div>
           </motion.div>
         )}
@@ -65,9 +75,9 @@ const Dropdown: React.FC<DropdownProps> = ({
 
       {!isCollapsed && (
         <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: isOpen ? 1 : 0, y: isOpen ? 0 : -10 }}
-          transition={{ duration: 0.2 }}
+          initial={{ opacity: 0, y: -10, x: -20 }}
+          animate={{ opacity: isOpen ? 1 : 0, y: isOpen ? 0 : -10, x: 0 }}
+          transition={{ duration: 0.3, ease: "easeInOut" }}
           className={clsx("w-full bg-white", {
             block: isOpen,
             hidden: !isOpen,

@@ -10,11 +10,23 @@ import {
 } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import { CiUser } from "react-icons/ci";
-import Dropdown from "./dropdown"; // Make sure the path to Dropdown is correct
+import Dropdown from "./dropdown"; // Ensure the correct path to Dropdown
 
-const Sidebar = () => {
+const Sidebar = ({
+  onHoverChange,
+}: {
+  onHoverChange: (isHovered: boolean) => void;
+}) => {
   const [isHovered, setIsHovered] = useState(false);
+  const handleHoverStart = () => {
+    setIsHovered(true);
+    onHoverChange(true);
+  };
 
+  const handleHoverEnd = () => {
+    setIsHovered(false);
+    onHoverChange(false);
+  };
   const sidebarVariants = {
     hidden: {
       width: "4rem", // Initial width for icons only
@@ -36,17 +48,26 @@ const Sidebar = () => {
 
   return (
     <motion.div
-      className="bg-white shadow-lg h-screen py-5 px-2 flex flex-col items-start border-r border-gray-200"
+      className="bg-white shadow-lg sticky h-screen py-5 px-2 flex flex-col items-start border-r border-gray-200"
       variants={sidebarVariants}
       initial="hidden" // Set initial state
       animate={isHovered ? "visible" : "hidden"}
-      onHoverStart={() => setIsHovered(true)}
-      onHoverEnd={() => setIsHovered(false)}
+      onHoverStart={handleHoverStart}
+      onHoverEnd={handleHoverEnd}
     >
       <div
-        className={`text-2xl px-4 font-bold mb-8 flex items-center justify-center`}
+        className={`text-2xl px-4 font-bold mb-8 flex items-center justify-center transition-colors duration-200`}
       >
-        {!isHovered ? <span>H</span> : <span>HadirPak</span>}
+        <span>H</span>
+        {isHovered && (
+          <motion.span
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
+          >
+            adirPak
+          </motion.span>
+        )}
       </div>
       <div className="flex flex-col w-full h-full justify-between">
         <div className="w-full">
@@ -120,13 +141,13 @@ const Sidebar = () => {
         <div className="w-full flex flex-col space-y-3">
           <SidebarItem
             icon={<FaChartBar width={24} height={24} />}
-            text="Mapel"
+            text="Logout"
             isHovered={isHovered}
             url="/dashboard"
           />
           <SidebarItem
             icon={<FaCalendarAlt width={24} height={24} />}
-            text="Schedule"
+            text="Profile"
             isHovered={isHovered}
             url="jadwal"
           />
@@ -157,7 +178,15 @@ const SidebarItem = ({
       whileHover={{ scale: 1.0, originX: 0 }} // Hover animation
     >
       <span className="mr-5">{icon}</span>
-      {isHovered && <span>{text}</span>}
+      {isHovered && (
+        <motion.span
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.3, ease: "easeInOut" }}
+        >
+          {text}
+        </motion.span>
+      )}
     </motion.a>
   );
 };

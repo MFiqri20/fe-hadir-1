@@ -16,15 +16,8 @@ import { Form, FormikProvider, getIn, useFormik } from "formik";
 import { ClipLoader } from "react-spinners";
 import useAuthModule from "@/app/lib/(auth)/lib";
 import { LupaPasswordPayload } from "@/app/lib/(auth)/interface/interface";
+import { LupaPasswordSchema } from "@/schema";
 
-export const LupaPasswordScehema = yup.object().shape({
-  email: yup
-    .string()
-    .nullable()
-    .default("")
-    .email("Gunakan format email")
-    .required("Email wajib di isi"),
-});
 
 const Forgot = () => {
   const [passwordType, setPasswordType] = useState("password");
@@ -37,8 +30,10 @@ const Forgot = () => {
   const { useLupaPassword } = useAuthModule();
   const { mutate, isLoading } = useLupaPassword();
   const formik = useFormik<LupaPasswordPayload>({
-    initialValues: LupaPasswordScehema.getDefault(),
-    validationSchema: LupaPasswordScehema,
+    initialValues: {
+      email: "",
+    },
+    validationSchema: LupaPasswordSchema, // Update dengan nama yang benar
     enableReinitialize: true,
     onSubmit: (payload) => {
       mutate(payload);
@@ -47,6 +42,7 @@ const Forgot = () => {
 
   const { handleChange, handleSubmit, handleBlur, values, errors, touched } =
     formik;
+
 
   return (
     <section className="w-screen h-screen flex flex-row">

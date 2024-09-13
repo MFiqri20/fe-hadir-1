@@ -16,22 +16,9 @@ import { Form, FormikProvider, getIn, useFormik } from "formik";
 import { ClipLoader } from "react-spinners";
 import useAuthModule from "@/app/lib/(auth)/lib";
 import { ResetPasswordPayload } from "@/app/lib/(auth)/interface/interface";
+import { ResetPasswordScehema } from "@/schema";
 
-export const ResetPasswordScehema = yup.object().shape({
-  new_password: yup
-    .string()
-    .nullable()
-    .default("")
-    .required("Wajib isi")
-    .min(8, "Minimal 8 karakater"),
 
-  confirm_password: yup
-    .string()
-    .nullable()
-    .default("")
-    .required("Wajib isi")
-    .min(8, "Minimal 8 karakater"),
-});
 
 const ResetPassword = ({ params }: { params: { id: number; token: any } }) => {
   const [passwordType, setPasswordType] = useState("password");

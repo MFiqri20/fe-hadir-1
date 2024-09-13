@@ -12,21 +12,9 @@ import { ArrowLongLeftIcon } from "@heroicons/react/20/solid";
 import useOptions from "@/hook/useOption";
 import Select from "@/component/Select";
 import useCrudModule from "@/hook/useCRUD";
+import { createGuruSchema } from "@/schema";
 
-export const createGuruSchema = yup.object().shape({
-  nama: yup.string().required("Nama wajib diisi"),
-  initial_schedule: yup.string().required("Intial Schedule wajib diisi"),
-  email: yup.string().email("Email tidak valid").required("Email wajib diisi"),
-  password: yup
-    .string()
-    .min(8, "Password harus terdiri dari minimal 8 karakter")
-    .required("Password wajib diisi"),
-  mapel: yup
-    .array()
-    .of(yup.number().required("Mapel ID wajib diisi"))
-    .min(1, "Minimal pilih satu mapel")
-    .required("Mapel wajib diisi"),
-});
+
 
 const CreateMapel = () => {
   const { useCreate } = useCrudModule();

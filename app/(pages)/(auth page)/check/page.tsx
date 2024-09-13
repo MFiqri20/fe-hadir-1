@@ -3,7 +3,7 @@ import check from "/public/images/check.png";
 import Image from "next/image";
 import { ChevronLeftIcon } from "@heroicons/react/20/solid";
 import Link from "next/link";
-import useAuthModule from "@/app/(user)/lib";
+// import useAuthModule from "@/app/(user)/lib";
 
 const Check = ({ params }: { params: { token: any; nama: any } }) => {
   // const { useProfileCheck } = useAuthModule();

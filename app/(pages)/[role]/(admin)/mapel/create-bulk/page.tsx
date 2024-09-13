@@ -7,18 +7,9 @@ import * as yup from "yup";
 import useCrudModule from "@/hook/useCRUD";
 import { MapelCreateBUlkPAyload } from "@/app/lib/(mapel)/interface";
 import Select from "@/component/Select";
+import { createBulkMapelSchema } from "@/schema";
 
-const createBulkMapelSchema = yup.object().shape({
-  data: yup.array().of(
-    yup.object().shape({
-      nama_mapel: yup.string().required("Nama mapel wajib diisi").default(""),
-      status_mapel: yup
-        .string()
-        .required("Status mapel wajib diisi")
-        .default(""),
-    })
-  ).required('Data mapel wajib diisi'),
-});
+
 
 const CreateBulkMapel = () => {
   const { useCreateBulk } = useCrudModule();

@@ -17,21 +17,9 @@ import useOptions from "@/hook/useOption";
 import Select from "@/component/Select";
 import useCrudModule from "@/hook/useCRUD";
 import { useEffect } from "react";
+import { updateGuruSchema } from "@/schema";
 
-export const createGuruSchema = yup.object().shape({
-  nama: yup.string().optional(),
-  initial_schedule: yup.string().optional(),
-  email: yup.string().email("Email tidak valid").optional(),
-  password: yup
-    .string()
-    .min(8, "Password harus terdiri dari minimal 8 karakter")
-    .optional(),
-  mapel: yup
-    .array()
-    .of(yup.number().optional())
-    .min(1, "Minimal pilih satu mapel")
-    .optional(),
-});
+
 
 const UpdateMapel = ({ params }: { params: { id: string } }) => {
   const { useDetail, useUpdate } = useCrudModule();
@@ -59,9 +47,9 @@ const UpdateMapel = ({ params }: { params: { id: string } }) => {
       initial_schedule: data?.initial_schedule || "",
       nama: data?.nama || "",
       email: data?.email || "",
-      mapel: data?.mapel.map((i) => i.id) || [],
+      mapel: data?.mapel.map((i: any) => i.id) || [],
     },
-    validationSchema: createGuruSchema,
+    validationSchema: updateGuruSchema,
     enableReinitialize: true,
     onSubmit: onSubmit,
   });
@@ -79,7 +67,7 @@ const UpdateMapel = ({ params }: { params: { id: string } }) => {
   // Setel nilai default setelah data dimuat
   useEffect(() => {
     if (data && data.mapel) {
-      const defaultMapelIds = data.mapel.map((i) => i.id);
+      const defaultMapelIds = data.mapel.map((i: any) => i.id);
       setFieldValue('mapel', defaultMapelIds);
     }
   }, [data, setFieldValue]);
@@ -130,7 +118,7 @@ const UpdateMapel = ({ params }: { params: { id: string } }) => {
                 onChange={handleChange}
                 onBlur={handleBlur}
                 error={formik.errors.nama}
-                touched={formik.touched.nama}
+                // touched={formik.touched.nama}
               />
             </section>
 
@@ -143,7 +131,7 @@ const UpdateMapel = ({ params }: { params: { id: string } }) => {
                 onChange={handleChange}
                 onBlur={handleBlur}
                 error={formik.errors.email}
-                touched={formik.touched.email}
+                // touched={formik.touched.email}
               />
             </section>
 
@@ -159,10 +147,10 @@ const UpdateMapel = ({ params }: { params: { id: string } }) => {
                   ) || []
                 }
                 onChange={(selectedOptions) => {
-                  setFieldValue("mapel", selectedOptions.map(option => option.value));
+                  setFieldValue("mapel", selectedOptions.map((option: any) => option.value));
                 }}
-                error={formik.errors.mapel}
-                touched={formik.touched.mapel}
+                // error={formik.errors.mapel}
+                // touched={formik.touched.mapel}
               />
             </section>
 

@@ -12,6 +12,7 @@ import useOptions from "@/hook/useOption";
 import TeacherTable from "../../../dashboard/component/TeacherSchedule";
 import useCrudModule from "@/hook/useCRUD";
 import InputFieldAuth from "@/component/InputTextAuth";
+import { createJadwalSchema } from "@/schema";
 
 // Define KelasList here
 const KelasList = [
@@ -37,25 +38,7 @@ const generateKelasMap = () => {
   }, {} as Record<string, number>);
 };
 
-export const createJadwalSchema = yup.object().shape({
-  hari_id: yup.number().nullable().default(0).required("Wajib isi"),
-  jam_jadwal: yup
-    .array()
-    .of(
-      yup.object().shape({
-        jam_mulai: yup.string().nullable().default("").required("Wajib isi"),
-        jam_selesai: yup.string().nullable().default("").required("Wajib isi"),
-        is_rest: yup.boolean().required("Wajib isi"),
-        jam_detail: yup.array().of(
-          yup.object().shape({
-            subject_code: yup.number().required("Wajib isi"),
-            kelas: yup.number().required("Wajib isi"),
-          })
-        ),
-      })
-    )
-    .required("Wajib isi"),
-});
+
 
 const CreateJadwal = () => {
   // const { useCreateJadwal } = useJadwalModule();
