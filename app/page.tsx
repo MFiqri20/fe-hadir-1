@@ -33,6 +33,7 @@ export default function Home() {
   if (status === "loading") {
     return <div>Loading...</div>; // Optionally render a loading state while checking session
   }
+  
   return (
     <main className="w-screen h-full">
       <div className="w-full px-10 py-5 border-b bg-[#023E8A] flex flex-row justify-between items-center">

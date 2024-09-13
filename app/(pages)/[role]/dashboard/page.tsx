@@ -12,54 +12,49 @@ import {
   MapPinIcon,
 } from "@heroicons/react/20/solid";
 import { signOut, useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import hadirpak from "/public/images/HadirPak_putih.png";
 import DoughnutChart from "@/component/DoughnutChart";
 import React from "react";
 import Footer from "@/component/Footer";
-import { Chart, ChartOptions, LegendItem } from "chart.js";
-import { ChartData } from "chart.js";
 import TableJadwal from "@/component/JadwalTable";
 import DoughnutComponent from "./component/DONUTCHART";
 import TeacherTable from "./component/TeacherSchedule";
-// import AdminPage from "./component dashboard/AdminPage";
-
 import SiswaPage from "./component dashboard/SiswaPage";
 import notAccess from "/public/images/not-access1.png";
 import GuruPage from "./component dashboard/GuruPage";
-import Admin from "../(admin)/page";
-import AdminLayout from "../(admin)/layout";
 
 const Dashboard = ({ params }: { params: { role: string } }) => {
-  var role = params.role;
-
+  const role = params.role;
   const { data: session, status } = useSession();
-  console.log("session:", session);
   const router = useRouter();
-  const textToCopy = "A78P1";
 
   useEffect(() => {
     if (status === "loading") return; // Do nothing while loading
-    if (!session) {
+    if (!session && status !== "unauthenticated") {
       router.push("/login"); // Redirect to login if no session
     }
   }, [session, status, router]);
 
+  // Render loading state while checking session
   if (status === "loading") {
-    return <div>Loading...</div>; // Optionally render a loading state while checking session
+    return <div>Loading...</div>;
   }
 
+  // Check for the role and render the appropriate page
   if (role.toLowerCase() === "guru") {
     return (
       <main className="w-screen h-full">
-        <GuruPage role="guru"/>
+        <GuruPage role="guru" />
       </main>
     );
   }
+
   if (role.toLowerCase() === "admin") {
-    router.push('/admin');
+    router.push("/admin");
   }
+
   if (role.toLowerCase() === "murid") {
     return (
       <main className="w-screen h-full">
@@ -68,6 +63,10 @@ const Dashboard = ({ params }: { params: { role: string } }) => {
     );
   }
 
+  return <AccessDeniedPage />;
+};
+
+export const AccessDeniedPage = () => {
   return (
     <>
       <main className="w-screen h-full flex flex-col items-center justify-center">
