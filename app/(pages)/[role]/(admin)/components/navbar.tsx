@@ -19,7 +19,7 @@ const NavBar = ({ currentPath }: { currentPath: string }) => {
             <>
               /
               <Link href={currentPath} className="text-blue-500">
-                {currentPath.replace("/", " ")}
+                { currentPath.replace("/", " ")}
               </Link>
             </>
           )}
