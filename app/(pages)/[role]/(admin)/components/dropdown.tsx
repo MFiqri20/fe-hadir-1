@@ -40,7 +40,7 @@ const Dropdown: React.FC<DropdownProps> = ({
       <button
         type="button"
         onClick={toggleDropdown}
-        className="w-full cursor-pointer flex items-center h-8 px-4 py-6 text-lg text-gray-700 hover:bg-gray-200 rounded transition-colors duration-200"
+        className="w-full cursor-pointer flex items-center h-8 px-4 py-6 text-lg text-gray-700 hover:bg-gray-200 rounded transition-colors duration-150"
         id="options-menu"
       >
         {isCollapsed ? (
@@ -56,7 +56,7 @@ const Dropdown: React.FC<DropdownProps> = ({
                 <motion.span
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.3, ease: "easeInOut" }}
+                  transition={{ duration: 0.2, ease: "easeInOut" }}
                 >
                   {title}
                 </motion.span>
@@ -64,7 +64,7 @@ const Dropdown: React.FC<DropdownProps> = ({
               <motion.span
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.3, ease: "easeInOut" }}
+                transition={{ duration: 0.2, ease: "easeInOut" }}
               >
                 {isOpen ? <FaCaretUp /> : <FaCaretDown />}
               </motion.span>
@@ -77,7 +77,7 @@ const Dropdown: React.FC<DropdownProps> = ({
         <motion.div
           initial={{ opacity: 0, y: -10, x: -20 }}
           animate={{ opacity: isOpen ? 1 : 0, y: isOpen ? 0 : -10, x: 0 }}
-          transition={{ duration: 0.3, ease: "easeInOut" }}
+          transition={{ duration: 0.2, ease: "easeInOut" }}
           className={clsx("w-full bg-white", {
             block: isOpen,
             hidden: !isOpen,
@@ -90,7 +90,7 @@ const Dropdown: React.FC<DropdownProps> = ({
                   key={index}
                   href="#"
                   onClick={() => handleOptionClick(index)}
-                  className={`cursor-pointer w-full flex items-center h-8 px-4 py-6 text-lg text-gray-700 hover:bg-gray-200 rounded transition-colors duration-200`}
+                  className={`cursor-pointer w-full flex items-center h-8 px-4 py-6 text-lg text-gray-700 hover:bg-gray-200 rounded transition-colors duration-150`}
                 >
                   <span className="mr-5">{iconsDrop[index]}</span>
                   {option}

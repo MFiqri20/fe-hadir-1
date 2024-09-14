@@ -19,7 +19,8 @@ const NavBar = ({ currentPath }: { currentPath: string }) => {
 
       return (
         <span key={index} className="flex items-center">
-          <span className="mx-2">/</span>
+          {/* Set the color of '/' to gray */}
+          <span className="mx-1 mr-2 text-xl text-gray-400 font-light">/</span>
           <Link href={cumulativePath} className={isActive(cumulativePath) ? "text-blue-500" : ""}>
             {segment}
           </Link>
@@ -30,7 +31,7 @@ const NavBar = ({ currentPath }: { currentPath: string }) => {
 
   return (
     <div className="w-full flex items-center justify-between px-6 py-6 border-b shadow-sm">
-      <div className="text-xl font-semibold flex gap-4">
+      <div className="text-2xl font-semibold flex gap-4">
         <Link href="/dashboard" className={isActive("/dashboard") ? "text-blue-500" : ""}>
           Dashboard
         </Link>

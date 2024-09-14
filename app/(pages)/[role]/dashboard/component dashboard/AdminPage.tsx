@@ -36,8 +36,11 @@ const AdminDashboard = () => {
           <div className="flex w-full justify-between items-center">
             <div className="flex flex-col gap-3">
               <h1 className="font-quick text-2xl md:text-3xl font-medium">
-                Hi,{" "}
-                {isLoading ? <Skeleton width={100} /> : dataProfil?.data.nama}
+                {isLoading ? (
+                  <Skeleton width={200} />
+                ) : (
+                  `Hi, ${dataProfil?.data.nama}`
+                )}
               </h1>
               <div className="flex flex-row gap-2">
                 {isLoading ? (
@@ -48,7 +51,11 @@ const AdminDashboard = () => {
                   </picture>
                 )}
                 <h1 className="font-quick text-lg md:text-3xl">
-                  SMK Madinatul Quran | Teacher
+                  {isLoading ? (
+                    <Skeleton width={400} height={35}/>
+                  ) : (
+                    `SMK Madinatul Quran | Teacher`
+                  )}
                 </h1>
               </div>
             </div>
@@ -63,9 +70,12 @@ const AdminDashboard = () => {
           </div>
         </div>
         <hr className="w-full border border-[#D9D9D9] mt-8" />
-        <h1 className="text-2xl mt-9 w-[998px]">
+        <h1 className="text-2xl mt-9 w-full md:w-[60%]">
           {isLoading ? (
-            <Skeleton count={3} />
+            <div className="">
+            <Skeleton count={1} />
+            <Skeleton count={1} width={"70%"}/>
+            </div>
           ) : (
             "Welcome to the school attendance system. Here, you can easily manage student, teacher and staff attendance and view real-time attendance summaries."
           )}
