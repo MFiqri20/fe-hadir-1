@@ -141,7 +141,7 @@ const Sidebar = ({
               icon={<FaUserTie width={32} height={32} />}
               text="Teacher"
               isHovered={isHovered}
-              url="/"
+              url="/admin/guru"
             />
             <SidebarItem
               icon={<FaUserCog width={32} height={32} />}

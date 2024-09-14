@@ -8,6 +8,56 @@ import useCrudModule from "@/hook/useCRUD";
 import { MapelListResponse } from "@/app/lib/(mapel)/interface";
 import { useQueryClient } from "@tanstack/react-query";
 
+const Skeleton = () => {
+  return (
+    <div className="animate-pulse">
+      <table className="min-w-full bg-white font-quick">
+        <thead>
+          <tr className="bg-gray-200">
+            <th className="w-[3%] py-2 px-4"> </th>
+            <th className="w-2/12 py-2 px-4"> </th>
+            <th className="w-3/12 py-2 px-4"> </th>
+            <th className="w-2/12 py-2 px-4"> </th>
+            <th className="w-2/12 py-2 px-4"> </th>
+            <th className="w-2/12 py-2 px-4"> </th>
+            <th className="w-2/12 py-2 px-4"> </th>
+            <th className="w-2/12 py-2 px-4"> </th>
+          </tr>
+        </thead>
+        <tbody className="text-black">
+          {[...Array(5)].map((_, index) => (
+            <tr key={index} className="border-b border-gray-200">
+              <td className="border text-center border-black px-4 py-2">
+                <div className="h-4 bg-gray-200 rounded"></div>
+              </td>
+              <td className="border border-black px-4 py-2">
+                <div className="h-4 bg-gray-200 rounded"></div>
+              </td>
+              <td className="border border-black px-4 py-2">
+                <div className="h-4 bg-gray-200 rounded"></div>
+              </td>
+              <td className="border border-black px-4 py-2">
+                <div className="h-4 bg-gray-200 rounded"></div>
+              </td>
+              <td className="border border-black px-4 py-2">
+                <div className="h-4 bg-gray-200 rounded"></div>
+              </td>
+              <td className="border border-black px-4 py-2">
+                <div className="h-4 bg-gray-200 rounded"></div>
+              </td>
+              <td className="border border-black px-4 py-2">
+                <div className="h-4 bg-gray-200 rounded"></div>
+              </td>
+              <td className="border border-black px-4 py-2">
+                <div className="h-4 bg-gray-200 rounded"></div>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+};
 
 const Mapel = () => {
   const { useList, useDelete } = useCrudModule();

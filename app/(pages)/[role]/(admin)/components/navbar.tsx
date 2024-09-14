@@ -32,7 +32,7 @@ const NavBar = ({ currentPath }: { currentPath: string }) => {
   return (
     <div className="w-full flex items-center justify-between px-6 py-6 border-b shadow-sm">
       <div className="text-2xl font-semibold flex gap-4">
-        <Link href="/dashboard" className={isActive("/dashboard") ? "text-blue-500" : ""}>
+        <Link href="/admin" className={isActive("/admin") ? "text-blue-500" : ""}>
           Dashboard
         </Link>
         {currentPath && generateBreadcrumbs()}

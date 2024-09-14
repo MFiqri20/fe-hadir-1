@@ -19,7 +19,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
         onHoverChange={setIsSidebarExpanded}
       />
       <div
-        className={`flex-1 h-screen overflow-auto transition-[padding-left] duration-300`}
+        className={`flex-1 h-screen overflow-auto transition-[padding-left] duration-200`}
       >
         <NavBar currentPath={currentPath} />
         {children}
