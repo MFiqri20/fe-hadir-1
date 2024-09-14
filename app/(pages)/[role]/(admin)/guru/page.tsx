@@ -20,7 +20,7 @@ const Guru = () => {
   );
 
   return (
-    <>
+    <div className="overflow-auto h-screen">
       <section className="container px-4 mx-auto space-y-5">
         <section className="flex items-center justify-between">
           <Button colorSchema="red" title="Tambah Mapel" />
@@ -90,7 +90,7 @@ const Guru = () => {
           </Table>
         </section>
       </section>
-    </>
+    </div>
   );
 };
 
