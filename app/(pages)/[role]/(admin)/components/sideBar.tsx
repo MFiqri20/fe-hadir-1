@@ -101,7 +101,7 @@ const Sidebar = ({
             <Dropdown
               icon={<FaChartBar width={32} height={32} />}
               iconsDrop={[
-                <CiUser width={32} height={32} key={"student"} />,
+                <CiUser width={32} height={32} strokeWidth={1.5} key={"student"} />,
                 <CiUser width={32} height={32} key={"teacher"} />,
                 <CiUser width={32} height={32} key={"staff"} />,
               ]}
@@ -185,7 +185,7 @@ const Sidebar = ({
             isHovered={isHovered}
             url=""
             style={`${
-              isHovered ? "border hover:border-red-500" : "" // border hanya muncul ketika sidebar diperluas
+              isHovered ? "border border-black hover:border-red-500" : "" // border hanya muncul ketika sidebar diperluas
             } hover:text-red-500 hover:bg-white`}
             onClick={async () => await signOut()}
           />
@@ -221,7 +221,7 @@ const SidebarItem = ({
           router.push(url);
         }
       }}
-      className={`cursor-pointer flex items-center h-8 px-4 py-6 text-lg text-gray-700 hover:bg-gray-200 rounded transition-colors duration-150 ${
+      className={`cursor-pointer flex items-center h-8 px-4 py-6 text-xl font-medium text-gray-700 hover:bg-gray-200 rounded transition-colors duration-150 ${
         style || ""
       }`}
       whileHover={{ scale: 1.0, originX: 0 }}

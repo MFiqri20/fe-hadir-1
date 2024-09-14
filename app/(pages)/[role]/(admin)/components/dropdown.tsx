@@ -54,6 +54,7 @@ const Dropdown: React.FC<DropdownProps> = ({
               <div className="flex flex-row items-center">
                 <span className="mr-5">{icon}</span>
                 <motion.span
+                className="text-xl font-medium"
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.2, ease: "easeInOut" }}
@@ -90,7 +91,7 @@ const Dropdown: React.FC<DropdownProps> = ({
                   key={index}
                   href="#"
                   onClick={() => handleOptionClick(index)}
-                  className={`cursor-pointer w-full flex items-center h-8 px-4 py-6 text-lg text-gray-700 hover:bg-gray-200 rounded transition-colors duration-150`}
+                  className={`cursor-pointer w-full flex items-center h-8 px-4 py-6 text-xl font-medium text-gray-700 hover:bg-gray-200 rounded transition-colors duration-150`}
                 >
                   <span className="mr-5">{iconsDrop[index]}</span>
                   {option}
