@@ -43,7 +43,7 @@ const Sidebar = ({
 
   const sidebarVariants = {
     hidden: {
-      width: "4rem", // Initial width for icons only
+      width: "4.5rem", // Initial width for icons only
       opacity: 1,
       transition: {
         duration: 0.2,
@@ -87,23 +87,23 @@ const Sidebar = ({
         <div className="w-full">
           <div className="flex flex-col space-y-3 w-full">
             <SidebarItem
-              icon={<FaHome width={26} height={26} />}
+              icon={<FaHome width={32} height={32} />}
               text="Home"
               isHovered={isHovered}
               url="/admin"
             />
             <SidebarItem
-              icon={<FaUser width={26} height={26} />}
+              icon={<FaUser width={32} height={32} />}
               text="Users"
               isHovered={isHovered}
               url="/admin/users"
             />
             <Dropdown
-              icon={<FaChartBar width={26} height={26} />}
+              icon={<FaChartBar width={32} height={32} />}
               iconsDrop={[
-                <CiUser width={26} height={26} key={"student"} />,
-                <CiUser width={26} height={26} key={"teacher"} />,
-                <CiUser width={26} height={26} key={"staff"} />,
+                <CiUser width={32} height={32} key={"student"} />,
+                <CiUser width={32} height={32} key={"teacher"} />,
+                <CiUser width={32} height={32} key={"staff"} />,
               ]}
               title="Recap"
               options={["Student", "Teacher", "Staff"]}
@@ -118,39 +118,39 @@ const Sidebar = ({
           <div className="h-[1px] w-full bg-gray-200 my-4"></div>
           <div className="w-full flex flex-col space-y-3">
             <SidebarItem
-              icon={<MdOutlinePlayLesson width={26} height={26} />}
+              icon={<MdOutlinePlayLesson width={32} height={32} />}
               text="Mapel"
               isHovered={isHovered}
               url="/admin/mapel"
             />
             <SidebarItem
-              icon={<FaCalendarAlt width={26} height={26} />}
+              icon={<FaCalendarAlt width={32} height={32} />}
               text="Schedule"
               isHovered={isHovered}
               url="/admin/jadwal"
             />
             <SidebarItem
               icon={
-                <SiGoogleclassroom width={26} strokeWidth={1.2} height={26} />
+                <SiGoogleclassroom width={32} strokeWidth={1.2} height={32} />
               }
               text="Class"
               isHovered={isHovered}
               url="/"
             />
             <SidebarItem
-              icon={<FaUserTie width={26} height={26} />}
+              icon={<FaUserTie width={32} height={32} />}
               text="Teacher"
               isHovered={isHovered}
               url="/"
             />
             <SidebarItem
-              icon={<FaUserCog width={26} height={26} />}
+              icon={<FaUserCog width={32} height={32} />}
               text="Staf"
               isHovered={isHovered}
               url="/"
             />
             <SidebarItem
-              icon={<FaUserGraduate width={26} height={26} />}
+              icon={<FaUserGraduate width={32} height={32} />}
               text="Student"
               isHovered={isHovered}
               url="/"
@@ -161,17 +161,32 @@ const Sidebar = ({
         </div>
         <div className="w-full flex flex-col space-y-3">
           <SidebarItem
-            icon={<Image src={profil} alt="user" width={26} height={26} />}
+            icon={
+              <div className="relative w-8 h-8">
+                {" "}
+                {/* Tetapkan ukuran eksplisit */}
+                <Image
+                  src={profil}
+                  alt="user"
+                  layout="fill"
+                  objectFit="cover"
+                />{" "}
+                {/* Atur gambar agar mengisi container */}
+              </div>
+            }
             text="Fatin nayhan"
             isHovered={isHovered}
             url="/admin/profile"
           />
+
           <SidebarItem
-            icon={<CiLogout strokeWidth={1.3} width={26} height={26} />}
+            icon={<CiLogout strokeWidth={1.3} width={38} height={38} />}
             text="Logout"
             isHovered={isHovered}
             url=""
-            style="border hover:text-red-500 hover:bg-white hover:border-red-500 hover:text-white"
+            style={`${
+              isHovered ? "border hover:border-red-500" : "" // border hanya muncul ketika sidebar diperluas
+            } hover:text-red-500 hover:bg-white`}
             onClick={async () => await signOut()}
           />
         </div>
@@ -217,6 +232,7 @@ const SidebarItem = ({
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.2, ease: "easeInOut" }}
+          className="whitespace-nowrap" // Tambahkan kelas ini
         >
           {text}
         </motion.span>
