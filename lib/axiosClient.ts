@@ -14,15 +14,17 @@ export interface BaseResponsePagination {
   status: string;
   message: string;
   pagination: {
+    total: number;
     page: number;
     limit: number;
     pageSize: number;
-    total: number;
+    total_page: number;
+    current_data: number;
   };
 }
 
-export interface BaseResponseSucess{
-  status:string;
+export interface BaseResponseSucess {
+  status: string;
   message: string;
-  data?:any;
+  data?: any;
 }

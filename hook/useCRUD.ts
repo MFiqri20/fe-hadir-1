@@ -4,6 +4,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import useAxiosAuth from "./useAuthAxios";
 import { useToast } from "./useToast";
 import Swal from "sweetalert2";
+import { usePagination } from "./usePagination";
 // import toast, { Toaster } from 'react-hot-toast';
 export interface PaginationParams {
   page: number;
@@ -20,45 +21,9 @@ const useCrudModule = () => {
   const axiosAuthClient = useAxiosAuth();
   const queryClient = useQueryClient();
   const { toastError, toastSuccess, toastWarning } = useToast();
-  const getList = async <T>(
-    url: string,
-    params: PaginationParams
-  ): Promise<T> => {
-    return axiosAuthClient.get(url, { params }).then((res) => res.data);
-  };
 
   const getDetail = async <T>(url: string): Promise<T> => {
     return axiosAuthClient.get(url).then((res) => res.data.data);
-  };
-
-  const usePagination = (initialParams: PaginationParams) => {
-    const [params, setParams] = useState(initialParams);
-
-    const handleFilter = (newParams: Partial<PaginationParams>) => {
-      setParams((prev) => ({ ...prev, ...newParams }));
-    };
-
-    const handleClear = () => {
-      setParams(initialParams);
-    };
-
-    const handlePageSize = (pageSize: number) => {
-      setParams((prev) => ({ ...prev, pageSize }));
-    };
-
-    const handlePage = (page: number) => {
-      setParams((prev) => ({ ...prev, page }));
-    };
-
-    return {
-      params,
-      setParams,
-      handleFilter,
-      handleClear,
-      handlePageSize,
-      handlePage,
-      filterParams: params,
-    };
   };
 
   const updateResource = async <T>(
@@ -69,7 +34,38 @@ const useCrudModule = () => {
     return axiosAuthClient.put(`${url}/${id}`, payload).then((res) => res.data);
   };
 
-  const useList = <T>(url: string, customParams?: PaginationParams, staleTime?: number) => {
+  const getList = async <T>(url: string): Promise<T> => {
+    return axiosAuthClient.get(url).then((res) => res.data);
+  };
+
+  const getListPagination = async <T>(
+    url: string,
+    params: PaginationParams
+  ): Promise<T> => {
+    return axiosAuthClient.get(url, { params }).then((res) => res.data);
+  };
+
+  const useList = <T>(url: string, staleTime?: number) => {
+    const { data, isFetching, isLoading } = useQuery<T>(
+      [url],
+      () => getList<T>(url),
+      {
+        keepPreviousData: true,
+        staleTime: staleTime,
+      }
+    );
+
+    return {
+      data,
+      isFetching,
+      isLoading,
+    };
+  };
+  const useListPagination = <T>(
+    url: string,
+    defaultParams: PaginationParams,
+    staleTime?: number
+  ) => {
     const {
       params,
       setParams,
@@ -78,23 +74,32 @@ const useCrudModule = () => {
       handlePageSize,
       handlePage,
       filterParams,
+      handleKeyword,
+      handleSearch,
+      keyword,
+      handleChange
     } = usePagination(defaultParams);
 
     const { data, isFetching, isLoading } = useQuery(
       [url, [filterParams]],
-      () => getList<T>(url, filterParams),
+      () => getListPagination<T>(url, filterParams),
       {
         keepPreviousData: true,
         select: (response) => response,
-        staleTime: staleTime || 0,
+        staleTime: staleTime,
       }
     );
 
-    console.log(url);
+    console.log(url, filterParams);
+    console.log(data);
 
     return {
       data,
+      handleKeyword,
+      handleSearch,
+      keyword,
       isFetching,
+      handleChange,
       isLoading,
       params,
       setParams,
@@ -105,14 +110,12 @@ const useCrudModule = () => {
     };
   };
 
-  
-
   const useCreate = <T>(url: string, urlInvalidate?: string) => {
     const { mutate, isLoading, data } = useMutation(
       (payload: T) => axiosAuthClient.post(url, payload),
       {
         onSuccess: (response) => {
-          console.log('data', data);
+          console.log("data", data);
           toastSuccess(response.data.message);
           queryClient.invalidateQueries([urlInvalidate]); // Optionally, invalidate queries to refetch data
         },
@@ -163,12 +166,12 @@ const useCrudModule = () => {
       (payload: T) => axiosAuthClient.post(url, payload),
       {
         onSuccess: (response) => {
-          toastSuccess(response.data.message)
-          queryClient.invalidateQueries([url])
+          toastSuccess(response.data.message);
+          queryClient.invalidateQueries([url]);
         },
         onError: (error) => {
-          toastError()
-          console.log('errorrroroorororor',error);
+          toastError();
+          console.log("errorrroroorororor", error);
         },
       }
     );
@@ -179,7 +182,7 @@ const useCrudModule = () => {
     const axiosAuthClient = useAxiosAuth();
     const queryClient = useQueryClient();
     const { toastSuccess, toastError } = useToast();
-  
+
     const { mutate, isLoading } = useMutation(
       (payload: T) => updateResource<T>(url, id, payload),
       {
@@ -192,10 +195,18 @@ const useCrudModule = () => {
         },
       }
     );
-  
+
     return { mutate, isLoading };
   };
 
-  return { useList, useCreate, useDetail, useDelete, useUpdate, useCreateBulk };
+  return {
+    useList,
+    useCreate,
+    useListPagination,
+    useDetail,
+    useDelete,
+    useUpdate,
+    useCreateBulk,
+  };
 };
 export default useCrudModule;

@@ -1,31 +1,48 @@
 "use client";
+import { useState } from "react";
 import { Table, Th, Thead, Tr, Tbody, Td } from "@/component/Table";
-import { useEffect, useState } from "react";
 import Button from "@/component/Button";
 import { GuruSubjectListResponse } from "@/app/lib/(guru)/interface";
 import useCrudModule, { PaginationParams } from "@/hook/useCRUD";
-import { motion } from "framer-motion";
 import FilterSidebar from "../components/filterSideBar";
+import Pagination from "@/component/Pagination";
+import Label from "@/component/Label";
+import FilterInput from "@/component/filterInput";
+
 const Guru = () => {
   const defaultParams: PaginationParams = {
     page: 1,
     pageSize: 10,
     nama: "",
+    nama_mapel: "",
+    initial_subject: "",
   };
 
-  const { useList } = useCrudModule();
+  const { useListPagination } = useCrudModule();
   const {
     data,
+    isLoading,
     isFetching,
     handleClear,
+    handleChange,
     handleFilter,
     handlePage,
     handlePageSize,
     params,
     setParams,
-  } = useList<GuruSubjectListResponse>("guru/list-subject", defaultParams, 30000);
+  } = useListPagination<GuruSubjectListResponse>(
+    "guru/list-subject",
+    defaultParams,
+    30000
+  );
+
   const [isFilterOpen, setFilterOpen] = useState(false);
-  // Skeleton Loader for Table Rows with loop
+
+  const handleFilterSubmit = async () => {
+    await handleFilter();
+    setFilterOpen(false);
+  };
+
   const SkeletonRows = ({ count }: { count: number }) => (
     <>
       {Array.from({ length: count }).map((_, index) => (
@@ -53,14 +70,9 @@ const Guru = () => {
     </>
   );
 
-
   return (
     <div className="overflow-auto h-screen">
-      <section
-        // onClick={() => setFilterOpen(!isFilterOpen)}
-        className="container px-6 py-8 mx-auto space-y-6"
-      >
-        {/* Header with "Tambah Guru" Button */}
+      <section className="container px-6 py-8 mx-auto space-y-6">
         <section className="flex items-center justify-between">
           <h1 className="text-2xl font-bold text-gray-700">Daftar Guru</h1>
           <div className="flex gap-4">
@@ -70,7 +82,7 @@ const Guru = () => {
               className="px-4 py-2 border-2 border-red-500 text-red-500 hover:bg-red-500 hover:text-white transition-all duration-200 rounded-lg"
             />
             <button
-              onClick={() => setFilterOpen(true)} // Open the sidebar
+              onClick={() => setFilterOpen(true)}
               className="btn btn-primary"
             >
               Filter
@@ -78,18 +90,15 @@ const Guru = () => {
           </div>
         </section>
 
-        {/* Guru Table */}
         <section className="rounded-lg">
-          <Table isFetching={isFetching} isEmpty={data?.data?.length === 0}>
+          <Table isFetching={isLoading} isEmpty={data?.data?.length === 0}>
             <Thead>
               <Tr>
                 <Th scope="col">
-                  <div className="flex items-center gap-x-3">
-                    <input
-                      type="checkbox"
-                      className="text-blue-500 border-gray-300 rounded dark:bg-gray-900 dark:ring-offset-gray-900 dark:border-gray-700"
-                    />
-                  </div>
+                  <input
+                    type="checkbox"
+                    className="text-blue-500 border-gray-300 rounded"
+                  />
                 </Th>
                 <Th scope="col">Nama Guru</Th>
                 <Th scope="col">Nama Pelajaran</Th>
@@ -102,8 +111,7 @@ const Guru = () => {
               {isFetching ? (
                 <SkeletonRows count={10} />
               ) : (
-                data &&
-                data.data.map((item, index) => (
+                data?.data.map((item, index) => (
                   <Tr
                     key={index}
                     className="hover:bg-gray-100 transition-colors"
@@ -111,7 +119,7 @@ const Guru = () => {
                     <Td>
                       <input
                         type="checkbox"
-                        className="text-blue-500 border-gray-300 rounded dark:bg-gray-900 dark:ring-offset-gray-900 dark:border-gray-700"
+                        className="text-blue-500 border-gray-300 rounded"
                       />
                     </Td>
                     <Td>
@@ -121,21 +129,15 @@ const Guru = () => {
                     </Td>
                     <Td>
                       {item.mapel.map((mapelItem) => (
-                        <div
-                          className="flex flex-col gap-1"
-                          key={mapelItem.nama_mapel}
-                        >
-                          <span>{mapelItem.nama_mapel}</span>
+                        <div key={mapelItem.nama_mapel}>
+                          {mapelItem.nama_mapel}
                         </div>
                       ))}
                     </Td>
                     <Td>
                       {item.mapel.map((mapelItem) => (
-                        <div
-                          className="flex flex-col gap-1"
-                          key={mapelItem.nama_mapel}
-                        >
-                          <span>{mapelItem.subject_code}</span>
+                        <div key={mapelItem.subject_code}>
+                          {mapelItem.subject_code}
                         </div>
                       ))}
                     </Td>
@@ -155,58 +157,49 @@ const Guru = () => {
             </Tbody>
           </Table>
         </section>
-        <section className="flex justify-center py-4">
-          <nav className="relative inline-flex items-center space-x-4">
-            <button
-              onClick={() => handlePage(params.page - 1)}
-              disabled={params.page === 1}
-              className="px-4 py-2 border border-gray-300 bg-white text-gray-700 rounded-lg shadow-sm hover:bg-gray-100 transition-colors"
-            >
-              Previous
-            </button>
-            <span className="text-gray-700">
-              Page {params.page} of {data?.pagination.total || 1}
-            </span>
-            <button
-              onClick={() => handlePage(params.page + 1)}
-              disabled={params.page === data?.pagination.total}
-              className="px-4 py-2 border border-gray-300 bg-white text-gray-700 rounded-lg shadow-sm hover:bg-gray-100 transition-colors"
-            >
-              Next
-            </button>
-          </nav>
+
+        <section>
+          <Pagination
+            isFetching={isFetching}
+            page={data?.pagination.page || 1}
+            pageSize={data?.pagination.pageSize || 10}
+            totalPages={data?.pagination.total_page || 0}
+            totalResults={data?.pagination.total || 0}
+            current_data={data?.pagination.current_data || 0}
+            handlePage={handlePage}
+            handlePageSize={handlePageSize}
+          />
         </section>
       </section>
+
       <FilterSidebar
+        onSubmit={handleFilterSubmit}
+        onClear={handleClear}
         title="Filter Guru"
         isOpen={isFilterOpen}
         onClose={() => setFilterOpen(false)}
       >
-        <div className="form-control mb-4">
-          <label className="label">
-            <span className="label-text">Nama Guru</span>
-          </label>
-          <input
-            type="text"
-            name="nama"
-            placeholder="Nama Guru"
-            className="input input-bordered"
-          />
-        </div>
-        <div className="form-control mb-4">
-          <label className="label">
-            <span className="label-text">Subject Code</span>
-          </label>
-          <input
-            type="text"
-            name="subject_code"
-            placeholder="Subject Code"
-            className="input input-bordered"
-          />
-        </div>
-        <button className="btn btn-primary w-full" onClick={() => {}}>
-          Apply Filter
-        </button>
+        <FilterInput
+          id="nama"
+          name="nama"
+          placeholder="Nama Guru"
+          value={params.nama || ""}
+          onChange={handleChange}
+        />
+        <FilterInput
+          id="nama_mapel"
+          name="nama_mapel"
+          placeholder="Nama mapel"
+          value={params.nama_mapel || ""}
+          onChange={handleChange}
+        />
+        <FilterInput
+          id="initial_subject"
+          name="initial_subject"
+          placeholder="Initial Subject code"
+          value={params.initial_subject || ""}
+          onChange={handleChange}
+        />
       </FilterSidebar>
     </div>
   );

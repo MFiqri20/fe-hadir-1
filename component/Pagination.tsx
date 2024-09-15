@@ -1,46 +1,35 @@
-import React, { ChangeEvent, ReactNode } from "react";
-// import Select from "./Select";
+import React, { ChangeEvent } from "react";
 import clsx from "clsx";
 
 interface PaginationProps {
-  handlePageSize: (e: ChangeEvent<any>) => void;
-  handlePage: (page : number) => void;
-
   page: number | string;
   pageSize: number | string;
-
-  pagination:
-    | {
-        page: number;
-        pageSize: number;
-        total: number;
-        total_page?: number;
-      }
-    | undefined;
+  totalPages: number;
+  totalResults: number;
+  isFetching: boolean;
+  current_data: number;
+  handlePage: (page: number) => void;
+  handlePageSize: (e: ChangeEvent<HTMLSelectElement>) => void;
 }
 
-export const Pagination: React.FC<PaginationProps> = ({
-  handlePageSize,
-  handlePage,
-  pagination,
+const Pagination: React.FC<PaginationProps> = ({
   page,
   pageSize,
+  totalPages,
+  totalResults,
+  isFetching,
+  current_data,
+  handlePage,
+  handlePageSize,
 }) => {
   function getPage(totalItems: number, currentPage: number, pageSize: number) {
-    currentPage = currentPage;
-
-    pageSize = pageSize;
-
-    // calculate total pages
     let totalPages = Math.ceil(totalItems / pageSize);
 
     let startPage: number, endPage: number;
     if (totalPages <= 10) {
-      // less than 10 total pages so show all
       startPage = 1;
       endPage = totalPages;
     } else {
-      // more than 10 total pages so calculate start and end pages
       if (currentPage <= 6) {
         startPage = 1;
         endPage = 10;
@@ -53,73 +42,82 @@ export const Pagination: React.FC<PaginationProps> = ({
       }
     }
 
-    // calculate start and end item indexes
-    let startIndex = (currentPage - 1) * pageSize;
-    let endIndex = Math.min(startIndex + pageSize - 1, totalItems - 1);
-
-    // create an array of pages to ng-repeat in the pager control
     const pages = Array.from(
       { length: endPage + 1 - startPage },
       (_, i) => startPage + i
     );
 
-    // return object with all pager properties required by the view
     return {
-      totalItems: totalItems,
-      currentPage: currentPage,
-      pageSize: pageSize,
-      totalPages: totalPages,
-      startPage: startPage,
-      endPage: endPage,
-      startIndex: startIndex,
-      endIndex: endIndex,
-      pages: pages,
+      totalItems,
+      currentPage,
+      pageSize,
+      totalPages,
+      startPage,
+      endPage,
+      pages,
     };
   }
-  let pages = getPage(
-    pagination?.total || 0,
-    pagination?.page || 1,
-    pagination?.pageSize || 10
-  );
+
+  let pages = getPage(totalResults, Number(page), Number(pageSize));
 
   return (
-    <div className="flex items-center justify-between mt-6">
+    <section className="flex justify-between py-4 items-center">
+      {/* Page Size Dropdown */}
       <div>
+        <label htmlFor="pageSize" className="mr-2 text-gray-700">
+          Page Size:
+        </label>
         <select
-          value={pageSize}
+          id="pageSize"
+          value={Number(pageSize)} // Ensure it's a number
           onChange={handlePageSize}
-          className="px-2 py-1 text-sm text-blue-500 rounded-md  border"
+          className="px-4 py-1 border rounded"
         >
           <option value={1}>1</option>
           <option value={5}>5</option>
           <option value={10}>10</option>
           <option value={25}>25</option>
           <option value={50}>50</option>
-          <option value={100}>100</option>
         </select>
-        <p>dari {pagination?.total} data</p>
       </div>
 
-      <div className="items-center hidden md:flex gap-x-3">
-        {pages.pages.map((pageItem, index) => (
-          <button
-            key={index}
-            onClick={()=> {
-              handlePage(pageItem)
-            }}
-            className={clsx(
-              `px-4 py-2 rounded-full text-sm `,
-              {
-                "text-white   bg-blue-300": page === pageItem,
-                "text-white  border  border-blue-300": page !== pageItem,
-              },
-              {}
-            )}
-          >
-            {pageItem}
-          </button>
-        ))}
+      {/* Pagination Buttons */}
+      <nav className="relative inline-flex items-center space-x-4">
+        <button
+          onClick={() => handlePage(Number(page) - 1)}
+          disabled={Number(page) <= 1} // Disable if on the first page
+          className="px-4 py-2 border border-gray-300 bg-white text-gray-700 rounded-lg shadow-sm hover:bg-gray-100 transition-colors"
+        >
+          Previous
+        </button>
+
+        {isFetching ? (
+          <span className="ml-4 w-24 h-6 bg-gray-300 rounded animate-pulse"></span>
+        ) : (
+          <span className="mx-4 text-gray-700">
+            Page {page} of {pages.totalPages}
+          </span>
+        )}
+
+        <button
+          onClick={() => handlePage(Number(page) + 1)}
+          disabled={Number(page) >= pages.totalPages} // Disable if on the last page
+          className="px-4 py-2 border border-gray-300 bg-white text-gray-700 rounded-lg shadow-sm hover:bg-gray-100 transition-colors"
+        >
+          Next
+        </button>
+      </nav>
+
+      {/* Current Data Info */}
+      <div className="text-sm text-gray-600">
+        {isFetching ? (
+          <div className="w-24 h-6 bg-gray-300 rounded animate-pulse"></div>
+        ) : (
+          `Showing ${current_data} of ${totalResults} results`
+        )}
       </div>
-    </div>
+    </section>
   );
 };
+
+export default Pagination;
