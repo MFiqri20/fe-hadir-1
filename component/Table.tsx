@@ -55,15 +55,17 @@ export const Tbody: React.FC<TbodyProps> = ({ children }) => {
 };
 
 interface TrProps {
+  className?: string;
   children: ReactNode;
   onClick?: () => void;
 }
 
-export const Tr: React.FC<TrProps> = ({ children, onClick }) => {
-  return <tr onClick={onClick}>{children}</tr>;
+export const Tr: React.FC<TrProps> = ({className, children, onClick }) => {
+  return <tr className={className} onClick={onClick}>{children}</tr>;
 };
 
 interface ThProps extends React.ThHTMLAttributes<HTMLTableCellElement> {
+
   children: ReactNode;
 }
 

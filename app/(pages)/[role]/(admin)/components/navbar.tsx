@@ -39,7 +39,7 @@ const NavBar = ({ currentPath }: { currentPath: string }) => {
     pathname === "/admin" || pathname.startsWith("/admin/");
 
   return (
-    <div className="sticky top-0 left-0 right-0 px-6 py-6 border-b shadow-sm bg-white z-40 flex items-center justify-between">
+    <div className="sticky top-0 left-0 right-0 px-6 py-6 border-b shadow-sm bg-white z-30 flex items-center justify-between">
       <div className="text-2xl font-semibold flex items-center gap-4">
         {/* 'Dashboard' link */}
         <Link

@@ -69,7 +69,7 @@ const useCrudModule = () => {
     return axiosAuthClient.put(`${url}/${id}`, payload).then((res) => res.data);
   };
 
-  const useList = <T>(url: string, customParams?: PaginationParams) => {
+  const useList = <T>(url: string, customParams?: PaginationParams, staleTime?: number) => {
     const {
       params,
       setParams,
@@ -81,13 +81,16 @@ const useCrudModule = () => {
     } = usePagination(defaultParams);
 
     const { data, isFetching, isLoading } = useQuery(
-      [url, filterParams],
+      [url, [filterParams]],
       () => getList<T>(url, filterParams),
       {
         keepPreviousData: true,
         select: (response) => response,
+        staleTime: staleTime || 0,
       }
     );
+
+    console.log(url);
 
     return {
       data,

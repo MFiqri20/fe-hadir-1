@@ -128,7 +128,7 @@ const AdminDashboard = () => {
               )}
             </div>
             <div className="w-full">
-              {isLoading ? <Skeleton height={200} /> : <SimpleAreaChart />}
+              {isLoading ? <Skeleton height={400} /> : <SimpleAreaChart />}
             </div>
           </div>
           {/*  */}
@@ -153,7 +153,7 @@ const AdminDashboard = () => {
               )}
             </div>
             <div className="w-full">
-              {isLoading ? <Skeleton height={200} /> : <BasicBars />}
+              {isLoading ? <Skeleton height={400} /> : <BasicBars />}
             </div>
           </div>
         </div>

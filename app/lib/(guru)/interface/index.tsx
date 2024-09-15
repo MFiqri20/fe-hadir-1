@@ -1,6 +1,6 @@
 // import { User } from "@/app/(mapel)/interface";
 
-import { BaseResponseSucess } from "@/lib/axiosClient";
+import { BaseResponsePagination, BaseResponseSucess } from "@/lib/axiosClient";
 import { User } from "../../(auth)/interface/interface";
 
 export interface GuruSubject {
@@ -27,7 +27,7 @@ interface Mapel {
   subject_code: string;
 }
 
-export interface GuruSubjectListResponse {
+export interface GuruSubjectListResponse extends BaseResponsePagination {
   data: GuruSubject[];
 }
 

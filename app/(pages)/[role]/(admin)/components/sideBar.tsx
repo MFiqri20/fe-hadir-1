@@ -53,10 +53,7 @@ const Sidebar = ({
     visible: {
       width: "15rem", // Expanded width on hover
       opacity: 1,
-      transition: {
-        duration: 0.3,
-        ease: "easeInOut",
-      },
+      
     },
   };
 
