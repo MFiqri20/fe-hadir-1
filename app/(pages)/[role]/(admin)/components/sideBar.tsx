@@ -53,7 +53,10 @@ const Sidebar = ({
     visible: {
       width: "15rem", // Expanded width on hover
       opacity: 1,
-      
+      transition: {
+        duration: 0.2,
+        ease: "easeInOut",
+      },
     },
   };
 
@@ -67,14 +70,14 @@ const Sidebar = ({
       onHoverEnd={handleHoverEnd}
     >
       <div
-        className={`text-3xl px-4 font-bold mb-6 mt-[2px] flex items-center justify-center transition-colors duration-150`}
+        className={`text-3xl px-4 font-bold mb-6 mt-[2px] flex items-center justify-center transition-colors duration-200`}
       >
         <span>H</span>
         {isHovered && (
           <motion.span
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.15, ease: "easeInOut" }}
+            transition={{ duration: 0.2, ease: "easeInOut" }}
           >
             adirPak
           </motion.span>
@@ -218,7 +221,7 @@ const SidebarItem = ({
           router.push(url);
         }
       }}
-      className={`cursor-pointer flex items-center h-8 px-4 py-6 text-xl font-medium text-gray-700 hover:bg-gray-200 rounded transition-colors duration-150 ${
+      className={`cursor-pointer flex items-center h-8 px-4 py-6 text-xl font-medium text-gray-700 hover:bg-gray-200 rounded transition-colors duration-200 ${
         style || ""
       }`}
       whileHover={{ scale: 1.0, originX: 0 }}

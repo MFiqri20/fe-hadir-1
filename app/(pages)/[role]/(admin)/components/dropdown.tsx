@@ -40,7 +40,7 @@ const Dropdown: React.FC<DropdownProps> = ({
       <button
         type="button"
         onClick={toggleDropdown}
-        className="w-full cursor-pointer flex items-center h-8 px-4 py-6 text-lg text-gray-700 hover:bg-gray-200 rounded transition-colors duration-150"
+        className="w-full cursor-pointer flex items-center h-8 px-4 py-6 text-lg text-gray-700 hover:bg-gray-200 rounded transition-colors duration-200"
         id="options-menu"
       >
         {isCollapsed ? (
@@ -91,7 +91,7 @@ const Dropdown: React.FC<DropdownProps> = ({
                   key={index}
                   href="#"
                   onClick={() => handleOptionClick(index)}
-                  className={`cursor-pointer w-full flex items-center h-8 px-4 py-6 text-xl font-medium text-gray-700 hover:bg-gray-200 rounded transition-colors duration-150`}
+                  className={`cursor-pointer w-full flex items-center h-8 px-4 py-6 text-xl font-medium text-gray-700 hover:bg-gray-200 rounded transition-colors duration-200`}
                 >
                   <span className="mr-5">{iconsDrop[index]}</span>
                   {option}
