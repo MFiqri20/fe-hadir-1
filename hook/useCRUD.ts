@@ -51,6 +51,7 @@ const useCrudModule = () => {
       () => getList<T>(url),
       {
         keepPreviousData: true,
+
         staleTime: staleTime,
       }
     );
@@ -77,7 +78,8 @@ const useCrudModule = () => {
       handleKeyword,
       handleSearch,
       keyword,
-      handleChange
+      handleRole,
+      handleChange,
     } = usePagination(defaultParams);
 
     const { data, isFetching, isLoading } = useQuery(
@@ -95,6 +97,7 @@ const useCrudModule = () => {
 
     return {
       data,
+      handleRole,
       handleKeyword,
       handleSearch,
       keyword,

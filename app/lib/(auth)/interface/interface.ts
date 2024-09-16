@@ -1,4 +1,4 @@
-import { BaseResponseSucess } from "@/lib/axiosClient";
+import { BaseResponsePagination, BaseResponseSucess } from "@/lib/axiosClient";
 
 export interface User {
   id?: number;
@@ -12,6 +12,10 @@ export interface User {
   refresh_token: string;
   created_at: string;
   updated_at: string;
+}
+
+export interface UserlistReponse extends BaseResponsePagination {
+  data: User[];
 }
 
 export interface LoginPayload extends Pick<User, "email" | "password"> {}

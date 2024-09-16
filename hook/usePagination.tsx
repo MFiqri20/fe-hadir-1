@@ -37,6 +37,11 @@ export const usePagination = <T extends PaginationParams>(defaultParams: T) => {
     });
   };
 
+  const handleRole = (role: string) => {
+    setParams((params) => ({ ...params, role, page: 1 }));
+    setFilterParams((params) => ({ ...params, role, page: 1 }));
+  };
+
   const handleClear = () => {
     setFilterParams(defaultParams);
     setParams(defaultParams);
@@ -61,6 +66,7 @@ export const usePagination = <T extends PaginationParams>(defaultParams: T) => {
     handlePageSize,
     handlePage,
     filterParams,
+    handleRole,
     handleSearch,
     handleChange,
     handleKeyword,

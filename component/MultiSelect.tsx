@@ -14,6 +14,7 @@ interface MultiSelectProps {
   onChange: (selectedOptions: OptionType[] | any) => void;
   error?: string | string[];
   touched?: boolean;
+  isFetching?: boolean; // Add isFetching prop to handle loading state
 }
 
 const MultiSelect: React.FC<MultiSelectProps> = ({
@@ -22,6 +23,7 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
   options,
   value,
   onChange,
+  isFetching = false,
   error,
   touched,
 }) => (
@@ -30,7 +32,7 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
       isMulti
       id={id}
       name={name}
-      options={options}
+      options={isFetching ? [{ label: "Loading...", value: 0 }] : options}
       value={value}
       onChange={onChange}
       className="basic-single"

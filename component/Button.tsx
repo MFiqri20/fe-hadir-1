@@ -8,10 +8,11 @@ interface ButtonProps {
   title: string;
   isDisabled?: boolean;
   variant?: Variant;
-  colorSchema: ColorSchema;
+  colorSchema?: ColorSchema;
   width?: string;
   height?: string;
   isLoading?: boolean;
+  style?: string
 }
 
 const Button: React.FC<
@@ -23,6 +24,7 @@ const Button: React.FC<
   colorSchema,
   width = "full",
   height = "md",
+  style = "",
   isLoading = false,
   ...props
 }) => {
@@ -30,7 +32,7 @@ const Button: React.FC<
     <button
       {...props}
       disabled={isDisabled}
-      className={clsx(` rounded border w-24  capitalize`, {
+      className={clsx(`${style} rounded border w-24  capitalize`, {
         "bg-blue-500 text-white": colorSchema === "blue" && variant === "solid",
         "border-blue-500 text-blue-500":
           colorSchema === "blue" && variant === "outline",

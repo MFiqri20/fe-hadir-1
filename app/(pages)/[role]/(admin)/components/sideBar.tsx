@@ -96,7 +96,7 @@ const Sidebar = ({
               icon={<FaUser width={32} height={32} />}
               text="Users"
               isHovered={isHovered}
-              url="/admin/users"
+              url="/admin/userlist"
             />
             <Dropdown
               icon={<FaChartBar width={32} height={32} />}

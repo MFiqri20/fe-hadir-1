@@ -3,56 +3,89 @@ import * as React from "react";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
-// icon
 import { RiNotificationBadgeLine } from "react-icons/ri";
 import { FiSearch } from "react-icons/fi";
 import { TbFilterPlus } from "react-icons/tb";
 import { FaArrowDownShortWide } from "react-icons/fa6";
-// image
-import profile from "/public/images/jomok.png";
+import useCrudModule, { PaginationParams } from "@/hook/useCRUD";
+import { UserlistReponse } from "@/app/lib/(auth)/interface/interface";
+import Pagination from "@/component/Pagination";
+import CircularProgress from "@mui/material/CircularProgress";
 import Image from "next/image";
 
-import UserListTable from "./component/Table";
-import { FunnelIcon } from "@heroicons/react/20/solid";
 const UserList = () => {
-  const [value, setValue] = React.useState("one");
-
-  const handleChange = (event: React.SyntheticEvent, newValue: string) => {
-    setValue(newValue);
+  const [value, setValue] = React.useState("all");
+  const defaultParams: PaginationParams = {
+    page: 1,
+    pageSize: 10,
+    role: value, // default role is empty, which means "all"
+    nama: "",
   };
+
+  const { useListPagination } = useCrudModule();
+  const {
+    data,
+    isFetching,
+    isLoading,
+    handleSearch,
+    handleChange,
+    handleClear,
+    handlePage,
+    handlePageSize,
+    keyword,
+    params,
+    handleRole,
+    setParams,
+    handleFilter,
+    handleKeyword,
+  } = useListPagination<UserlistReponse>(
+    "auth/user-list",
+    defaultParams,
+    30000
+  );
+
+  const handleChangeTab = (event: React.SyntheticEvent, newValue: string) => {
+    setValue(newValue);
+    handleRole(newValue); // Panggil handleRole saat tab berubah
+  };
+
   return (
     <section className="w-full pt-8">
       <div className="flex justify-between items-center mx-6">
         <h1 className="text-4xl font-medium">Userlist</h1>
         <RiNotificationBadgeLine className="text-3xl" />
       </div>
-      {/*  */}
       <hr className="w-full border border-[#D9D9D9] mt-8" />
-      {/*  */}
       <div className="flex">
         <div className="mt-[59px] px-8 w-[75%]">
           <Box sx={{ width: "100%" }}>
             <Tabs
               value={value}
-              onChange={handleChange}
+              onChange={handleChangeTab}
               textColor="primary"
               indicatorColor="primary"
-              aria-label="secondary tabs example"
+              aria-label="role tabs"
             >
               <Tab
-                value="one"
+                value=""
+                label={
+                  <span className="font-quick font-bold text-xl">All</span>
+                }
+              />
+              <Tab
+                value="murid"
                 label={
                   <span className="font-quick font-bold text-xl">Student</span>
                 }
               />
               <Tab
-                value="two"
+                value="guru"
                 label={
                   <span className="font-quick font-bold text-xl">Teacher</span>
                 }
               />
               <Tab
-                value="three"
+                value="staf"
                 label={
                   <span className="font-quick font-bold text-xl">Staff</span>
                 }
@@ -67,6 +100,9 @@ const UserList = () => {
                   type="text"
                   className="grow focus:ring-0 border-0"
                   placeholder="Search for Student, Teacher"
+                  onChange={(e) =>
+                    setParams((prev) => ({ ...prev, nama: e.target.value }))
+                  }
                 />
               </label>
               <div className="flex gap-4">
@@ -84,66 +120,82 @@ const UserList = () => {
                 </div>
               </div>
             </div>
-            <UserListTable />
+            {isLoading || isFetching ? (
+              <div className="flex justify-center items-center h-[300px]">
+                <CircularProgress />
+              </div>
+            ) : data?.data.length === 0 ? (
+              <p className="text-center text-xl mt-4">Data tidak ditemukan</p>
+            ) : (
+              <div className="container mx-auto mt-6">
+                <div className="relative overflow-x-auto sm:rounded-lg">
+                  <table className="w-full text-sm text-left text-gray-500">
+                    <thead className="text-lg text-gray-700 uppercase border-y-2 border-[#D9D9D9]">
+                      <tr>
+                        <th scope="col" className="px-6 py-3">
+                          Id
+                        </th>
+                        <th scope="col" className="px-6 py-3">
+                          Name
+                        </th>
+                        <th scope="col" className="px-6 py-3">
+                          Email
+                        </th>
+                        <th scope="col" className="px-6 py-3">
+                          Avatar
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {data?.data.map((user, index) => (
+                        <tr
+                          key={index}
+                          className="border-b-2 border-[#D9D9D9] hover:bg-gray-50"
+                        >
+                          <th
+                            scope="row"
+                            className="px-6 py-4 font-semibold text-lg whitespace-nowrap"
+                          >
+                            {user.id}
+                          </th>
+                          <td className="px-6 py-4 font-semibold text-lg">
+                            {user.nama}
+                          </td>
+                          <td className="px-6 py-4 font-semibold text-lg">
+                            {user.email}
+                          </td>
+                          <td className="px-6 py-4 font-semibold text-lg">
+                            <div className="w-12 h-12 rounded-full overflow-hidden">
+                              <Image
+                                src={
+                                  user.avatar ||
+                                  ""
+                                } // URL or path to the user avatar
+                                alt="User Avatar"
+                                width={48} // Adjust size as needed
+                                height={48} // Adjust size as needed
+                                className="object-cover"
+                              />
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
           </div>
-        </div>
-        {/*  */}
-        <div className="h-full w-1/4 border bg-[#F8F9FA] shadow-2xl flex items-start flex-col px-5">
-          <div className="w-full flex flex-col items-center">
-            <picture>
-              <Image
-                src={profile}
-                alt="profile"
-                className="w-[100px] mt-[50px]"
-              />
-            </picture>
-            <h1 className="font-medium text-xl mt-2">Fatin Nayhan</h1>
-            <h1 className="text-[#495057]">SMKMQ00010121</h1>
-          </div>
-          <div className="mt-12">
-            <h1 className="font-semibold text-lg">About</h1>
-            <h1 className="text-base">
-              Lorem ipsum dolor sit amet consectetur. Dui a morbi tempor
-              tristique in rutrum mattis ac neque. Maecenas vel nisi orci ipsum.
-              Consequat velit vel turpis placerat ac. Lectus in sed fames
-              pretium dolor tellus.
-            </h1>
-          </div>
-          <div className="flex mt-6 justify-between w-full">
-            <div className="">
-              <h1 className="font-semibold text-lg mb-2">Age</h1>
-              <h1>17 years old</h1>
-            </div>
-            <div className="">
-              <h1 className="font-semibold text-lg mb-2">Class</h1>
-              <h1>XII RPL</h1>
-            </div>
-          </div>
-          <div className="flex mt-6 justify-between w-full">
-            <div className="">
-              <h1 className="font-semibold text-lg mb-2">Date of Birth</h1>
-              <h1>03 January 2007 </h1>
-            </div>
-            <div className="">
-              <h1 className="font-semibold text-lg mb-2">Gender</h1>
-              <h1>Male</h1>
-            </div>
-          </div>
-          <div className="mt-6">
-            <h1 className="font-semibold text-lg mb-2">Email</h1>
-            <h1>nhannn@gmail.com</h1>
-          </div>
-          <div className="mt-6">
-            <h1 className="font-semibold text-lg mb-2">NISN</h1>
-            <h1>SMKMQ00010121</h1>
-          </div>
-          <div className="my-6">
-            <h1 className="font-semibold text-lg mb-2">Address</h1>
-            <h1 className="text-lg">
-              123, merdeka raya street, West Java, kec. Bojongkoneng, kel.
-              batulempeng 16522
-            </h1>
-          </div>
+          <Pagination
+            page={data?.pagination.page || 0}
+            pageSize={data?.pagination.pageSize || 0}
+            totalPages={data?.pagination.total_page || 0}
+            totalResults={data?.pagination.total || 0}
+            isFetching={isFetching}
+            current_data={data?.data.length || 0}
+            handlePage={handlePage}
+            handlePageSize={handlePageSize}
+          />
         </div>
       </div>
     </section>
