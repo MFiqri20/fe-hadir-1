@@ -187,6 +187,8 @@ const AdminAttendance: React.FC = () => {
     }
   }, [data]);
 
+  console.log(data?.data.kode_kelas);
+
   const textToCopy: any = data?.data.kode_kelas;
 
   useEffect(() => {
@@ -309,10 +311,10 @@ const AdminAttendance: React.FC = () => {
               </div>
               <div className="w-full md:w-auto md:block flex flex-col items-end">
                 <h1 className="font-quick font-medium md:text-[60px] text-[38px]">
-                  Database Class
+                  {data?.data.nama_mapel} Class
                 </h1>
                 <h1 className="font-quick font-medium md:text-3xl text-[28px] text-[#495057] text-right">
-                  07.30 - 10.00 PM{" "}
+                  {data?.data.jam_mulai} - {data?.data.jam_selesai} PM{" "}
                 </h1>
                 <div className="md:hidden flex gap-2 items-center">
                   <h1 className="font-quick text-2xl font-medium text-[#2F3E46]">

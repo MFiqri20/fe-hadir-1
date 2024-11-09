@@ -15,21 +15,16 @@ const generateAlphabetOptions = () => {
   }));
 };
 
-const KelasList = [
-  { nama_kelas: "X RPL", kelas: 1 },
-  { nama_kelas: "X TKJ", kelas: 4 },
-  { nama_kelas: "XI RPL", kelas: 2 },
-  { nama_kelas: "XI TKJ", kelas: 5 },
-  { nama_kelas: "XII RPL", kelas: 3 },
-  { nama_kelas: "XII TKJ", kelas: 6 },
-];
-
 const useOptions = () => {
   const axiosAuthClient = useAxiosAuth();
   const { data: session } = useSession();
 
   const getMapel = async (): Promise<any> => {
     return axiosAuthClient.get("/mapel/list").then((res) => res.data);
+  };
+
+  const getKelas = async (): Promise<any> => {
+    return axiosAuthClient.get("/kelas/list").then((res) => res.data);
   };
 
   const { data: optionMapel, isFetching: isFetchingMapel } = useQuery(
@@ -46,6 +41,26 @@ const useOptions = () => {
       },
     }
   );
+
+  const { data: optionKelas, isFetching: isFetchingKelas } = useQuery(
+    ["/kelas/list"],
+    () => getKelas(),
+    {
+      enabled: !!session,
+      select: (data) => {
+        const options = data?.data?.map((item: any) => ({
+          label: item.nama_kelas,
+          value: item.id,
+        }));
+        return options;
+      },
+    }
+  );
+
+  // const optionKelas = KelasList.map((item) => ({
+  //   label: item.nama_kelas,
+  //   value: item.kelas,
+  // }));
 
   const getHari = async (): Promise<any> => {
     return axiosAuthClient.get("/hari/list").then((res) => res.data);
@@ -70,10 +85,8 @@ const useOptions = () => {
     return axiosAuthClient.get("/subject-code/list").then((res) => res.data);
   };
 
-  const { data: optionSubjectCode, isFetching: isFetchingSubjectCode } = useQuery(
-    ["/subject-code/list"],
-    () => getSubjectCode(),
-    {
+  const { data: optionSubjectCode, isFetching: isFetchingSubjectCode } =
+    useQuery(["/subject-code/list"], () => getSubjectCode(), {
       enabled: !!session,
       select: (data) => {
         const options = data?.data?.map((item: SubjectCode) => ({
@@ -82,8 +95,7 @@ const useOptions = () => {
         }));
         return options;
       },
-    }
-  );
+    });
 
   const { data: optionJadwalCode, isFetching: isFetchingJadwalCode } = useQuery(
     ["/subject-code/list"],
@@ -101,13 +113,13 @@ const useOptions = () => {
   );
 
   const getIntitialSchedule = async (): Promise<any> => {
-    return axiosAuthClient.get("/initial-schedule/list").then((res) => res.data);
+    return axiosAuthClient
+      .get("/initial-schedule/list")
+      .then((res) => res.data);
   };
 
-  const { data: optionInitialSchedule, isFetching: isFetchingInitialSchedule } = useQuery(
-    ["/initial-schedule/list"],
-    () => getIntitialSchedule(),
-    {
+  const { data: optionInitialSchedule, isFetching: isFetchingInitialSchedule } =
+    useQuery(["/initial-schedule/list"], () => getIntitialSchedule(), {
       enabled: !!session,
       select: (data) => {
         const options = data?.data?.map((item: any) => ({
@@ -116,13 +128,9 @@ const useOptions = () => {
         }));
         return options;
       },
-    }
-  );
+    });
 
-  const optionKelas = KelasList.map((item) => ({
-    label: item.nama_kelas,
-    value: item.kelas,
-  }));
+  //
 
   // Generate options for initial_schedule from A to Z
   // const optionInitialSchedule = generateAlphabetOptions();
@@ -138,6 +146,7 @@ const useOptions = () => {
     isFetchingHari,
     isFetchingSubjectCode,
     isFetchingJadwalCode,
+    isFetchingKelas,
     isFetchingInitialSchedule,
   };
 };
