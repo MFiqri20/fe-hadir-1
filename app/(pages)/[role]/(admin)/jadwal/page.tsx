@@ -155,7 +155,7 @@ const TableJadwal: React.FC = () => {
           <div className="min-w-[800px] max-h-[550px]">
             <div className="flex flex-row justify-between w-full bg-blue-800 text-white font-semibold">
               <div className="py-2 px-6">Clock</div>
-              {optionKelas.map((kelas) => (
+              {optionKelas.map((kelas: any) => (
                 <div key={kelas.value} className="py-2 px-6">
                   {kelas.label}
                 </div>
