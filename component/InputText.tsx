@@ -35,8 +35,8 @@ const InputField: React.FC<InputFieldProps> = ({
   };
 
   const inputClasses = isTextArea
-    ? "w-full font-quick font-medium border-0 rounded-md focus:ring-0 resize-y"
-    : "w-full font-quick font-medium border-0 focus:ring-0 rounded-md";
+    ? "w-full text-xl font-quick font-medium border-0 rounded-md focus:ring-0 resize-y"
+    : "w-full h-[60px] text-xl font-quick font-medium border-0 focus:ring-0 rounded-md";
 
   const InputElement = isTextArea ? "textarea" : "input";
 

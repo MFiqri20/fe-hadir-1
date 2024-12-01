@@ -49,6 +49,17 @@
   background-color: #555;
 }
 
+@font-face {
+  font-family: brodille;
+  src: url('/brodille.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.custom {
+  font-family: brodille;
+}
+
 /* .background {
   position: absolute;
   top: 0;

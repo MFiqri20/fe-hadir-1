@@ -15,6 +15,10 @@ import {
 } from "@/app/lib/(absen)";
 import { signOut } from "next-auth/react";
 import useAuthModule from "@/app/lib/(auth)/lib";
+import { ClipLoader } from "react-spinners";
+import Navbar from "@/component/Navbar";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
 const AdminPage = () => {
   const [countdown, setCountdown] = useState({
@@ -147,76 +151,42 @@ const AdminPage = () => {
 
   return (
     <section>
-      <div className="w-full px-10 py-5 border-b bg-[#023E8A] flex flex-row justify-between items-center">
-        <picture>
-          <Image src={hadirpak} alt="hadir" />
-        </picture>
-        <div className="flex gap-10">
-          <a href="" className="font-quick text-[#FFBC25] text-base">
-            Dashboard
-          </a>
-          <button
-            onClick={() => router.push("attendance")}
-            className="font-quick text-white text-base"
-          >
-            Attendance
-          </button>
-          <a href="" className="font-quick text-white text-base">
-            Userdata
-          </a>
-        </div>
-        <div className="dropdown dropdown-end">
-          <div
-            tabIndex={0}
-            role="button"
-            className="btn btn-ghost btn-circle avatar"
-          >
-            <div className="rounded-full">
-              <picture>
-                <Image src={profile} alt="user" width={80} height={80} />
-              </picture>
-            </div>
-          </div>
-          <ul
-            tabIndex={0}
-            className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
-          >
-            <li>
-              <a className="justify-between">Profile</a>
-            </li>
-            <li>
-              <a>Settings</a>
-            </li>
-            <li>
-              <a
-                onClick={async () => {
-                  await signOut();
-                  router.push("/login");
-                }}
-              >
-                Logout
-              </a>
-            </li>
-          </ul>
-        </div>
-      </div>
+      <Navbar
+        role="guru"
+        title1="Dashboard"
+        title2="Attendance"
+        title3="Recap"
+      />
 
       <div className="w-screen px-8">
+        {/* Profile Skeleton */}
         <div className="flex w-full justify-between my-10 items-center">
           <div className="flex flex-col gap-3">
             <h1 className="font-quick text-3xl font-medium">
-              Hi, {dataProfil?.data.nama}
+              {isFetching ? (
+                <Skeleton height={35} width={100} />
+              ) : (
+                `Hi, ${dataProfil?.data.nama}`
+              )}
             </h1>
             <div className="flex flex-row gap-2">
-              <picture>
+              {isFetching ? (
+                <Skeleton height={35} width={35} />
+              ) : (
                 <Image src={logo} alt="user" width={35} height={35} />
-              </picture>
+              )}
               <h1 className="font-quick text-3xl">
-                SMK Madinatul Quran | Teacher
+                {isFetching ? (
+                  <Skeleton height={35} width={200} />
+                ) : (
+                  "SMK Madinatul Quran | Teacher"
+                )}
               </h1>
             </div>
           </div>
-          {!data?.data.is_absen && (
+
+          {/* Countdown Skeleton */}
+          {!isFetching && !data?.data.is_absen && (
             <div className="w-[672px] flex gap-6 items-center">
               <span className="countdown text-[100px] font-light text-[#495057]">
                 <span style={{ "--value": countdown.hours } as any}></span>:
@@ -224,78 +194,124 @@ const AdminPage = () => {
                 <span style={{ "--value": countdown.seconds } as any}></span>
               </span>
               <div className="flex flex-col">
-                <h1 className="font-quick font-medium text-2xl text-[#495057] ">
-                  left before check-in to {data?.data.mapel}
+                <h1 className="font-quick font-medium text-2xl text-[#495057]">
+                  {isFetching ? (
+                    <Skeleton height={35} width={500} />
+                  ) : (
+                    `left before check-in to ${data?.data.mapel}`
+                  )}
                 </h1>
-                <h1 className="font-quick font-medium text-2xl text-[#495057] ">
-                  {data?.data.kelas} Class
+                <h1 className="font-quick font-medium text-2xl text-[#495057]">
+                  {isFetching ? (
+                    <Skeleton height={35} width={500} />
+                  ) : (
+                    `${data?.data.kelas} Class`
+                  )}
                 </h1>
               </div>
             </div>
           )}
         </div>
+
+        {/* Button Skeleton */}
         <button
           onClick={handleAbsence}
-          disabled={buttonDisabled}
+          disabled={isFetching || buttonDisabled}
           className={`btn w-full h-[60px] mt-10 text-[#212529] text-3xl font-quick font-semibold py-3 ${
             data?.data.is_absen || !isCountdownOver
               ? "btn-disabled"
               : "btn-outline"
           }`}
         >
-          {isLoading ? (
+          {isFetching ? (
+            <Skeleton height={35} width={100} />
+          ) : isLoading ? (
             <span className="loading loading-spinner"></span>
           ) : (
             buttonText
           )}
         </button>
-        <hr className="w-full border border-[#6C757D] mt-8" />
-        <div className="flex md:flex-row flex-col my-8 justify-evenly">
-          <DoughnutComponent
-            title="Weekly"
-            absen={25}
-            attendece={25}
-            permission={50}
-          />
-          <DoughnutComponent
-            title="Monthly"
-            absen={25}
-            attendece={25}
-            permission={50}
-          />
-          <DoughnutComponent
-            title="Semester Basis"
-            absen={25}
-            attendece={25}
-            permission={50}
-          />
-        </div>
-        <hr className="w-full border border-[#6C757D]" />
-        {/*  */}
 
+        <hr className="w-full border border-[#6C757D] mt-8" />
+
+        {/* Chart Skeletons */}
+        <div className="flex md:flex-row flex-col my-8 justify-evenly">
+          {isFetching ? (
+            Array.from({ length: 3 }).map((_, index) => (
+              <Skeleton key={index} height={300} width={300} />
+            ))
+          ) : (
+            <>
+              <DoughnutComponent
+                title="Weekly"
+                absen={25}
+                attendece={25}
+                permission={50}
+              />
+              <DoughnutComponent
+                title="Monthly"
+                absen={25}
+                attendece={25}
+                permission={50}
+              />
+              <DoughnutComponent
+                title="Semester Basis"
+                absen={25}
+                attendece={25}
+                permission={50}
+              />
+            </>
+          )}
+        </div>
+
+        <hr className="w-full border border-[#6C757D]" />
+
+        {/* Class Info Skeleton */}
         <div className="flex w-full justify-between mt-6">
           <div className="">
             <h1 className="font-quick font-semibold text-4xl text-[#212529]">
-              Today`s Class
+              {isFetching ? (
+                <Skeleton height={35} width={200} />
+              ) : (
+                "Today's Class"
+              )}
             </h1>
-
             <h1 className="font-quick font-medium text-lg text-[#495057] w-[708px] mt-2">
-              Today`s class is a{" "}
-              <span className="font-bold">{data?.data.mapel} class</span> ,
-              please enter the class that is already available in the schedule
-              or click button beside.
+              {isFetching ? (
+                <Skeleton height={35} width={150} />
+              ) : (
+                `Today's class is a ${data?.data.mapel} class.`
+              )}
             </h1>
           </div>
           <button
             onClick={handleMasukKelas}
-            disabled={!data?.data.is_absen}
+            disabled={isLoading || !data?.data.is_absen}
             className="btn btn-outline font-semibold text-[24px] px-16 h-[98px]"
           >
-            Enter class
+            {isLoading ? (
+              <ClipLoader color={"#36d7b7"} size={20} />
+            ) : (
+              "Enter Class"
+            )}
           </button>
         </div>
-        <TableJadwal />
-        <TeacherTable />
+
+        {/* Table Skeletons */}
+        {isFetching ? (
+          <Skeleton height={300} width={1670} />
+        ) : (
+          <>
+            <TableJadwal />
+          </>
+        )}
+        {isFetching ? (
+          <Skeleton height={300} width={1670} />
+        ) : (
+          <>
+            <TeacherTable />
+          </>
+        )}
       </div>
       <Footer />
     </section>

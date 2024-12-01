@@ -12,14 +12,15 @@ import useOptions from "@/hook/useOption";
 import TeacherTable from "../../../dashboard/component/TeacherSchedule";
 import useCrudModule from "@/hook/useCRUD";
 import InputFieldAuth from "@/component/InputTextAuth";
+import { createJadwalSchema } from "@/schema";
 
 // Define KelasList here
 const KelasList = [
   { nama_kelas: "X RPL", kelas: 1 },
-  { nama_kelas: "X TKJ", kelas: 4 },
-  { nama_kelas: "XI RPL", kelas: 2 },
-  { nama_kelas: "XI TKJ", kelas: 5 },
-  { nama_kelas: "XII RPL", kelas: 3 },
+  { nama_kelas: "X TKJ", kelas: 2 },
+  { nama_kelas: "XI RPL", kelas: 3 },
+  { nama_kelas: "XI TKJ", kelas: 4 },
+  { nama_kelas: "XII RPL", kelas: 5 },
   { nama_kelas: "XII TKJ", kelas: 6 },
 ];
 
@@ -37,25 +38,7 @@ const generateKelasMap = () => {
   }, {} as Record<string, number>);
 };
 
-export const createJadwalSchema = yup.object().shape({
-  hari_id: yup.number().nullable().default(0).required("Wajib isi"),
-  jam_jadwal: yup
-    .array()
-    .of(
-      yup.object().shape({
-        jam_mulai: yup.string().nullable().default("").required("Wajib isi"),
-        jam_selesai: yup.string().nullable().default("").required("Wajib isi"),
-        is_rest: yup.boolean().required("Wajib isi"),
-        jam_detail: yup.array().of(
-          yup.object().shape({
-            subject_code: yup.number().required("Wajib isi"),
-            kelas: yup.number().required("Wajib isi"),
-          })
-        ),
-      })
-    )
-    .required("Wajib isi"),
-});
+
 
 const CreateJadwal = () => {
   // const { useCreateJadwal } = useJadwalModule();
@@ -109,8 +92,8 @@ const CreateJadwal = () => {
   console.log(formik.values);
 
   return (
-    <section className="flex items-center overflow-x-auto flex-col justify-center w-full h-fit pt-10 bg-gray-50 p-10 font-quick">
-      <section className="bg-white p-8 rounded-lg mt-20 shadow-lg w-full">
+    <section className="flex items-center overflow-x-auto flex-col justify-center w-full h-fit px-6 p-4 font-quick">
+      <section className="w-full">
         <Link href="/admin/jadwal">
           <span className="flex items-center mb-4 text-blue-600 hover:underline">
             <ArrowLongLeftIcon className="h-5 w-5 mr-2" />
@@ -291,7 +274,7 @@ const CreateJadwal = () => {
                     </table>
                   </div>
                   <button type="submit" className="btn btn-outline px-10">
-                    Submit
+                    {isLoading ? "Loading..." : "Submit"}
                   </button>
                   <button
                     type="button"

@@ -15,6 +15,8 @@ import {
 import useAuthModule from "@/app/lib/(auth)/lib";
 import dayjs from "dayjs";
 import socket from "@/lib/socket";
+import { ClipLoader } from "react-spinners";
+import Navbar from "@/component/Navbar";
 
 const SiswaAttendance: React.FC = () => {
   const { data: session, status } = useSession();
@@ -25,7 +27,7 @@ const SiswaAttendance: React.FC = () => {
   const [isAbsen2, setIsAbsen2] = useState<boolean>(false);
 
   const { useCreate } = useCrudModule();
-  const { mutate } = useCreate<CreateAbsenSiswaPayload>(
+  const { mutate, isLoading } = useCreate<CreateAbsenSiswaPayload>(
     "/absen/masuk-siswa",
     "/jadwal/hari-ini-siswa"
   );
@@ -192,51 +194,12 @@ const SiswaAttendance: React.FC = () => {
 
   return (
     <main className="w-screen h-full">
-      <div className="w-full px-10 py-5 border-b bg-[#023E8A] flex flex-row justify-between items-center">
-        <Image src={hadirpak} alt="hadir" />
-        <div className="flex gap-10">
-          <a
-            href="/murid/dashboard"
-            className="font-quick text-white text-base"
-          >
-            Dashboard
-          </a>
-          <a
-            href="/murid/attendance"
-            className="font-quick text-[#FFBC25] text-base"
-          >
-            Attendance
-          </a>
-          <a href="#" className="font-quick text-white text-base">
-            Userdata
-          </a>
-        </div>
-        <div className="dropdown dropdown-end">
-          <div
-            tabIndex={0}
-            role="button"
-            className="btn btn-ghost btn-circle avatar"
-          >
-            <div className="rounded-full">
-              <Image src={profile} alt="user" width={80} height={80} />
-            </div>
-          </div>
-          <ul
-            tabIndex={0}
-            className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
-          >
-            <li>
-              <a className="justify-between">Profile</a>
-            </li>
-            <li>
-              <a>Settings</a>
-            </li>
-            <li>
-              <a onClick={() => signOut()}>Logout</a>
-            </li>
-          </ul>
-        </div>
-      </div>
+      <Navbar
+      role="murid"
+      title1="Dashboard"
+      title2="Attendance"
+      title3="Profile"
+      />
 
       <div className="px-10 w-full h-screen">
         <div className="w-full flex justify-between items-center">
@@ -298,7 +261,16 @@ const SiswaAttendance: React.FC = () => {
               className="btn btn-outline mt-6 w-96 hover:bg-[#023E8A]"
               onClick={handleSubmit}
             >
-              Submit
+              {isLoading ? (
+                <ClipLoader
+                  color={"#36d7b7"}
+                  size={20}
+                  aria-label="Loading Spinner"
+                  data-testid="loader"
+                />
+              ) : (
+                'Submit'
+              )}
             </button>
           </div>
         )}

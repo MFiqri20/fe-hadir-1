@@ -7,8 +7,12 @@ import { useFormik, Form, FormikProvider } from "formik";
 import * as yup from "yup";
 import { MapelCreatePayload } from "@/app/lib/(mapel)/interface";
 import Link from "next/link";
-import { ArrowLongLeftIcon } from "@heroicons/react/20/solid";
+// icons
+import { ArrowLongLeftIcon, ChevronLeftIcon } from "@heroicons/react/20/solid";
+import { RiNotificationBadgeLine } from "react-icons/ri";
+//
 import useCrudModule from "@/hook/useCRUD";
+import { useRouter } from "next/navigation";
 
 export const createMapelSchema = yup.object().shape({
   nama_mapel: yup.string().nullable().default("").required("Wajib isi"),
@@ -55,61 +59,76 @@ const CreateMapel = () => {
     resetForm,
     setValues,
   } = formik;
+  const route = useRouter();
 
   return (
-    <section className="flex items-center justify-center w-full h-screen bg-gray-50 p-10 font-quick">
-      <section className="bg-white p-8 rounded-lg shadow-lg w-full max-w-lg">
-        <Link href="/admin/mapel">
-          <span className="flex items-center mb-4 text-blue-600 hover:underline">
-            <ArrowLongLeftIcon className="h-5 w-5 mr-2" />
-            Kembali
-          </span>
-        </Link>
-        <h2 className="text-2xl font-semibold text-gray-700 mb-6">
-          Tambah Mapel
-        </h2>
+    <section>
+      <div className="flex justify-between items-center mx-6 my-8">
+        <h1 className="text-4xl font-medium">
+          {" "}
+          <span className="text-[#0077B6]">Create</span> | Subject
+        </h1>
+        <RiNotificationBadgeLine className="text-3xl" />
+      </div>
+      <hr className="w-full border mt-8" />
+      <section className="flex justify-center w-full h-screen p-10 font-quick">
+        <section className="bg-[#F8F9FA] p-8 rounded-lg shadow-lg w-full h-fit">
+          <button
+            onClick={() => route.push("/admin")}
+            className="flex items-center justify mb-10 hover:underline"
+          >
+            <ChevronLeftIcon className="w-8 mr-2" />
+            <h1 className="text-2xl font-semibold text-gray-700 hover:underline-offset-0">
+              Tambah Mapel
+            </h1>
+          </button>
+          <FormikProvider value={formik}>
+            <Form className="space-y-6" onSubmit={handleSubmit}>
+              <section className="flex flex-col gap-3">
+                <Label
+                  htmlFor="nama"
+                  title="Subjet Name"
+                  style="font-medium text-xl"
+                />
+                <InputText
+                  value={values.nama_mapel}
+                  placeholder="Enter Subject Name"
+                  name="nama_mapel"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  error={formik.errors.nama_mapel}
+                  touched={formik.touched.nama_mapel}
+                />
+              </section>
 
-        <FormikProvider value={formik}>
-          <Form className="space-y-6" onSubmit={handleSubmit}>
-            <section>
-              <Label htmlFor="nama_mapel" title="Nama mapel" />
-              <InputText
-                value={values.nama_mapel}
-                placeholder="Nama mapel"
-                name="nama_mapel"
-                onChange={handleChange}
-                onBlur={handleBlur}
-                error={formik.errors.nama_mapel}
-                touched={formik.touched.nama_mapel}
-              />
-            </section>
+              <section className="flex flex-col items-start gap-3 w-full">
+                <Label htmlFor="status_mapel" title="Status" />
+                <Select
+                  style="w-full"
+                  value={values.status_mapel}
+                  id="status_mapel"
+                  name="status_mapel"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  options={options}
+                  isError={!!errors.status_mapel}
+                  messageError={errors.status_mapel}
+                />
+              </section>
 
-            <section>
-              <Label htmlFor="status_mapel" title="Status" />
-              <Select
-                value={values.status_mapel}
-                id="status_mapel"
-                name="status_mapel"
-                onChange={handleChange}
-                onBlur={handleBlur}
-                options={options}
-                isError={!!errors.status_mapel}
-                messageError={errors.status_mapel}
-              />
-            </section>
-
-            <section className="mt-6">
-              <Button
-                height="md"
-                title="Simpan"
-                colorSchema="blue"
-                isLoading={isLoading}
-                isDisabled={isLoading}
-                className="w-full"
-              />
-            </section>
-          </Form>
-        </FormikProvider>
+              <section className="mt-6">
+                <Button
+                  style="btn btn-outline w-full font-semibold text-xl bg-[#023E8A] text-white hover:bg-white hover:text-[#023E8A]"
+                  height="md"
+                  title="Simpan"
+                  isLoading={isLoading}
+                  isDisabled={isLoading}
+                  className="w-full"
+                />
+              </section>
+            </Form>
+          </FormikProvider>
+        </section>
       </section>
     </section>
   );

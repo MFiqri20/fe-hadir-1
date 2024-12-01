@@ -39,6 +39,15 @@ interface daftarSiswaInterface {
   waktu_keluar: string | null;
 }
 
+interface Recap {
+  Senin: number;
+  Selasa: number;
+  Rabu: number;
+  Kamis: number;
+  Jumat: number;
+  Sabtu: number;
+}
+
 export interface DetailAbsenKelasIResponse extends BaseResponseSucess {
   data: DetailAbsenKelasInterface;
 }
@@ -50,6 +59,9 @@ export interface DataJadwalHariIniResponse {
 export interface CreateAbsenGuruPayload {
   jam_detail: number | undefined;
 }
+export interface CreateAbsenStaffPayload {
+  jam_detail: number | undefined;
+}
 
 export interface CreateAbsenSiswaPayload {
   kode_class: string | undefined;
@@ -57,4 +69,8 @@ export interface CreateAbsenSiswaPayload {
 
 export interface CreateKelasMasukGuruPayload {
   jam_detail: number | undefined;
+}
+
+export interface RecapPayload {
+  data: Recap;
 }

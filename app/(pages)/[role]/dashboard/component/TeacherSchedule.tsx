@@ -1,10 +1,11 @@
 import { GuruSubjectListResponse } from "@/app/lib/(guru)/interface";
 import useCrudModule from "@/hook/useCRUD";
 import React from "react";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+import { ClipLoader } from "react-spinners";
 
 export default function TeacherTable() {
-  // const { useGuruSubjectList } = useGuruModule();
-  // const { data, isFetching } = useGuruSubjectList();
   const { useList } = useCrudModule();
   const { data, isFetching } =
     useList<GuruSubjectListResponse>("/guru/list-subject");
@@ -21,51 +22,59 @@ export default function TeacherTable() {
           </tr>
         </thead>
         <tbody className="text-black">
-          {data?.data.map((teacher, index) => (
-            <React.Fragment key={teacher.id}>
-              <tr>
-                <td
-                  className="border text-center border-black px-4 py-2"
-                  rowSpan={teacher.mapel.length || 1}
-                >
-                 {teacher.initial_schedule}
-                </td>
-                <td
-                  className="border border-black px-4 py-2"
-                  rowSpan={teacher.mapel.length || 1}
-                >
-                  {teacher.nama}
-                </td>
-                {teacher.mapel.length > 0 ? (
-                  <td className="border border-black px-4 py-2">
-                    {teacher.mapel[0].nama_mapel}
-                  </td>
-                ) : (
+          {isFetching ? (
+            // Skeleton Loader
+            <div className="w-full flex justify-center items-center">
+              <ClipLoader color={"#36d7b7"} size={20} />
+            </div>
+          ) : (
+            // Render actual data
+            data?.data.map((teacher, index) => (
+              <React.Fragment key={teacher.id}>
+                <tr>
                   <td
-                    className="border border-black px-4 py-2 text-center"
-                    colSpan={2}
+                    className="border text-center border-black px-4 py-2"
+                    rowSpan={teacher.mapel.length || 1}
                   >
-                    No subjects available
+                    {teacher.initial_schedule}
                   </td>
-                )}
-                {teacher.mapel.length > 0 && (
-                  <td className="border border-black px-4 py-2">
-                    {teacher.mapel[0].subject_code}
+                  <td
+                    className="border border-black px-4 py-2"
+                    rowSpan={teacher.mapel.length || 1}
+                  >
+                    {teacher.nama}
                   </td>
-                )}
-              </tr>
-              {teacher.mapel.slice(1).map((subject, i) => (
-                <tr key={i}>
-                  <td className="border border-black px-4 py-2">
-                    {subject.nama_mapel}
-                  </td>
-                  <td className="border border-black px-4 py-2">
-                    {subject.subject_code}
-                  </td>
+                  {teacher.mapel.length > 0 ? (
+                    <td className="border border-black px-4 py-2">
+                      {teacher.mapel[0].nama_mapel}
+                    </td>
+                  ) : (
+                    <td
+                      className="border border-black px-4 py-2 text-center"
+                      colSpan={2}
+                    >
+                      No subjects available
+                    </td>
+                  )}
+                  {teacher.mapel.length > 0 && (
+                    <td className="border border-black px-4 py-2">
+                      {teacher.mapel[0].subject_code}
+                    </td>
+                  )}
                 </tr>
-              ))}
-            </React.Fragment>
-          ))}
+                {teacher.mapel.slice(1).map((subject, i) => (
+                  <tr key={i}>
+                    <td className="border border-black px-4 py-2">
+                      {subject.nama_mapel}
+                    </td>
+                    <td className="border border-black px-4 py-2">
+                      {subject.subject_code}
+                    </td>
+                  </tr>
+                ))}
+              </React.Fragment>
+            ))
+          )}
         </tbody>
       </table>
     </div>

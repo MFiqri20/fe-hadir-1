@@ -11,7 +11,7 @@ interface ButtonProps {
   messageError?: string;
   id: string;
   value: string | number | null | undefined;
-
+  style?: string;
 }
 
 const Select: React.FC<
@@ -23,21 +23,22 @@ const Select: React.FC<
   id,
   messageError = "wajib di isi",
   isError = false,
+  style,
   ...props
 }) => {
   return (
-    <section>
+    <section className="w-full">
       <select
         value={value}
         name={name}
         id={id}
-        className={clsx(`w-full h-10 border rounded px-2`, {
+        className={clsx(`border rounded px-2 font-medium text-xl text-[#495057] ${style || ""}`, {
           "border-red-500 border-2": isError,
           "border-gray-700": !isError,
         })}
         {...props}
       >
-       <option>Pilih</option>
+        <option>Choose Initial</option>
         {options?.map((option, index) => (
           <option key={index} value={option.value}>
             {option.label}

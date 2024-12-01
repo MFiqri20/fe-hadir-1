@@ -1,3 +1,4 @@
+"use client";
 import Image from "next/image";
 import profile from "/public/images/profile.png";
 import logo from "/public/images/logo.png";
@@ -27,11 +28,30 @@ import {
   CreateAbsenSiswaPayload,
   DataJadwalHariIniResponse,
 } from "@/app/lib/(absen)";
+import useAuthModule from "@/app/lib/(auth)/lib";
+import Navbar from "@/component/Navbar";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+import axios from "axios";
+import useDownloadPdf from "@/hook/useDownloadPdf";
 
 const SiswaPage = () => {
   const [seconds, setSeconds] = useState(59);
   const [minutes, setMinutes] = useState(24);
   const [hours, setHours] = useState(10);
+  const { useProfile } = useAuthModule();
+  const { data: dataProfil, } = useProfile();
+  const { useDetail } = useCrudModule();
+  // const { data: dataPdf, isLoading } = useDetail<Blob>("/download/pdf-week");
+
+  const role = 'murid';
+
+  const { downloadPdf, isLoading, error } = useDownloadPdf({ role });
+
+  const handleDownload = () => {
+    // Sesuaikan endpoint dan nama file
+    downloadPdf(`/api/download/pdf`, "Recap.pdf");
+  };
 
   useEffect(() => {
     const countdown = setInterval(() => {
@@ -50,147 +70,144 @@ const SiswaPage = () => {
     return () => clearInterval(countdown);
   }, [seconds, minutes, hours]);
 
-  const { data, isFetching } =
-    useCrudModule().useList<DataJadwalHariIniResponse>(
-      "/jadwal/hari-ini-siswa"
-    );
+  const {
+    data,
+    isFetching,
+    isLoading: isJadwalLoading,
+  } = useCrudModule().useList<DataJadwalHariIniResponse>(
+    "/jadwal/hari-ini-siswa"
+  );
 
-    const router = useRouter()
+  const router = useRouter();
 
-  console.log("data", data);
+  // useEffect(() => {
+  //   console.log("Data PDF:", dataPdf);
+  // }, [dataPdf]);
+  
+
+  // const handleDownload = async () => {
+  //   try {
+  //     const response = await axios.get("/download/pdf-week", {
+  //       responseType: "blob", // Pastikan respons berupa file biner
+  //     });
+  
+  //     const url = window.URL.createObjectURL(new Blob([response.data], { type: "application/pdf" }));
+  //     const link = document.createElement("a");
+  //     link.href = url;
+  //     link.setAttribute("download", "WeeklyRecap.pdf");
+  //     document.body.appendChild(link);
+  //     link.click();
+  //     link.parentNode?.removeChild(link);
+  //   } catch (error) {
+  //     console.error("Error downloading file:", error);
+  //     alert("Gagal mengunduh file. Silakan coba lagi.");
+  //   }
+  // };
+  
+  
 
   return (
     <section>
-      <div className="w-full px-10 py-5 border-b bg-[#023E8A] flex flex-row justify-between items-center">
-        <picture>
-          <Image src={hadirpak} alt="hadir" />
-        </picture>
-        <div className="flex gap-10">
-          <a href="/murid/dashboard" className="font-quick text-[#FFBC25] text-base">
-            Dashboard
-          </a>
-          <a
-            href={`/murid/attendance`}
-            className="font-quick text-white text-base"
-          >
-            Attendance
-          </a>
-          <a href="" className="font-quick text-white text-base">
-            Userdata
-          </a>
-        </div>
-        <div className="dropdown dropdown-end">
-          <div
-            tabIndex={0}
-            role="button"
-            className="btn btn-ghost btn-circle avatar"
-          >
-            <div className="rounded-full">
-              <picture>
-                <Image src={profile} alt="user" width={80} height={80} />
-              </picture>
-            </div>
-          </div>
-          <ul
-            tabIndex={0}
-            className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
-          >
-            <li>
-              <a className="justify-between">Profile</a>
-            </li>
-            <li>
-              <a>Settings</a>
-            </li>
-            <li>
-              <a
-                onClick={async () => {
-                  await signOut();
-                  router.push('/login')
-                }}
-              >
-                Logout
-              </a>
-            </li>
-          </ul>
-        </div>
-      </div>
-      {/*  */}
+      <Navbar
+        role="murid"
+        title1="Dashboard"
+        title2="Attendance"
+        title3="Profile"
+      />
       <div className="w-screen px-8">
         <div className="flex w-full my-10 items-center">
           <div className="flex flex-col gap-3">
             <h1 className="font-quick text-3xl font-medium">
-              Hi, Ramzi Respati
+              {isLoading ? (
+                <Skeleton width={200} />
+              ) : (
+                `Hi, ${dataProfil?.data.nama}`
+              )}
+            </h1>
+            <h1 className="font-quick text-3xl font-medium">
+              {isLoading ? (
+                <Skeleton width={150} />
+              ) : (
+                `Kelas : ${data?.data.kelas}`
+              )}
             </h1>
             <div className="flex flex-row gap-2">
-              <picture>
-                <Image src={logo} alt="user" width={35} height={35} />
-              </picture>
+              {isLoading ? (
+                <Skeleton circle height={35} width={35} />
+              ) : (
+                <picture>
+                  <Image src={logo} alt="user" width={35} height={35} />
+                </picture>
+              )}
               <h1 className="font-quick text-3xl">
-                SMK Madinatul Quran | Student
+                {isLoading ? (
+                  <Skeleton width={300} />
+                ) : (
+                  "SMK Madinatul Quran | Student"
+                )}
               </h1>
             </div>
           </div>
         </div>
-        {/*  */}
-        {/*  */}
         <hr className="w-full border border-[#6C757D]" />
-        {/*  */}
 
         <div className="flex w-full justify-between mt-6">
-          <div className="">
+          <div>
             <h1 className="font-quick font-semibold text-4xl text-[#212529]">
-              Today`s Class
+              {isLoading ? <Skeleton width={150} /> : "Today's Class"}
             </h1>
             <h1 className="font-quick font-medium text-lg text-[#495057] w-[708px] mt-2">
-              Today`s class is a{" "}
-              <span className="font-bold">{data?.data.mapel} class</span> , please enter
-              the class that is already available in the schedule or click
-              button beside.
+              {isLoading ? (
+                <Skeleton count={2} width={"70%"} />
+              ) : (
+                `Today's class is a ${data?.data.mapel} class, please enter the class that is already available in the schedule or click button beside.`
+              )}
             </h1>
           </div>
-          <button onClick={() => router.push("attendance")} className="btn btn-outline font-semibold text-[24px] px-16 h-[98px]">
-            Enter class
+          <button
+            onClick={() => router.push("attendance")}
+            className="btn btn-outline font-semibold text-[24px] px-16 h-[98px]"
+          >
+            {isLoading ? <Skeleton width={150} /> : "Enter class"}
           </button>
         </div>
 
-        <TableJadwal />
-        {/*  */}
+        {/* {isJadwalLoading ? <Skeleton height={250} /> : <TableJadwal />} */}
 
-        <TeacherTable />
+        {/* {isJadwalLoading ? <Skeleton height={250} /> : <TeacherTable />} */}
         <hr className="w-full border border-[#6C757D] mt-8" />
-        {/*  */}
-        <div className="flex md:flex-row flex-col my-8 justify-evenly">
-          <DoughnutComponent
-            title="Weekly"
-            absen={25}
-            attendece={25}
-            permission={50}
-          />
-          <DoughnutComponent
-            title="Monthly"
-            absen={25}
-            attendece={25}
-            permission={50}
-          />
-          <DoughnutComponent
-            title="Semester Basis"
-            absen={25}
-            attendece={25}
-            permission={50}
-          />
-        </div>
-        {/*  */}
+
+        {isLoading ? (
+          <Skeleton height={250} />
+        ) : (
+          <div className="flex md:flex-row flex-col my-8 justify-evenly">
+            {["Weekly", "Monthly", "Semester Basis"].map((title, index) => (
+              <DoughnutComponent
+                key={index}
+                title={title}
+                absen={25}
+                attendece={25}
+                permission={50}
+              />
+            ))}
+          </div>
+        )}
+
         <div className="flex w-full justify-between mb-32">
           <h1 className="font-quick font-medium text-lg text-[#495057] w-[708px]">
-            This will kindly remind you of your attendance each time you clock
-            in, whether it be weekly, monthly, or per semester.
+            {isLoading ? (
+              <Skeleton count={2} />
+            ) : (
+              "This will kindly remind you of your attendance each time you clock in, whether it be weekly, monthly, or per semester."
+            )}
           </h1>
-          <button className="btn btn-outline font-semibold text-[16px]">
-            Download Recap
+          <button 
+          onClick={handleDownload}
+          className="btn btn-outline font-semibold text-[16px]">
+            {isLoading ? <Skeleton width={150} /> : "Download Recap"}
           </button>
         </div>
       </div>
-      {/*  */}
       <Footer />
     </section>
   );

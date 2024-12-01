@@ -107,7 +107,7 @@ const useCrudModule = () => {
       (payload: T) => axiosAuthClient.post(url, payload),
       {
         onSuccess: (response) => {
-          console.log('data', data);
+          console.log("data", data);
           toastSuccess(response.data.message);
           queryClient.invalidateQueries([urlInvalidate]); // Optionally, invalidate queries to refetch data
         },
@@ -158,12 +158,12 @@ const useCrudModule = () => {
       (payload: T) => axiosAuthClient.post(url, payload),
       {
         onSuccess: (response) => {
-          toastSuccess(response.data.message)
-          queryClient.invalidateQueries([url])
+          toastSuccess(response.data.message);
+          queryClient.invalidateQueries([url]);
         },
         onError: (error) => {
-          toastError()
-          console.log('errorrroroorororor',error);
+          toastError();
+          console.log("errorrroroorororor", error);
         },
       }
     );
@@ -174,7 +174,7 @@ const useCrudModule = () => {
     const axiosAuthClient = useAxiosAuth();
     const queryClient = useQueryClient();
     const { toastSuccess, toastError } = useToast();
-  
+
     const { mutate, isLoading } = useMutation(
       (payload: T) => updateResource<T>(url, id, payload),
       {
@@ -187,7 +187,7 @@ const useCrudModule = () => {
         },
       }
     );
-  
+
     return { mutate, isLoading };
   };
 

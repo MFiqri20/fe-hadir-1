@@ -11,6 +11,7 @@ import { useFormik, Form, FormikProvider } from "formik";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import InputFieldAuth from "@/component/InputTextAuth";
+import { ClipLoader } from "react-spinners";
 
 export const loginSchema = yup.object().shape({
   email: yup
@@ -119,7 +120,16 @@ const Login = () => {
                   </a>
                 </div>
                 <button type="submit" className="btn btn-outline w-full">
-                  Login
+                  {isLoading ? (
+                    <ClipLoader
+                      color={"#36d7b7"}
+                      size={20}
+                      aria-label="Loading Spinner"
+                      data-testid="loader"
+                    />
+                  ) : (
+                    'Login'
+                  )}
                 </button>
               </div>
             </Form>

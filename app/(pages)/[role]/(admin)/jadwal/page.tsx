@@ -7,6 +7,8 @@ import * as yup from "yup";
 import useOptions from "@/hook/useOption";
 // import { UpdateJadwalPayload } from "@/app/(jadwal)/interface/update";
 import { JadwalDetailResponses } from "@/app/lib/(jadwal)/interface/detail";
+import { useRouter } from "next/navigation";
+import { ClipLoader } from "react-spinners";
 
 export const updateJadwalSchema = yup.object().shape({
   hari_id: yup.number().nullable(),
@@ -39,14 +41,13 @@ const TableJadwal: React.FC = () => {
   } | null>(null);
 
   const { useUpdate, useDetail } = useCrudModule();
-  const { data: dataJadwalDetail } = useDetail<JadwalDetailResponses>(
-    "jadwal/detail",
-    selectedDay || "0"
-  );
+  const { data: dataJadwalDetail, isFetching } =
+    useDetail<JadwalDetailResponses>("jadwal/detail", selectedDay || "0");
   const { mutate, isLoading } = useUpdate<any>(
     "jadwal/update",
     selectedDay || "0"
   );
+  const routes = useRouter();
 
   useEffect(() => {
     if (dataJadwalDetail) {
@@ -135,6 +136,17 @@ const TableJadwal: React.FC = () => {
 
   return (
     <div className="mt-3 p-6 font-quick w-full">
+      <div className="flex gap-10">
+        <button
+          className="btn btn-outline text-2xl"
+          onClick={() => routes.push("/admin/jadwal/create")}
+        >
+          Create Jadwal
+        </button>
+        <button className="btn btn-outline text-2xl hover:bg-red-500 hover:border-none">
+          Delete Jadwal
+        </button>
+      </div>
       <div className="flex flex-col">
         <div className="overflow-x-auto">
           <div className="flex w-full justify-between mt-12 mb-3">
@@ -174,89 +186,102 @@ const TableJadwal: React.FC = () => {
           <div className="min-w-[800px] max-h-[550px]">
             <div className="flex flex-row justify-between w-full bg-blue-800 text-white font-semibold">
               <div className="py-2 px-6">Clock</div>
-              {optionKelas.map((kelas) => (
+              {optionKelas?.map((kelas: any) => (
                 <div key={kelas.value} className="py-2 px-6">
                   {kelas.label}
                 </div>
               ))}
             </div>
-            <FormikProvider value={formik}>
-              <Form>
-                <div className="flex flex-col">
-                  {values.jam_jadwal?.map((jam: any, jamIndex: any) => (
-                    <div
-                      key={jamIndex}
-                      className="flex border-t flex-row justify-between"
-                    >
-                      <div className="border-t py-4 px-4 w-40 font-semibold">
-                        {`${jam.jam_mulai} - ${jam.jam_selesai}`}
-                      </div>
-                      {jam.is_rest ? (
-                        <div className="border-t py-4 px-4 w-full text-center font-semibold">
-                          Rest
+            {isFetching ? (
+              <FormikProvider value={formik}>
+                <Form>
+                  <div className="flex flex-col">
+                    {values.jam_jadwal?.map((jam: any, jamIndex: any) => (
+                      <div
+                        key={jamIndex}
+                        className="flex border-t flex-row justify-between"
+                      >
+                        <div className="border-t py-4 px-4 w-40 font-semibold">
+                          {`${jam.jam_mulai} - ${jam.jam_selesai}`}
                         </div>
-                      ) : (
-                        jam.jam_detail.map((detail: any, detailIndex: any) => (
-                          <div
-                            key={detailIndex}
-                            className={`border-t py-4 px-4 relative ${
-                              isEditing ? "bg-gray-100 cursor-pointer" : ""
-                            }`}
-                            onClick={() =>
-                              isEditing &&
-                              setEditCell({ jamIndex, detailIndex })
-                            }
-                          >
-                            {editCell?.jamIndex === jamIndex &&
-                            editCell?.detailIndex === detailIndex ? (
-                              <Field
-                                as="select"
-                                name={`jam_jadwal.${jamIndex}.jam_detail.${detailIndex}.subject_code`}
-                                className="border p-1 rounded"
-                                onBlur={handleBlur}
-                                onChange={(e: any) =>
-                                  handleCellChange(e, jamIndex, detailIndex)
-                                }
-                                value={detail.subject_code}
-                              >
-                                <option value="">Pilih</option>
-                                {optionJadwalCode.map((subject: any) => (
-                                  <option
-                                    key={subject.value}
-                                    value={subject.value}
-                                  >
-                                    {subject.label}
-                                  </option>
-                                ))}
-                              </Field>
-                            ) : (
-                              <span>
-                                {
-                                  optionJadwalCode.find(
-                                    (subject: any) =>
-                                      subject.value === detail.subject_code
-                                  )?.label
-                                }
-                              </span>
-                            )}
+                        {jam.is_rest ? (
+                          <div className="border-t py-4 px-4 w-full text-center font-semibold">
+                            Rest
                           </div>
-                        ))
-                      )}
-                    </div>
-                  ))}
-                </div>
-                {isEditing && (
-                  <div className="flex justify-end mt-4">
-                    <button
-                      type="submit"
-                      className="bg-blue-600 text-white px-4 py-2 rounded"
-                    >
-                      Save Changes
-                    </button>
+                        ) : (
+                          jam.jam_detail.map(
+                            (detail: any, detailIndex: any) => (
+                              <div
+                                key={detailIndex}
+                                className={`border-t py-4 px-4 relative ${
+                                  isEditing ? "bg-gray-100 cursor-pointer" : ""
+                                }`}
+                                onClick={() =>
+                                  isEditing &&
+                                  setEditCell({ jamIndex, detailIndex })
+                                }
+                              >
+                                {editCell?.jamIndex === jamIndex &&
+                                editCell?.detailIndex === detailIndex ? (
+                                  <Field
+                                    as="select"
+                                    name={`jam_jadwal.${jamIndex}.jam_detail.${detailIndex}.subject_code`}
+                                    className="border p-1 rounded"
+                                    onBlur={handleBlur}
+                                    onChange={(e: any) =>
+                                      handleCellChange(e, jamIndex, detailIndex)
+                                    }
+                                    value={detail.subject_code}
+                                  >
+                                    <option value="">Pilih</option>
+                                    {optionJadwalCode.map((subject: any) => (
+                                      <option
+                                        key={subject.value}
+                                        value={subject.value}
+                                      >
+                                        {subject.label}
+                                      </option>
+                                    ))}
+                                  </Field>
+                                ) : (
+                                  <span>
+                                    {
+                                      optionJadwalCode.find(
+                                        (subject: any) =>
+                                          subject.value === detail.subject_code
+                                      )?.label
+                                    }
+                                  </span>
+                                )}
+                              </div>
+                            )
+                          )
+                        )}
+                      </div>
+                    ))}
                   </div>
-                )}
-              </Form>
-            </FormikProvider>
+                  {isEditing && (
+                    <div className="flex justify-end mt-4">
+                      <button
+                        type="submit"
+                        className="bg-blue-600 text-white px-4 py-2 rounded"
+                      >
+                        Save Changes
+                      </button>
+                    </div>
+                  )}
+                </Form>
+              </FormikProvider>
+            ) : (
+              <div className="w-full flex justify-center my-5">
+                <ClipLoader
+                  color={"#36d7b7"}
+                  size={20}
+                  aria-label="Loading Spinner"
+                  data-testid="loader"
+                />
+              </div>
+            )}
           </div>
           <div className="flex justify-end mt-4">
             {!isEditing && selectedDay && (
