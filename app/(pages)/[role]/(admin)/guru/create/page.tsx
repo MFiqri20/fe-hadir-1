@@ -75,13 +75,7 @@ const CreateGuru = () => {
 
   return (
     <div className="">
-      <div className="flex justify-between items-center mx-6 my-8">
-        <h1 className="text-4xl font-medium">
-          {" "}
-          <span className="text-[#0077B6]">Create</span> | Teacher
-        </h1>
-        <RiNotificationBadgeLine className="text-3xl" />
-      </div>
+
       {/*  */}
       <hr className="w-full border mt-8" />
       <section className="flex justify-center w-full h-screen md:p-10 p-3 font-quick">
@@ -92,7 +86,7 @@ const CreateGuru = () => {
           >
             <ChevronLeftIcon className="w-8 mr-2" />
             <h1 className="text-2xl font-semibold text-gray-700 hover:underline-offset-0">
-              Tambah Kelas
+              Tambah Guru
             </h1>
           </button>
 

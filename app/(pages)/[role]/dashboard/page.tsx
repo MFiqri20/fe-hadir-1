@@ -14,15 +14,15 @@ const Dashboard = ({ params }: { params: { role: string } }) => {
   const router = useRouter();
   const role = params.role?.toLowerCase();
 
-  useEffect(() => {
-    console.log("Session Data:", session);
-    console.log("Role from params:", role);
+  // useEffect(() => {
+  //   console.log("Session Data:", session);
+  //   console.log("Role from params:", role);
 
-    if (status === "loading") return;
-    if (!session) {
-      router.replace("/login");
-    }
-  }, [session, status, router]);
+  //   if (status === "loading") return;
+  //   if (!session) {
+  //     router.replace("/login");
+  //   }
+  // }, [session, status, router]);
 
   if (role === "guru") {
     return <AdminPage />;

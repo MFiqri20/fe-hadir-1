@@ -1,17 +1,18 @@
 "use client";
 import { Table, Th, Thead, Tr, Tbody, Td } from "@/component/Table";
 import { useRouter } from "next/navigation";
-import useMapelModule from "../../(guru)/lib";
+// import useMapelModule from "../../(guru)/lib";
 import Button from "@/component/Button";
-import useGuruModule from "../../(guru)/lib";
-import { GuruSubjectListResponse } from "../../(guru)/interface";
+// import useGuruModule from "../../(guru)/lib";
+import { GuruSubjectListResponse } from "@/app/lib/(guru)/interface";
 import { string } from "yup";
 import useCrudModule, { PaginationParams } from "@/hook/useCRUD";
 
 const Guru = () => {
+  const route = useRouter()
   const defaultParams: PaginationParams = {
     page: 1,
-    pageSize: 10,
+    pageSize: 15,
     nama: 0
   };
 
@@ -25,7 +26,7 @@ const Guru = () => {
     <>
       <section className="container px-4 mx-auto space-y-5">
         <section className="flex items-center justify-between">
-          <Button colorSchema="red" title="Tambah Mapel" />
+          <Button colorSchema="red" onClick={() => route.push('/admin/guru/create')} title="Tambah Guru" />
         </section>
         <section>
           <Table isFetching={isFetching} isEmpty={data?.data?.length === 0}>

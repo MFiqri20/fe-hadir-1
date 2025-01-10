@@ -1,45 +1,47 @@
 import { useState } from "react";
-import axios from "axios";
 
-type UseDownloadPdfProps = {
-  role: string; // Role pengguna, misalnya "Murid", "Guru", dll.
-};
-
-const useDownloadPdf = ({ role }: UseDownloadPdfProps) => {
-  const [isLoading, setIsLoading] = useState(false);
+const useDownloadPdf = () => {
+  const [isDownloading, setIsDownloading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const downloadPdf = async (endpoint: string, fileName: string = "File.pdf") => {
-    setIsLoading(true);
+  const downloadPdf = async (url: string, filename: string) => {
+    setIsDownloading(true);
     setError(null);
 
     try {
-      const response = await axios.get(endpoint, {
-        params: { role }, // Tambahkan role sebagai parameter jika diperlukan
-        responseType: "blob", // Mendapatkan respons berupa file biner
+      const response = await fetch(url, {
+        method: "GET",
       });
 
-      if (!response.data) {
-        throw new Error("Data PDF belum tersedia");
+      if (!response.ok) {
+        throw new Error("Failed to download PDF");
       }
 
-      // Membuat URL untuk file PDF
-      const url = window.URL.createObjectURL(new Blob([response.data], { type: "application/pdf" }));
+      // Ambil blob dari response
+      const blob = await response.blob();
+
+      // Buat URL objek untuk blob
+      const downloadUrl = window.URL.createObjectURL(new Blob([blob]));
+
+      // Buat elemen <a> untuk mendownload file
       const link = document.createElement("a");
-      link.href = url;
-      link.setAttribute("download", fileName);
+      link.href = downloadUrl;
+      link.setAttribute("download", filename); // Nama file untuk di-download
       document.body.appendChild(link);
       link.click();
-      link.parentNode?.removeChild(link);
-    } catch (err: any) {
+
+      // Hapus elemen setelah download selesai
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(downloadUrl);
+    } catch (err) {
       console.error("Error downloading PDF:", err);
-      setError(err.message || "Terjadi kesalahan saat mengunduh file");
+      setError("Terjadi kesalahan saat mendownload PDF");
     } finally {
-      setIsLoading(false);
+      setIsDownloading(false);
     }
   };
 
-  return { downloadPdf, isLoading, error };
+  return { downloadPdf, isDownloading, error };
 };
 
 export default useDownloadPdf;

@@ -17,6 +17,15 @@ import dayjs from "dayjs";
 import socket from "@/lib/socket";
 import { ClipLoader } from "react-spinners";
 import Navbar from "@/component/Navbar";
+import useGeolocation from "@/hook/useGeolocation";
+
+
+const TARGET_LAT = -6.310255155333169;
+const TARGET_LNG = 106.97099973877388;
+
+// const TARGET_LAT = -6.493285473270789;
+// const TARGET_LNG = 107.00824046761038;
+const RADIUS = 100; // Dalam meter
 
 const SiswaAttendance: React.FC = () => {
   const { data: session, status } = useSession();
@@ -25,6 +34,42 @@ const SiswaAttendance: React.FC = () => {
   const { useProfileSiswa } = useAuthModule();
   const { data: dataSiswa } = useProfileSiswa();
   const [isAbsen2, setIsAbsen2] = useState<boolean>(false);
+
+  const { latitude, longitude, error } = useGeolocation();
+
+  const getDistance = (
+    lat1: number,
+    lon1: number,
+    lat2: number,
+    lon2: number
+  ) => {
+    const toRad = (value: number) => (value * Math.PI) / 180;
+    const R = 6371e3; // Radius bumi dalam meter
+
+    const φ1 = toRad(lat1);
+    const φ2 = toRad(lat2);
+    const Δφ = toRad(lat2 - lat1);
+    const Δλ = toRad(lon2 - lon1);
+
+    const a =
+      Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
+      Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
+
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+    return R * c; // Jarak dalam meter
+  };
+
+  const isWithinRange =
+    latitude && longitude
+      ? getDistance(latitude, longitude, TARGET_LAT, TARGET_LNG) <= RADIUS
+      : false;
+
+  const handleSubmitGeo = () => {
+    if (isWithinRange) {
+      mutate({ kode_class: classCode });
+    }
+  };
 
   const { useCreate } = useCrudModule();
   const { mutate, isLoading } = useCreate<CreateAbsenSiswaPayload>(
@@ -195,10 +240,10 @@ const SiswaAttendance: React.FC = () => {
   return (
     <main className="w-screen h-full">
       <Navbar
-      role="murid"
-      title1="Dashboard"
-      title2="Attendance"
-      title3="Profile"
+        role="murid"
+        title1="Dashboard"
+        title2="Attendance"
+        title3="Profile"
       />
 
       <div className="px-10 w-full h-screen">
@@ -258,20 +303,20 @@ const SiswaAttendance: React.FC = () => {
               />
             </div>
             <button
-              className="btn btn-outline mt-6 w-96 hover:bg-[#023E8A]"
+              className={`btn mt-4 w-40 ${
+                !isWithinRange ? "opacity-50 cursor-not-allowed" : ""
+              }`}
               onClick={handleSubmit}
+              disabled={!isWithinRange || isLoading}
             >
-              {isLoading ? (
-                <ClipLoader
-                  color={"#36d7b7"}
-                  size={20}
-                  aria-label="Loading Spinner"
-                  data-testid="loader"
-                />
-              ) : (
-                'Submit'
-              )}
+              {isLoading ? <ClipLoader size={20} /> : "Submit"}
             </button>
+
+            {!isWithinRange && (
+              <p className="text-red-500 mt-2">
+                Anda tidak berada di lokasi yang ditentukan.
+              </p>
+            )}
           </div>
         )}
       </div>

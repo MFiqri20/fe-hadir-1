@@ -30,14 +30,8 @@ const AdminDashboard = () => {
 
   return (
     <section className="w-full py-8">
-      <div className="flex justify-between items-center mx-6 my-8">
-        <h1 className="text-4xl font-medium">
-          {" "}
-          <span className="text-[#0077B6]">Create</span> | Student
-        </h1>
-        <RiNotificationBadgeLine className="text-3xl" />
-      </div>
-      <div className="px-7 pb-8">
+     
+      <div className="px-7 pb-8 pt-4">
         <div className="flex justify-between items-cemter">
           <div className="flex w-full justify-between items-center">
             <div className="flex flex-col gap-3">

@@ -19,6 +19,7 @@ import { ClipLoader } from "react-spinners";
 import Navbar from "@/component/Navbar";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import useDownloadPdf from "@/hook/useDownloadPdf";
 
 const AdminPage = () => {
   const [countdown, setCountdown] = useState({
@@ -31,6 +32,12 @@ const AdminPage = () => {
 
   const { useProfile } = useAuthModule();
   const { data: dataProfil } = useProfile();
+
+  const { downloadPdf, isDownloading, error } = useDownloadPdf();
+
+  const handleDownload = () => {
+    downloadPdf("/download/pdf-month?role=Guru", "Recap.pdf");
+  };
 
   // Fetch schedule data and calculate countdown
   const { data, isFetching } =
@@ -163,20 +170,20 @@ const AdminPage = () => {
         <div className="flex w-full justify-between my-10 items-center">
           <div className="flex flex-col gap-3">
             <h1 className="font-quick text-3xl font-medium">
-              {isFetching ? (
+              {isLoading ? (
                 <Skeleton height={35} width={100} />
               ) : (
                 `Hi, ${dataProfil?.data.nama}`
               )}
             </h1>
             <div className="flex flex-row gap-2">
-              {isFetching ? (
+              {isLoading ? (
                 <Skeleton height={35} width={35} />
               ) : (
                 <Image src={logo} alt="user" width={35} height={35} />
               )}
               <h1 className="font-quick text-3xl">
-                {isFetching ? (
+                {isLoading ? (
                   <Skeleton height={35} width={200} />
                 ) : (
                   "SMK Madinatul Quran | Teacher"
@@ -186,7 +193,7 @@ const AdminPage = () => {
           </div>
 
           {/* Countdown Skeleton */}
-          {!isFetching && !data?.data.is_absen && (
+          {!isLoading && !data?.data.is_absen && (
             <div className="w-[672px] flex gap-6 items-center">
               <span className="countdown text-[100px] font-light text-[#495057]">
                 <span style={{ "--value": countdown.hours } as any}></span>:
@@ -195,14 +202,14 @@ const AdminPage = () => {
               </span>
               <div className="flex flex-col">
                 <h1 className="font-quick font-medium text-2xl text-[#495057]">
-                  {isFetching ? (
+                  {isLoading ? (
                     <Skeleton height={35} width={500} />
                   ) : (
                     `left before check-in to ${data?.data.mapel}`
                   )}
                 </h1>
                 <h1 className="font-quick font-medium text-2xl text-[#495057]">
-                  {isFetching ? (
+                  {isLoading ? (
                     <Skeleton height={35} width={500} />
                   ) : (
                     `${data?.data.kelas} Class`
@@ -216,14 +223,14 @@ const AdminPage = () => {
         {/* Button Skeleton */}
         <button
           onClick={handleAbsence}
-          disabled={isFetching || buttonDisabled}
-          className={`btn w-full h-[60px] mt-10 text-[#212529] text-3xl font-quick font-semibold py-3 ${
+          disabled={isLoading || buttonDisabled}
+          className={`btn w-full h-[60px] mt-10 text-[#212529] text-3xl font-quick font-semibold py-3 hover:bg-[#023E8A] ${
             data?.data.is_absen || !isCountdownOver
               ? "btn-disabled"
               : "btn-outline"
           }`}
         >
-          {isFetching ? (
+          {isLoading ? (
             <Skeleton height={35} width={100} />
           ) : isLoading ? (
             <span className="loading loading-spinner"></span>
@@ -236,7 +243,7 @@ const AdminPage = () => {
 
         {/* Chart Skeletons */}
         <div className="flex md:flex-row flex-col my-8 justify-evenly">
-          {isFetching ? (
+          {isLoading ? (
             Array.from({ length: 3 }).map((_, index) => (
               <Skeleton key={index} height={300} width={300} />
             ))
@@ -263,6 +270,19 @@ const AdminPage = () => {
             </>
           )}
         </div>
+        <div className="w-full flex justify-between items-center my-6">
+          <h1 className="font-medium text-lg text-[#495057]">
+            This will kindly remind you of your attendance each time you clock
+            in, whether it be <br /> weekly, monthly, or per semester.
+          </h1>
+          <button
+            onClick={handleDownload}
+            disabled={isDownloading}
+            className="btn btn-outline font-semibold text-base px-[15px] hover:bg-[#023E8A]"
+          >
+            Download Recap
+          </button>
+        </div>
 
         <hr className="w-full border border-[#6C757D]" />
 
@@ -270,14 +290,14 @@ const AdminPage = () => {
         <div className="flex w-full justify-between mt-6">
           <div className="">
             <h1 className="font-quick font-semibold text-4xl text-[#212529]">
-              {isFetching ? (
+              {isLoading ? (
                 <Skeleton height={35} width={200} />
               ) : (
                 "Today's Class"
               )}
             </h1>
             <h1 className="font-quick font-medium text-lg text-[#495057] w-[708px] mt-2">
-              {isFetching ? (
+              {isLoading ? (
                 <Skeleton height={35} width={150} />
               ) : (
                 `Today's class is a ${data?.data.mapel} class.`
@@ -298,14 +318,14 @@ const AdminPage = () => {
         </div>
 
         {/* Table Skeletons */}
-        {isFetching ? (
+        {isLoading ? (
           <Skeleton height={300} width={1670} />
         ) : (
           <>
             <TableJadwal />
           </>
         )}
-        {isFetching ? (
+        {isLoading ? (
           <Skeleton height={300} width={1670} />
         ) : (
           <>
